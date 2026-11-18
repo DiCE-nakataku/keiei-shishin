@@ -1682,9 +1682,9 @@
                 <polyline points="9 15 12 12 15 15"></polyline>
               </svg>
             </div>
-            <label class="cta-upload-btn" for="excelInput" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('excelInput').click()}">
+            <button type="button" class="cta-upload-btn" onclick="document.getElementById('excelInput').click()">
               📂 入力済みExcel(.xlsx)を選択
-            </label>
+            </button>
             <div class="dropzone-hint">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
             <div class="upload-feedback" id="uploadFeedback" role="status" aria-live="polite" hidden></div>
           </div>
@@ -1817,7 +1817,7 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.1 · 更新日 2026-11-18</span></span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.2 · 更新日 2026-11-18</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
   </footer>
 </main>
