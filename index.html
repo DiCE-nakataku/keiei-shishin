@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>経営指針書 自動レイアウト＆A4横PDF出力ツール v9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script>
+if (typeof XLSX === 'undefined') {
+  document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"><\/script>');
+}
+</script>
+<style>
+  :root {
+    --primary: #14284b;
+    --primary-mid: #234375;
+    --primary-tint: #f2f6fb;
+    --accent: #b8892b;
+    --accent-tint: #fbf7ef;
+    --ink: #1a202c;
+    --ink-sub: #4a5568;
+    --ink-muted: #94a3b8;
+    --line: #cbd5e1;
+    --line-light: #e2e8f0;
+    --surface: #ffffff;
+    --surface-sub: #f8fafc;
+    --opp-bg: #e6f4ea;
+    --opp-fg: #137333;
+    --thr-bg: #fce8e6;
+    --thr-fg: #c5221f;
+    --both-bg: #fef7e0;
+    --both-fg: #b06000;
+  }
+  body.theme-green {
+    --primary: #143d29;
+    --primary-mid: #1e5c3e;
+    --primary-tint: #f1f8f4;
+    --accent: #b8892b;
+    --accent-tint: #fbf7ef;
+  }
+  body.theme-slate {
+    --primary: #1e293b;
+    --primary-mid: #334155;
+    --primary-tint: #f1f5f9;
+    --accent: #0284c7;
+    --accent-tint: #f0f9ff;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo UI", sans-serif;
+    background: #cbd5e1;
+    color: var(--ink);
+    font-feature-settings: "palt";
+    letter-spacing: 0.02em;
+  }
+
+  /* Control Toolbar (Screen only) */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #0f172a;
+    color: #fff;
+    padding: 12px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
+  }
+  .toolbar h1 {
+    font-size: 14.5px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .file-label {
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .file-label:hover { background: #1d4ed8; }
+  input[type="file"] { display: none; }
+  .theme-select {
+    background: #1e293b;
+    color: #fff;
+    border: 1px solid #475569;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+  }
+  .btn-print {
+    background: #10b981;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: #059669; }
+  .status {
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-left: auto;
+  }
+
+  /* Welcome Guide */
+  .welcome-box {
+    max-width: 780px;
+    margin: 56px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 36px 42px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+    line-height: 1.8;
+  }
+  .welcome-box h2 { margin-top: 0; color: var(--primary); font-size: 19px; }
+
+  /* Page Wrapper & A4 Landscape Canvas */
+  .pages-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 0 56px;
+    gap: 28px;
+  }
+  .page {
+    width: 297mm;
+    height: 210mm;
+    background: var(--surface);
+    padding: 13mm 17mm 11mm 17mm;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  /* Header & Footer */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1.5pt solid var(--primary);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .page-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1.5pt;
+    width: 48mm;
+    height: 2.5pt;
+    background: var(--accent);
+  }
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .sec-tag {
+    font-family: "Inter", sans-serif;
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .page-title {
+    font-size: 14.5pt;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+  .page-meta {
+    font-size: 8.5pt;
+    color: var(--ink-sub);
+    font-weight: 500;
+  }
+  .page-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+  }
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8pt;
+    color: var(--ink-sub);
+    border-top: 0.5pt solid var(--line);
+    padding-top: 4px;
+    margin-top: 6px;
+  }
+  .page-num {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+  }
+
+  /* Floating Control Bar (Screen only) */
+  .floating-ctrl-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 5px;
+    border: 0.5pt solid var(--line);
+    z-index: 20;
+  }
+  .floating-ctrl-bar .bar-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-sub);
+    margin-right: 4px;
+  }
+  .floating-ctrl-bar .sep {
+    width: 1px;
+    height: 14px;
+    background: #cbd5e1;
+    margin: 0 4px;
+  }
+  .mode-btn {
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .mode-btn:hover { background: var(--primary-tint); }
+  .mode-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .mode-btn.primary-action {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+  }
+  .mode-btn.danger-action {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+  }
+
+  /* =========================================================
+     1. COVER PAGE & COMPANY LOGO SYSTEM
+  ========================================================= */
+  .cover-page {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .cover-ctrl-wrap {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    z-index: 30;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.96);
+  }
+  .cover-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 38.2% 61.8%;
+    height: 100%;
+  }
+  .cover-left {
+    background: linear-gradient(160deg, var(--primary) 0%, var(--primary-mid) 100%);
+    color: #fff;
+    padding: 22mm 16mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .cover-left::after {
+    content: "";
+    position: absolute;
+    top: 16mm;
+    right: 0;
+    bottom: 16mm;
+    width: 3pt;
+    background: var(--accent);
+  }
+  .cover-en {
+    font-family: "Inter", sans-serif;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+  }
+  .cover-term-box {
+    border-left: 2.5pt solid var(--accent);
+    padding-left: 14px;
+  }
+  .cover-term-label {
+    font-size: 9pt;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 4px;
+  }
+  .cover-term-num {
+    font-family: "Noto Serif JP", serif;
+    font-size: 28pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.15;
+  }
+  .cover-range {
+    margin-top: 10px;
+    font-size: 10.5pt;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.9);
+  }
+  .cover-left-foot {
+    font-size: 8.5pt;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.08em;
+  }
+
+  .cover-right {
+    background: #fff;
+    padding: 22mm 22mm 20mm 22mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .cover-main-area {
+    margin-top: 4mm;
+  }
+  .cover-doc-type {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.25em;
+    margin-bottom: 10px;
+  }
+  .cover-title {
+    font-family: "Noto Serif JP", serif;
+    font-size: 36pt;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.18em;
+    margin: 0 0 18px 0;
+    line-height: 1.2;
+  }
+  .cover-motto {
+    font-family: "Noto Serif JP", serif;
+    font-size: 13pt;
+    font-weight: 600;
+    color: var(--ink-sub);
+    line-height: 1.75;
+    padding: 12px 16px;
+    background: var(--primary-tint);
+    border-left: 3pt solid var(--primary);
+  }
+  .cover-sign-area {
+    border-top: 1pt solid var(--line);
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cover-sign-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    width: 100%;
+  }
+  .cover-company {
+    font-size: 17pt;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    line-height: 1.25;
+  }
+  .cover-company.compact {
+    font-size: 14.5pt;
+  }
+  .cover-rep-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    width: 100%;
+  }
+  .cover-rep {
+    font-size: 10.5pt;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .cover-date {
+    font-size: 9pt;
+    color: var(--ink-sub);
+    white-space: nowrap;
+    margin-left: auto;
+  }
+
+  /* Universal Logo Container (Handles transparent, white-bg, dark-bg, colored-bg logos gracefully) */
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    transition: all 0.15s;
+  }
+  .logo-badge img {
+    display: block;
+    max-height: 22mm;
+    max-width: 68mm;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  /* Frame styles so ANY logo (transparent, white box, colored box) looks intentional */
+  .logo-badge.frame-none {
+    padding: 0;
+    background: transparent;
+  }
+  .logo-badge.frame-plate {
+    background: #ffffff;
+    padding: 7px 14px;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+    border: 0.5pt solid var(--line-light);
+  }
+  .logo-badge.frame-soft {
+    background: var(--surface-sub);
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 0.75pt solid var(--line);
+  }
+
+  /* Cover Logo Placement Positions */
+  /* Pos 1: Right Top (Header mark above title) */
+  .cover-logo-right-top {
+    margin-bottom: 10mm;
+    display: flex;
+    justify-content: flex-start;
+  }
+  /* Pos 2: Left Top (Brand mark on dark navy panel - auto white plate if needed) */
+  .cover-logo-left-top {
+    margin-bottom: 6mm;
+  }
+  /* Pos 3: Right Bottom (Beside Company Name in signature block) */
+  .cover-sign-with-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  .cover-sign-with-logo .logo-badge {
+    flex-shrink: 0;
+  }
+  .cover-sign-with-logo .logo-badge img {
+    max-height: 14mm;
+    max-width: 38mm;
+  }
+  .cover-sign-text-col {
+    flex: 1;
+    min-width: 0;
+  }
+  /* Pos 4: Center Hero (Centered emblem above title) */
+  .cover-logo-center-hero {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8mm;
+  }
+  .cover-logo-center-hero .logo-badge img {
+    max-height: 26mm;
+    max-width: 80mm;
+  }
+
+  /* =========================================================
+     2. HERO CARDS & DYNAMIC 10-YEAR VISION MODES (5 MODES)
+  ========================================================= */
+  .hero-quote {
+    background: linear-gradient(135deg, var(--primary-tint) 0%, #ffffff 100%);
+    border: 1pt solid var(--line);
+    border-left: 4pt solid var(--primary);
+    border-radius: 6px;
+    padding: 16px 22px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-quote-label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .hero-quote-text {
+    font-family: "Noto Serif JP", serif;
+    font-size: 15.5pt;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  /* --- MODE A: TEXT ONLY (No Image) --- */
+  .vision-layout-text-only {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 14px;
+  }
+  .vision-layout-text-only .hero-quote {
+    flex: 0 0 54%;
+    margin-bottom: 0;
+    padding: 20px 28px;
+  }
+  .vision-layout-text-only.no-sub-cards .hero-quote {
+    flex: 1;
+  }
+  .vision-layout-text-only .vision-text {
+    font-size: 14.5pt;
+    line-height: 1.75;
+  }
+  .vision-layout-text-only.no-sub-cards .vision-text {
+    font-size: 17pt;
+    line-height: 1.85;
+  }
+
+  /* --- MODE B: CORNER (61.8% Text : 38.2% Image Top, Sub-cards Bottom) --- */
+  .vision-layout-corner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 12px;
+  }
+  .vision-layout-corner .vision-top-split {
+    display: flex;
+    gap: 14px;
+    flex: 0 0 52%;
+    align-items: stretch;
+  }
+  .vision-layout-corner.no-sub-cards .vision-top-split {
+    flex: 1;
+  }
+  .vision-layout-corner .hero-quote {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  .vision-layout-corner .vision-text {
+    font-size: 12pt;
+    line-height: 1.65;
+  }
+  .vision-layout-corner .vision-img-frame {
+    width: 38.2%;
+    border: 1pt solid var(--line);
+    border-radius: 6px;
+    background: var(--surface-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 6px;
+  }
+  .vision-layout-corner .vision-img-frame img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  /* --- MODE C: RIGHT HALF (50% Left Text Stack : 50% Right Full-Height Image) --- */
+  .vision-layout-right-half {
+    display: grid;
+    grid-template-columns: 50% 1fr;
+    gap: 16px;
+    height: 100%;
+  }
+  .vision-layout-right-half .vision-left-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    overflow: hidden;
+  }
+  .vision-layout-right-half .hero-quote {
+    margin-bottom: 0;
+    padding: 14px 18px;
+    flex: 1;
+  }
+  .vision-layout-right-half .vision-text {
+    font-size: 11.2pt;
+    line-height: 1.6;
+  }
+  .vision-layout-right-half .sub-cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .vision-layout-right-half .panel-card {
+    padding: 8px 12px;
+  }
+  .vision-layout-right-half .panel-head {
+    font-size: 8.8pt;
+    margin-bottom: 4px;
+    padding-bottom: 3px;
+  }
+  .vision-layout-right-half .panel-body {
+    font-size: 8.5pt;
+    line-height: 1.48;
+  }
+  .vision-layout-right-half .vision-right-full-img {
+    border: 1pt solid var(--line);
+    border-radius: 6px;
+    background: var(--surface-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    height: 100%;
+    padding: 8px;
+  }
+  .vision-layout-right-half .vision-right-full-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  /* --- MODE D: FULL BODY BACKGROUND (Background Image covering entire .page-body) --- */
+  .vision-layout-full-bg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border: 1pt solid var(--line);
+  }
+  .vision-layout-full-bg .poster-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+  .vision-layout-full-bg .poster-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.22) 0%, rgba(15, 23, 42, 0.42) 100%);
+    z-index: 2;
+  }
+  .vision-layout-full-bg .poster-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 14px;
+  }
+  .vision-layout-full-bg .hero-quote {
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1pt solid rgba(255,255,255,0.85);
+    border-left: 4.5pt solid var(--accent);
+    margin-bottom: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  }
+  .vision-layout-full-bg.no-sub-cards .hero-quote {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 24px 30px;
+  }
+  .vision-layout-full-bg .vision-text {
+    font-size: 13pt;
+    line-height: 1.68;
+  }
+  .vision-layout-full-bg .panel-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  /* --- MODE E: FULL BODY FOREGROUND (Image in front covering body area cleanly, optional compact caption strip) --- */
+  .vision-layout-full-fg {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 8px;
+  }
+  .vision-layout-full-fg .fg-image-stage {
+    flex: 1;
+    border: 1pt solid var(--line);
+    border-radius: 6px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 6px;
+    position: relative;
+  }
+  .vision-layout-full-fg .fg-image-stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .vision-layout-full-fg .fg-caption-bar {
+    background: var(--primary-tint);
+    border-left: 3.5pt solid var(--primary);
+    padding: 7px 14px;
+    border-radius: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .vision-layout-full-fg .fg-caption-tag {
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .vision-layout-full-fg .fg-caption-text {
+    font-family: "Noto Serif JP", serif;
+    font-size: 9.8pt;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.45;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Generic Narrative & Grid Cards */
+  .narrative-box {
+    background: var(--surface-sub);
+    border: 0.75pt solid var(--line);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 10.5pt;
+    line-height: 1.8;
+    color: var(--ink);
+    white-space: pre-wrap;
+    flex: 1;
+  }
+  .dynamic-grid {
+    display: grid;
+    gap: 12px;
+    flex: 1;
+  }
+  .dynamic-grid.cols-1 { grid-template-columns: 1fr; }
+  .dynamic-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .dynamic-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .dynamic-grid.rows-2 { grid-template-rows: 1fr 1fr; height: 100%; }
+  .dynamic-grid.rows-1 { grid-template-rows: 1fr; height: 100%; }
+
+  .panel-card {
+    border: 0.75pt solid var(--line);
+    border-top: 2.5pt solid var(--primary);
+    border-radius: 5px;
+    padding: 11px 15px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-card.accent-top {
+    border-top-color: var(--accent);
+  }
+  .panel-head {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: var(--primary);
+    padding-bottom: 5px;
+    margin-bottom: 7px;
+    border-bottom: 0.5pt solid var(--line-light);
+  }
+  .panel-body {
+    font-size: 9.6pt;
+    line-height: 1.68;
+    color: var(--ink);
+    white-space: pre-wrap;
+    flex: 1;
+  }
+
+  /* =========================================================
+     3. PRECISION TABLES
+  ========================================================= */
+  table.exec {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 8.8pt;
+    line-height: 1.45;
+  }
+  table.exec.fill-height {
+    height: 100%;
+  }
+  table.exec th, table.exec td {
+    border: 0.5pt solid var(--line);
+    padding: 5px 8px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  table.exec thead th {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    font-size: 8.5pt;
+    letter-spacing: 0.03em;
+    padding: 5.5px 6px;
+  }
+  table.exec thead th.sub {
+    background: var(--primary-tint);
+    color: var(--primary);
+    font-size: 8pt;
+    border-bottom: 1pt solid var(--primary);
+  }
+  table.exec tbody tr:nth-child(even) {
+    background: #fafbfd;
+  }
+  .cat-cell {
+    background: var(--primary-tint) !important;
+    color: var(--primary);
+    font-weight: 700;
+    text-align: center;
+    font-size: 8.6pt;
+  }
+  .item-cell {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .num {
+    font-family: "Inter", "Noto Sans JP", sans-serif;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
+  .ctr {
+    text-align: center;
+  }
+  .row-summary td {
+    background: var(--primary-tint) !important;
+    border-top: 1.2pt solid var(--primary) !important;
+    border-bottom: 1.2pt solid var(--primary) !important;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .row-bold td {
+    font-weight: 700;
+    background: #f8fafc !important;
+  }
+  .empty-dash {
+    color: #cbd5e1;
+    font-size: 8pt;
+    user-select: none;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 7.8pt;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .badge-opp { background: var(--opp-bg); color: var(--opp-fg); }
+  .badge-thr { background: var(--thr-bg); color: var(--thr-fg); }
+  .badge-both { background: var(--both-bg); color: var(--both-fg); }
+  .badge-neutral { background: #f1f5f9; color: #475569; }
+
+  .gantt-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-align: center;
+  }
+  .gantt-arrow {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 9.5pt;
+  }
+  .kpi-hero-val {
+    font-family: "Inter", sans-serif;
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .kpi-unit {
+    font-size: 8pt;
+    font-weight: 400;
+    color: var(--ink-sub);
+    margin-left: 2px;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+  @media print {
+    body { background: #fff; }
+    .toolbar, .welcome-box, .no-print, .floating-ctrl-bar { display: none !important; }
+    .pages-wrapper { padding: 0; gap: 0; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>経営指針書 A4横レイアウト出力ツール v7（表紙ロゴ設置・ビジョン前面/背景切替対応）</h1>
+  <label class="file-label">
+    📂 入力済みExcel(.xlsx)を選択
+    <input type="file" id="excelInput" accept=".xlsx,.xls" onclick="this.value=null;" />
+  </label>
+  <select class="theme-select" onchange="document.body.className=this.value">
+    <option value="">カラー：ロイヤルネイビー × ゴールド</option>
+    <option value="theme-green">カラー：フォレストグリーン × ゴールド</option>
+    <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
+  </select>
+  <button class="btn-print" onclick="window.print()">🖨️ A4横で印刷 / PDF保存</button>
+  <span class="status" id="statusText">Excelファイルを選択してください</span>
+</div>
+
+<div class="welcome-box" id="welcomeBox">
+  <h2>使い方</h2>
+  <ol style="padding-left:20px;">
+    <li>左上の<strong>「📂 入力済みExcel(.xlsx)を選択」</strong>から入力済みの経営指針書Excelファイル（<code>.xlsx</code>）を選択します。</li>
+    <li><strong>「表紙」</strong>右上の操作バーから自社ロゴ画像を挿入でき、<strong>配置場所（4パターン）</strong>と<strong>背景処理（そのまま／白プレート／枠線）</strong>を選択できます。</li>
+    <li><strong>「長期（10年）ビジョン」</strong>ページでは、画像を挿入すると<strong>「右隅」「右半分」「全面背景（文字重ね）」「全面前面（画像主役）」</strong>の4パターンから選択できます。</li>
+  </ol>
+</div>
+
+<input type="file" id="coverLogoInput" accept="image/*" />
+<input type="file" id="visionImgInput" accept="image/*" />
+
+<div class="pages-wrapper" id="pagesContainer"></div>
+
+<script>
+// State for Cover Logo
+let coverLogoDataUrl = null;
+let coverLogoPos = 'right-top';   // 'right-top' | 'left-top' | 'right-bottom' | 'center-hero'
+let coverLogoFrame = 'none';      // 'none' | 'plate' | 'soft'
+let currentCoverData = null;
+
+// State for 10-Year Vision Image
+let visionImageDataUrl = null;
+let visionLayoutMode = 'corner';  // 'corner' | 'right-half' | 'full-bg' | 'full-fg' | 'full-fg-only'
+let currentVisionData = null;
+
+document.getElementById('coverLogoInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    coverLogoDataUrl = evt.target.result;
+    renderCoverPage();
+  };
+  reader.readAsDataURL(file);
+});
+
+function setCoverLogoPos(pos) {
+  coverLogoPos = pos;
+  // Auto-suggest white plate when placed on dark left panel so dark logos never vanish
+  if (pos === 'left-top' && coverLogoFrame === 'none') {
+    coverLogoFrame = 'plate';
+  }
+  renderCoverPage();
+}
+function setCoverLogoFrame(frame) {
+  coverLogoFrame = frame;
+  renderCoverPage();
+}
+function removeCoverLogo() {
+  coverLogoDataUrl = null;
+  document.getElementById('coverLogoInput').value = '';
+  renderCoverPage();
+}
+
+function renderCoverPage() {
+  const el = document.getElementById('coverPageContainer');
+  if (!el || !currentCoverData) return;
+  const { company, rep, term, startYM, endYM, pubDate, subTitle } = currentCoverData;
+
+  let ctrlHTML = `<div class="floating-ctrl-bar cover-ctrl-wrap no-print">`;
+  if (!coverLogoDataUrl) {
+    ctrlHTML += `<span class="bar-label">表紙ロゴ：未設置</span>
+      <button class="mode-btn primary-action" onclick="document.getElementById('coverLogoInput').click()">🏢 自社ロゴを挿入</button>`;
+  } else {
+    ctrlHTML += `<span class="bar-label">ロゴ位置：</span>
+      <button class="mode-btn ${coverLogoPos==='right-top'?'active':''}" onclick="setCoverLogoPos('right-top')">右上（標準）</button>
+      <button class="mode-btn ${coverLogoPos==='left-top'?'active':''}" onclick="setCoverLogoPos('left-top')">左上（濃紺帯）</button>
+      <button class="mode-btn ${coverLogoPos==='right-bottom'?'active':''}" onclick="setCoverLogoPos('right-bottom')">右下（社名横）</button>
+      <button class="mode-btn ${coverLogoPos==='center-hero'?'active':''}" onclick="setCoverLogoPos('center-hero')">中央上部</button>
+      <span class="sep"></span>
+      <span class="bar-label">背景処理：</span>
+      <button class="mode-btn ${coverLogoFrame==='none'?'active':''}" onclick="setCoverLogoFrame('none')">透過そのまま</button>
+      <button class="mode-btn ${coverLogoFrame==='plate'?'active':''}" onclick="setCoverLogoFrame('plate')">白プレート</button>
+      <button class="mode-btn ${coverLogoFrame==='soft'?'active':''}" onclick="setCoverLogoFrame('soft')">淡色枠</button>
+      <span class="sep"></span>
+      <button class="mode-btn" onclick="document.getElementById('coverLogoInput').click()">変更</button>
+      <button class="mode-btn danger-action" onclick="removeCoverLogo()">削除</button>`;
+  }
+  ctrlHTML += `</div>`;
+
+  const logoTag = coverLogoDataUrl
+    ? `<div class="logo-badge frame-${coverLogoFrame}"><img src="${coverLogoDataUrl}" alt="自社ロゴ" /></div>`
+    : '';
+
+  const leftTopSlot = (coverLogoDataUrl && coverLogoPos === 'left-top')
+    ? `<div class="cover-logo-left-top">${logoTag}</div>`
+    : `<div class="cover-en">MANAGEMENT<br>POLICY &amp;<br>BUSINESS PLAN</div>`;
+
+  const rightTopSlot = (coverLogoDataUrl && coverLogoPos === 'right-top')
+    ? `<div class="cover-logo-right-top">${logoTag}</div>`
+    : (coverLogoDataUrl && coverLogoPos === 'center-hero')
+      ? `<div class="cover-logo-center-hero">${logoTag}</div>`
+      : '';
+
+  const centerStyle = (coverLogoDataUrl && coverLogoPos === 'center-hero') ? 'text-align:center;' : '';
+
+  const isLongCompany = company.length >= 13 || (coverLogoDataUrl && coverLogoPos === 'right-bottom' && company.length >= 11);
+  const compCls = isLongCompany ? 'cover-company compact' : 'cover-company';
+
+  const textColHTML = `
+    <div class="cover-sign-text-col">
+      <div class="${compCls}">${esc(company)}</div>
+      <div class="cover-rep-row">
+        <div class="cover-rep">${rep ? '代表取締役　' + esc(rep) : ''}</div>
+        <div class="cover-date">${pubDate ? '策定日：' + esc(pubDate) : ''}</div>
+      </div>
+    </div>`;
+
+  const companyBlockHTML = (coverLogoDataUrl && coverLogoPos === 'right-bottom')
+    ? `<div class="cover-sign-with-logo">${logoTag}${textColHTML}</div>`
+    : textColHTML;
+
+  el.innerHTML = `
+    ${ctrlHTML}
+    <div class="cover-grid">
+      <div class="cover-left">
+        ${leftTopSlot}
+        <div class="cover-term-box">
+          <div class="cover-term-label">FISCAL PERIOD</div>
+          <div class="cover-term-num">第 ${esc(term || '—')} 期</div>
+          <div class="cover-range">${esc(startYM)} ～ ${esc(endYM)}</div>
+        </div>
+        <div class="cover-left-foot">${esc(company)}</div>
+      </div>
+      <div class="cover-right">
+        <div class="cover-main-area" style="${centerStyle}">
+          ${rightTopSlot}
+          <div class="cover-doc-type">EXECUTIVE MANAGEMENT GUIDELINE</div>
+          <h1 class="cover-title">経営指針書</h1>
+          ${subTitle ? `<div class="cover-motto" style="text-align:left;">${esc(subTitle)}</div>` : ''}
+        </div>
+        <div class="cover-sign-area">
+          ${companyBlockHTML}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Vision Image Handlers
+document.getElementById('visionImgInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    visionImageDataUrl = evt.target.result;
+    renderVisionBody();
+  };
+  reader.readAsDataURL(file);
+});
+
+function setVisionMode(mode) {
+  visionLayoutMode = mode;
+  renderVisionBody();
+}
+
+function removeVisionImage() {
+  visionImageDataUrl = null;
+  document.getElementById('visionImgInput').value = '';
+  renderVisionBody();
+}
+
+function renderVisionBody() {
+  const container = document.getElementById('visionPageBody');
+  if (!container || !currentVisionData) return;
+
+  const { mainVis, subCards } = currentVisionData;
+  const hasSubs = subCards.length > 0;
+  const noSubClass = hasSubs ? '' : 'no-sub-cards';
+
+  let ctrlHTML = `<div class="floating-ctrl-bar no-print">`;
+  if (!visionImageDataUrl) {
+    ctrlHTML += `<span class="bar-label" style="margin-right:auto;">レイアウト：テキスト主役モード（画像なし）</span>
+      <button class="mode-btn primary-action" onclick="document.getElementById('visionImgInput').click()">🖼️ ビジョン画像・イラストを挿入</button>`;
+  } else {
+    ctrlHTML += `<span class="bar-label">画像配置：</span>
+      <button class="mode-btn ${visionLayoutMode==='corner'?'active':''}" onclick="setVisionMode('corner')">右隅（黄金比）</button>
+      <button class="mode-btn ${visionLayoutMode==='right-half'?'active':''}" onclick="setVisionMode('right-half')">右半分</button>
+      <button class="mode-btn ${visionLayoutMode==='full-bg'?'active':''}" onclick="setVisionMode('full-bg')">全面背景（文字重ね）</button>
+      <button class="mode-btn ${visionLayoutMode==='full-fg'?'active':''}" onclick="setVisionMode('full-fg')">全面前面（下帯付）</button>
+      <button class="mode-btn ${visionLayoutMode==='full-fg-only'?'active':''}" onclick="setVisionMode('full-fg-only')">全面前面（画像のみ）</button>
+      <span class="sep"></span>
+      <button class="mode-btn" onclick="document.getElementById('visionImgInput').click()">変更</button>
+      <button class="mode-btn danger-action" onclick="removeVisionImage()">削除</button>`;
+  }
+  ctrlHTML += `</div>`;
+
+  function buildSubGridHTML() {
+    if (!hasSubs) return '';
+    const cards = subCards.map((c, idx) => `
+      <div class="panel-card ${idx % 2 === 1 ? 'accent-top' : ''}">
+        <div class="panel-head">${esc(c.title)}</div>
+        <div class="panel-body">${esc(c.body)}</div>
+      </div>
+    `).join('');
+    return `<div class="dynamic-grid cols-${subCards.length}">${cards}</div>`;
+  }
+
+  let bodyHTML = '';
+
+  if (!visionImageDataUrl) {
+    bodyHTML = `
+      <div class="vision-layout-text-only ${noSubClass}">
+        <div class="hero-quote">
+          <div class="hero-quote-label">10-YEAR VISION ― 10年後に目指す会社の姿</div>
+          <div class="hero-quote-text vision-text">${fmtCell(mainVis, '（長期ビジョンを入力してください）')}</div>
+        </div>
+        ${buildSubGridHTML()}
+      </div>
+    `;
+  } else if (visionLayoutMode === 'corner') {
+    bodyHTML = `
+      <div class="vision-layout-corner ${noSubClass}">
+        <div class="vision-top-split">
+          <div class="hero-quote">
+            <div class="hero-quote-label">10-YEAR VISION ― 10年後に目指す会社の姿</div>
+            <div class="hero-quote-text vision-text">${fmtCell(mainVis, '（長期ビジョンを入力してください）')}</div>
+          </div>
+          <div class="vision-img-frame">
+            <img src="${visionImageDataUrl}" alt="10年ビジョン" />
+          </div>
+        </div>
+        ${buildSubGridHTML()}
+      </div>
+    `;
+  } else if (visionLayoutMode === 'right-half') {
+    const stackCards = subCards.map((c, idx) => `
+      <div class="panel-card ${idx % 2 === 1 ? 'accent-top' : ''}">
+        <div class="panel-head">${esc(c.title)}</div>
+        <div class="panel-body">${esc(c.body)}</div>
+      </div>
+    `).join('');
+    bodyHTML = `
+      <div class="vision-layout-right-half">
+        <div class="vision-left-stack">
+          <div class="hero-quote">
+            <div class="hero-quote-label">10-YEAR VISION ― 10年後に目指す会社の姿</div>
+            <div class="hero-quote-text vision-text">${fmtCell(mainVis, '（長期ビジョンを入力してください）')}</div>
+          </div>
+          ${hasSubs ? `<div class="sub-cards-stack">${stackCards}</div>` : ''}
+        </div>
+        <div class="vision-right-full-img">
+          <img src="${visionImageDataUrl}" alt="10年ビジョン" />
+        </div>
+      </div>
+    `;
+  } else if (visionLayoutMode === 'full-bg') {
+    bodyHTML = `
+      <div class="vision-layout-full-bg ${noSubClass}">
+        <img class="poster-bg-img" src="${visionImageDataUrl}" alt="10年ビジョン背景" />
+        <div class="poster-scrim"></div>
+        <div class="poster-content">
+          <div class="hero-quote">
+            <div class="hero-quote-label">10-YEAR VISION ― 10年後に目指す会社の姿</div>
+            <div class="hero-quote-text vision-text">${fmtCell(mainVis, '（長期ビジョンを入力してください）')}</div>
+          </div>
+          ${buildSubGridHTML()}
+        </div>
+      </div>
+    `;
+  } else if (visionLayoutMode === 'full-fg') {
+    bodyHTML = `
+      <div class="vision-layout-full-fg">
+        <div class="fg-image-stage">
+          <img src="${visionImageDataUrl}" alt="10年ビジョン図解" />
+        </div>
+        ${mainVis ? `
+          <div class="fg-caption-bar">
+            <span class="fg-caption-tag">10-YEAR VISION</span>
+            <div class="fg-caption-text">${esc(mainVis.replace(/\n+/g, '　'))}</div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } else if (visionLayoutMode === 'full-fg-only') {
+    bodyHTML = `
+      <div class="vision-layout-full-fg">
+        <div class="fg-image-stage" style="padding:2px;">
+          <img src="${visionImageDataUrl}" alt="10年ビジョン図解" />
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = ctrlHTML + `<div style="flex:1;overflow:hidden;">${bodyHTML}</div>`;
+}
+
+document.getElementById('excelInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('statusText');
+  if (typeof XLSX === 'undefined') {
+    alert('Excel読み込みライブラリ（SheetJS）が読み込めていません。インターネット接続を確認してページを再読み込みしてください。');
+    return;
+  }
+  statusEl.textContent = 'ファイルを読み込み中...';
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const wb = XLSX.read(new Uint8Array(evt.target.result), { type: 'array' });
+      renderBook(wb);
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = '読み込みエラーが発生しました';
+      alert('Excelファイルの解析中にエラーが発生しました：\n' + err.message);
+    }
+  };
+  reader.onerror = function() {
+    statusEl.textContent = 'ファイル読込失敗';
+    alert('ファイルの読み込みに失敗しました。');
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+function val(ws, addr) {
+  if (!ws || !ws[addr]) return '';
+  return (ws[addr].w !== undefined && ws[addr].w !== '') ? ws[addr].w : (ws[addr].v !== undefined ? String(ws[addr].v) : '');
+}
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtCell(s, placeholder = '—') {
+  const t = String(s || '').trim();
+  return t ? esc(t) : `<span class="empty-dash">${placeholder}</span>`;
+}
+function fmtNum(s) {
+  const t = String(s || '').trim();
+  if (!t || t === '-') return `<span class="empty-dash">—</span>`;
+  return esc(t);
+}
+function impactBadge(s) {
+  const t = String(s || '').trim();
+  if (!t) return `<span class="empty-dash">—</span>`;
+  if (t.includes('両面')) return `<span class="badge badge-both">${esc(t)}</span>`;
+  if (t.includes('機会')) return `<span class="badge badge-opp">${esc(t)}</span>`;
+  if (t.includes('脅威')) return `<span class="badge badge-thr">${esc(t)}</span>`;
+  return `<span class="badge badge-neutral">${esc(t)}</span>`;
+}
+function ganttMark(s) {
+  const t = String(s || '').trim();
+  if (!t) return '';
+  if (t === '●' || t === '•') return `<span class="gantt-dot">●</span>`;
+  if (t.includes('★')) return `<span class="gantt-dot" style="background:var(--accent);">★</span>`;
+  if (t === '→') return `<span class="gantt-arrow">→</span>`;
+  return `<span style="font-weight:700;font-size:8pt;color:var(--primary);">${esc(t)}</span>`;
+}
+
+function buildDynamicCatTable(rows, colgroupHTML, theadHTML, tableStyle = '') {
+  const active = rows.filter(r => r.hasData);
+  const displayRows = active.length > 0 ? active : rows.slice(0, 4);
+  const counts = {};
+  displayRows.forEach(r => { counts[r.cat] = (counts[r.cat] || 0) + 1; });
+  const rendered = {};
+  let trs = '';
+  displayRows.forEach(r => {
+    const first = !rendered[r.cat];
+    rendered[r.cat] = true;
+    trs += `<tr>
+      ${first ? `<td rowspan="${counts[r.cat]}" class="cat-cell">${esc(r.cat)}</td>` : ''}
+      ${r.cellsHTML}
+    </tr>`;
+  });
+  const autoFont = displayRows.length <= 6 ? 'font-size:9.5pt;line-height:1.6;' : (displayRows.length <= 10 ? 'font-size:9pt;line-height:1.5;' : '');
+  return `<table class="exec fill-height" style="${autoFont}${tableStyle}">${colgroupHTML}${theadHTML}<tbody>${trs}</tbody></table>`;
+}
+
+function buildDynamicCardGrid(cards, emptyFallbackText = '（未入力）') {
+  const active = cards.filter(c => c.body.trim() !== '');
+  const list = active.length > 0 ? active : cards;
+  const cols = list.length === 1 ? 'cols-1' : 'cols-2';
+  const rows = list.length <= 2 ? 'rows-1' : 'rows-2';
+  const bodyFont = list.length <= 2 ? 'font-size:10.5pt;line-height:1.75;' : 'font-size:9.2pt;line-height:1.58;';
+  const itemsHTML = list.map((c, idx) => `
+    <div class="panel-card ${idx % 2 === 1 ? 'accent-top' : ''}">
+      <div class="panel-head">${esc(c.title)}</div>
+      <div class="panel-body" style="${bodyFont}">${fmtCell(c.body, emptyFallbackText)}</div>
+    </div>
+  `).join('');
+  return `<div class="dynamic-grid ${cols} ${rows}">${itemsHTML}</div>`;
+}
+
+function renderBook(wb) {
+  const container = document.getElementById('pagesContainer');
+  container.innerHTML = '';
+  document.getElementById('welcomeBox').style.display = 'none';
+
+  const ws0 = wb.Sheets['00_出力設定・表紙'];
+  if (!ws0) { alert('「00_出力設定・表紙」シートが見つかりません。'); return; }
+
+  const company = val(ws0, 'B24') || '（会社名未入力）';
+  const rep = val(ws0, 'B25');
+  const term = val(ws0, 'B26');
+  const startYM = val(ws0, 'B27');
+  const endYM = val(ws0, 'B28');
+  const pubDate = val(ws0, 'B29');
+
+  const selected = [];
+  for (let r = 5; r <= 21; r++) {
+    if (val(ws0, 'B'+r).trim() && val(ws0, 'D'+r).trim() === '出力する') {
+      selected.push(val(ws0, 'B'+r).trim());
+    }
+  }
+
+  document.getElementById('statusText').textContent = `読み込み完了：全 ${selected.length} ページ出力対象`;
+  let pageNum = 0;
+  const total = selected.length;
+
+  function makePage(secTag, title, html, isCover = false, bodyId = '') {
+    pageNum++;
+    const div = document.createElement('div');
+    div.className = isCover ? 'page cover-page' : 'page';
+    if (isCover && bodyId) div.id = bodyId;
+    if (isCover) {
+      div.innerHTML = html;
+    } else {
+      div.innerHTML = `
+        <div class="page-header">
+          <div class="header-left">
+            <span class="sec-tag">${esc(secTag)}</span>
+            <h2 class="page-title">${esc(title)}</h2>
+          </div>
+          <div class="page-meta">${esc(company)}　｜　第${esc(term)}期 経営指針書</div>
+        </div>
+        <div class="page-body" ${bodyId ? `id="${bodyId}"` : ''}>${html}</div>
+        <div class="page-footer">
+          <span>CONFIDENTIAL — ${esc(company)}</span>
+          <span class="page-num">${String(pageNum).padStart(2,'0')} / ${String(total).padStart(2,'0')}</span>
+        </div>
+      `;
+    }
+    container.appendChild(div);
+  }
+
+  selected.forEach(sName => {
+    const ws = wb.Sheets[sName];
+    if (!ws) return;
+
+    if (sName === '01_表紙') {
+      const subTitle = val(ws, 'B11');
+      currentCoverData = { company, rep, term, startYM, endYM, pubDate, subTitle };
+      makePage('COVER', '表紙', '', true, 'coverPageContainer');
+      renderCoverPage();
+    }
+
+    else if (sName === '02_経営姿勢の確立') {
+      const catNames = {
+        5: 'Ⅰ. マーケティングの立場（科学性）', 6: 'Ⅰ. マーケティングの立場（科学性）',
+        7: 'Ⅱ. 地域社会に対する役割（社会性）', 8: 'Ⅱ. 地域社会に対する役割（社会性）',
+        9: 'Ⅲ. 社員の立場から（人間性）', 10: 'Ⅲ. 社員の立場から（人間性）'
+      };
+      const rows = [];
+      for (let r = 5; r <= 10; r++) {
+        const ans = val(ws, 'C'+r).trim();
+        rows.push({
+          cat: catNames[r],
+          hasData: ans !== '',
+          cellsHTML: `<td class="item-cell">${esc(val(ws,'B'+r))}</td><td style="white-space:pre-wrap;">${fmtCell(ans)}</td>`
+        });
+      }
+      makePage('01 / STANCE', '経営姿勢の確立（科学性・社会性・人間性）', buildDynamicCatTable(
+        rows,
+        `<colgroup><col style="width:23%;"><col style="width:27%;"><col style="width:50%;"></colgroup>`,
+        `<thead><tr><th>3つの立場</th><th>問いかけ項目</th><th>自社の経営姿勢</th></tr></thead>`
+      ));
+    }
+
+    else if (sName === '03_経営理念') {
+      const mainPhil = val(ws, 'C5').trim();
+      const notePhil = val(ws, 'C6').trim();
+      if (!notePhil) {
+        makePage('02 / PHILOSOPHY', '経営理念', `
+          <div class="hero-quote" style="flex:1;margin-bottom:0;padding:28px 36px;">
+            <div class="hero-quote-label">CORPORATE PHILOSOPHY ― 私たちが存在する理由</div>
+            <div class="hero-quote-text" style="font-size:18pt;line-height:1.85;">${fmtCell(mainPhil, '（経営理念を入力してください）')}</div>
+          </div>
+        `);
+      } else {
+        makePage('02 / PHILOSOPHY', '経営理念', `
+          <div class="hero-quote" style="flex:0 0 46%;">
+            <div class="hero-quote-label">CORPORATE PHILOSOPHY ― 私たちが存在する理由</div>
+            <div class="hero-quote-text">${fmtCell(mainPhil, '（経営理念を入力してください）')}</div>
+          </div>
+          <div style="font-size:9.5pt;font-weight:700;color:var(--primary);margin:2px 0 6px;letter-spacing:0.05em;">■ 理念に込めた想い・解説</div>
+          <div class="narrative-box">${esc(notePhil)}</div>
+        `);
+      }
+    }
+
+    else if (sName === '04_長期ビジョン検討') {
+      const cards = [];
+      for (let r = 5; r <= 8; r++) {
+        cards.push({ title: `${val(ws,'A'+r)}：${val(ws,'B'+r)}`, body: val(ws,'C'+r) });
+      }
+      makePage('03 / VISION WORK', '長期（10年）ビジョン検討シート', buildDynamicCardGrid(cards, '（検討内容未記入）'));
+    }
+
+    else if (sName === '05_長期ビジョン') {
+      const mainVis = val(ws, 'C5').trim();
+      const subCards = [];
+      for (let r = 6; r <= 8; r++) {
+        const bText = val(ws, 'C'+r).trim();
+        if (bText) subCards.push({ title: val(ws, 'B'+r), body: bText });
+      }
+      currentVisionData = { mainVis, subCards };
+      makePage('03 / LONG-TERM VISION', '長期（10年）ビジョン', '', false, 'visionPageBody');
+      renderVisionBody();
+    }
+
+    else if (sName === '06_外部環境分析マクロ') {
+      const rows = [];
+      for (let r = 5; r <= 14; r++) {
+        const cleanCat = val(ws,'A'+r).replace(/[【】]/g, '');
+        const cleanItem = val(ws,'B'+r).replace(/^●\s*/, '');
+        const pred = val(ws,'C'+r).trim();
+        const imp = val(ws,'D'+r).trim();
+        rows.push({
+          cat: cleanCat,
+          hasData: Boolean(pred || imp),
+          cellsHTML: `<td class="item-cell">${esc(cleanItem)}</td><td>${fmtCell(pred)}</td><td class="ctr">${impactBadge(imp)}</td>`
+        });
+      }
+      makePage('04 / MACRO ENVIRONMENT', '外部環境の分析（マクロ環境）', buildDynamicCatTable(
+        rows,
+        `<colgroup><col style="width:14%;"><col style="width:19%;"><col style="width:53%;"><col style="width:14%;"></colgroup>`,
+        `<thead><tr><th>大分類</th><th>分析項目</th><th>3年後の予測（世の中の動向）</th><th>自社への影響</th></tr></thead>`
+      ));
+    }
+
+    else if (sName === '07_外部環境分析ミクロ') {
+      const rows = [];
+      for (let r = 5; r <= 19; r++) {
+        const cleanCat = val(ws,'A'+r).replace(/[【】]/g, '');
+        const cleanItem = val(ws,'B'+r).replace(/^●\s*/, '');
+        const pred = val(ws,'C'+r).trim();
+        const imp = val(ws,'D'+r).trim();
+        rows.push({
+          cat: cleanCat,
+          hasData: Boolean(pred || imp),
+          cellsHTML: `<td class="item-cell">${esc(cleanItem)}</td><td>${fmtCell(pred)}</td><td class="ctr">${impactBadge(imp)}</td>`
+        });
+      }
+      makePage('05 / MICRO ENVIRONMENT', '外部環境の分析（ミクロ環境）', buildDynamicCatTable(
+        rows,
+        `<colgroup><col style="width:15%;"><col style="width:19%;"><col style="width:52%;"><col style="width:14%;"></colgroup>`,
+        `<thead><tr><th>大分類</th><th>分析項目</th><th>3年後の予測（業界・顧客・競合）</th><th>自社への影響</th></tr></thead>`
+      ));
+    }
+
+    else if (sName === '08_自社の強み弱み') {
+      const rows = [];
+      for (let r = 5; r <= 32; r++) {
+        const rawCat = val(ws,'A'+r).split('\n')[0].replace(/[【】]/g, '');
+        const item = val(ws,'B'+r).replace(/^●\s*/, '');
+        const s = val(ws,'C'+r).trim();
+        const w = val(ws,'D'+r).trim();
+        rows.push({
+          cat: rawCat,
+          hasData: Boolean(s || w),
+          cellsHTML: `<td class="item-cell">${esc(item)}</td><td>${fmtCell(s)}</td><td>${fmtCell(w)}</td>`
+        });
+      }
+      makePage('06 / INTERNAL ANALYSIS', '内部環境の分析（自社の強み・弱み）', buildDynamicCatTable(
+        rows,
+        `<colgroup><col style="width:12%;"><col style="width:16%;"><col style="width:36%;"><col style="width:36%;"></colgroup>`,
+        `<thead><tr><th>経営資源</th><th>評価項目</th><th>自社の強み（Strength）</th><th>自社の弱み（Weakness）</th></tr></thead>`
+      ));
+    }
+
+    else if (sName === '09_経営課題洗出') {
+      const cards = [];
+      for (let r = 5; r <= 8; r++) {
+        const raw = val(ws,'C'+r).trim();
+        const cleaned = raw.replace(/^【[EFGH]：[^】]+】\s*$/, '');
+        cards.push({ title: `${val(ws,'A'+r).replace(/\n/g,' ')} × ${val(ws,'B'+r)}`, body: cleaned });
+      }
+      makePage('07 / CROSS SWOT', '経営課題洗出しシート（クロスSWOT分析）', buildDynamicCardGrid(cards, '（対策未記入）'));
+    }
+
+    else if (sName === '10_課題抽出') {
+      const activeRows = [];
+      for (let r = 5; r <= 14; r++) {
+        const kadai = val(ws,'B'+r).trim();
+        const ben = val(ws,'C'+r).trim();
+        if (kadai || ben) activeRows.push(r);
+      }
+      const list = activeRows.length > 0 ? activeRows : [5, 6, 7];
+      let trs = list.map((r, i) => `<tr>
+        <td class="ctr item-cell">${i + 1}</td>
+        <td class="item-cell">${fmtCell(val(ws,'B'+r))}</td>
+        <td>${fmtCell(val(ws,'C'+r))}</td>
+        <td class="num ctr">${fmtNum(val(ws,'D'+r))}</td>
+        <td class="num ctr">${fmtNum(val(ws,'E'+r))}</td>
+        <td class="num ctr">${fmtNum(val(ws,'F'+r))}</td>
+        <td class="num ctr">${fmtNum(val(ws,'G'+r))}</td>
+        <td class="num ctr">${fmtNum(val(ws,'H'+r))}</td>
+        <td class="num ctr">${fmtNum(val(ws,'I'+r))}</td>
+        <td class="num ctr" style="font-weight:700;background:var(--primary-tint);">${fmtNum(val(ws,'J'+r))}</td>
+        <td class="num ctr" style="font-weight:800;color:var(--accent);font-size:10pt;">${fmtNum(val(ws,'K'+r))}</td>
+      </tr>`).join('');
+      const fSize = list.length <= 5 ? 'font-size:9.2pt;line-height:1.55;' : 'font-size:8.4pt;';
+      makePage('08 / STRATEGIC ISSUES', '課題抽出・方針整理シート', `
+        <table class="exec fill-height" style="${fSize}">
+          <colgroup>
+            <col style="width:4%;"><col style="width:31%;"><col style="width:27%;">
+            <col style="width:4.5%;"><col style="width:4.5%;"><col style="width:4.5%;">
+            <col style="width:4.5%;"><col style="width:4.5%;"><col style="width:4.5%;">
+            <col style="width:5.5%;"><col style="width:5.5%;">
+          </colgroup>
+          <thead>
+            <tr><th>No</th><th>経営課題</th><th>克服すると何が得られるか</th><th>理念</th><th>ﾋﾞｼﾞｮﾝ</th><th>効果</th><th>実現</th><th>緊急</th><th>欲求</th><th>合計</th><th>順位</th></tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `);
+    }
+
+    else if (sName === '11_経営方針') {
+      const activeRows = [];
+      for (let r = 5; r <= 12; r++) {
+        if (val(ws,'B'+r).trim() || val(ws,'C'+r).trim()) activeRows.push(r);
+      }
+      const list = activeRows.length > 0 ? activeRows : [5, 6, 7];
+      let trs = list.map((r, i) => `<tr>
+        <td class="cat-cell">方針 ${i + 1}</td>
+        <td class="item-cell" style="font-size:10pt;color:var(--primary);">${fmtCell(val(ws,'B'+r))}</td>
+        <td style="white-space:pre-wrap;line-height:1.65;">${fmtCell(val(ws,'C'+r))}</td>
+      </tr>`).join('');
+      const fSize = list.length <= 4 ? 'font-size:9.6pt;' : 'font-size:8.8pt;';
+      makePage('09 / MANAGEMENT POLICY', '重点経営方針', `
+        <table class="exec fill-height" style="${fSize}">
+          <colgroup><col style="width:10%;"><col style="width:30%;"><col style="width:60%;"></colgroup>
+          <thead><tr><th>No.</th><th>経営方針</th><th>説明・具体的な取り組み</th></tr></thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `);
+    }
+
+    else if (sName === '12_変動損益計算書') {
+      const pBlocks = [
+        { startC: 2, title: val(ws,'B5') },
+        { startC: 5, title: val(ws,'E5') },
+        { startC: 8, title: val(ws,'H5') }
+      ];
+      const activeBlocks = pBlocks.filter(pb => {
+        const c1 = XLSX.utils.encode_col(pb.startC - 1);
+        return val(ws, c1 + '25').trim() !== '';
+      });
+      const useBlocks = activeBlocks.length > 0 ? activeBlocks : pBlocks;
+
+      let trs = '';
+      for (let r = 25; r <= 30; r++) {
+        const isSum = (r === 27 || r === 29 || r === 30);
+        let cells = '';
+        useBlocks.forEach(pb => {
+          const ca = XLSX.utils.encode_col(pb.startC - 1);
+          const cr = XLSX.utils.encode_col(pb.startC);
+          const cc = XLSX.utils.encode_col(pb.startC + 1);
+          cells += `<td class="num">${fmtNum(val(ws, ca+r))}</td><td class="num">${fmtNum(val(ws, cr+r))}</td><td class="num">${fmtNum(val(ws, cc+r))}</td>`;
+        });
+        trs += `<tr class="${isSum ? 'row-summary' : ''}"><td class="item-cell">${esc(val(ws,'A'+r))}</td>${cells}</tr>`;
+      }
+
+      const itemW = useBlocks.length === 1 ? 34 : (useBlocks.length === 2 ? 26 : 22);
+      const remW = (100 - itemW) / useBlocks.length;
+      let colsHTML = `<col style="width:${itemW}%;">`;
+      let h1 = `<th rowspan="2">項目</th>`, h2 = '';
+      useBlocks.forEach(pb => {
+        colsHTML += `<col style="width:${(remW*0.38).toFixed(1)}%;"><col style="width:${(remW*0.28).toFixed(1)}%;"><col style="width:${(remW*0.34).toFixed(1)}%;">`;
+        h1 += `<th colspan="3">${esc(pb.title)}</th>`;
+        h2 += `<th class="sub">金額</th><th class="sub">構成比</th><th class="sub">前年差</th>`;
+      });
+
+      makePage('10 / VARIABLE P&L', '過去3期 変動損益計算書（単位：千円）', `
+        <table class="exec fill-height" style="font-size:9.2pt;">
+          <colgroup>${colsHTML}</colgroup>
+          <thead><tr>${h1}</tr><tr>${h2}</tr></thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `);
+    }
+
+    else if (sName === '13_利益計画検討表①') {
+      const simCols = ['C','D','E','F','G','H'].filter(col => {
+        return val(ws, col+'5').trim() !== '' || val(ws, col+'6').trim() !== '' || val(ws, col+'7').trim() !== '';
+      });
+      const showCols = ['B', ...(simCols.length > 0 ? simCols : ['C','D','E'])];
+      const itemW = 30;
+      const colW = ((100 - itemW) / showCols.length).toFixed(2);
+      const colsHTML = `<colgroup><col style="width:${itemW}%;">${showCols.map(() => `<col style="width:${colW}%;">`).join('')}</colgroup>`;
+      const thHTML = `<thead><tr><th>項目</th>${showCols.map(c => `<th>${esc(val(ws, c+'4'))}</th>`).join('')}</tr></thead>`;
+
+      let trs = '';
+      for (let r = 5; r <= 20; r++) {
+        if (r === 8) continue;
+        const cls = (r === 19 || r === 20) ? 'row-summary' : (r === 9 || r === 11 || r === 14 ? 'row-bold' : '');
+        trs += `<tr class="${cls}"><td class="item-cell">${esc(val(ws,'A'+r))}</td>${showCols.map(c => `<td class="num">${fmtNum(val(ws, c+r))}</td>`).join('')}</tr>`;
+      }
+      makePage('11 / PROFIT SIMULATION', '利益・資金計画検討表①（単位：千円）', `
+        <table class="exec fill-height" style="font-size:8.2pt;line-height:1.28;">${colsHTML}${thHTML}<tbody>${trs}</tbody></table>
+      `);
+    }
+
+    else if (sName === '14_利益資金計画検討表②') {
+      let trs = '';
+      for (let r = 6; r <= 23; r++) {
+        const cls = (r === 6 || r === 17) ? 'row-summary' : (r === 8 || r === 12 ? 'row-bold' : '');
+        trs += `<tr class="${cls}">
+          <td class="item-cell">${esc(val(ws,'A'+r))}</td>
+          <td class="num">${fmtNum(val(ws,'B'+r))}</td><td class="num">${fmtNum(val(ws,'C'+r))}</td>
+          <td class="num">${fmtNum(val(ws,'D'+r))}</td><td class="num">${fmtNum(val(ws,'E'+r))}</td>
+          <td class="num">${fmtNum(val(ws,'F'+r))}</td><td class="num">${fmtNum(val(ws,'G'+r))}</td>
+          <td class="num">${fmtNum(val(ws,'H'+r))}</td><td class="num">${fmtNum(val(ws,'I'+r))}</td>
+        </tr>`;
+      }
+      makePage('12 / MID-TERM FINANCIAL PLAN', '中期3ヵ年 利益・資金計画（単位：千円）', `
+        <table class="exec fill-height" style="font-size:7.6pt;line-height:1.18;">
+          <colgroup>
+            <col style="width:28%;">
+            <col style="width:11%;"><col style="width:7%;">
+            <col style="width:11%;"><col style="width:7%;">
+            <col style="width:11%;"><col style="width:7%;">
+            <col style="width:11%;"><col style="width:7%;">
+          </colgroup>
+          <thead>
+            <tr><th rowspan="2">項目</th><th colspan="2">${esc(val(ws,'B4'))}</th><th colspan="2">${esc(val(ws,'D4'))}</th><th colspan="2">${esc(val(ws,'F4'))}</th><th colspan="2">${esc(val(ws,'H4'))}</th></tr>
+            <tr><th class="sub">金額</th><th class="sub">比率</th><th class="sub">金額</th><th class="sub">比率</th><th class="sub">金額</th><th class="sub">比率</th><th class="sub">金額</th><th class="sub">比率</th></tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `);
+    }
+
+    else if (sName === '15_目標設定') {
+      const activeCols = ['B','C','D'].filter(c => {
+        return val(ws, c+'5').trim() !== '' || val(ws, c+'6').trim() !== '' || val(ws, c+'7').trim() !== '' || val(ws, c+'8').trim() !== '';
+      });
+      const cols = activeCols.length > 0 ? activeCols : ['B','C','D'];
+      const labelW = 19;
+      const dataW = ((100 - labelW) / cols.length).toFixed(2);
+      const colgroup = `<colgroup><col style="width:${labelW}%;">${cols.map(() => `<col style="width:${dataW}%;">`).join('')}</colgroup>`;
+
+      makePage('13 / 3-YEAR TARGETS', '3ヵ年 目標設定シート', `
+        <table class="exec fill-height">
+          ${colgroup}
+          <thead><tr><th>目標区分</th>${cols.map(c => `<th>${esc(val(ws, c+'4'))}</th>`).join('')}</tr></thead>
+          <tbody>
+            <tr style="height:12%;">
+              <td class="cat-cell">目標 売上高</td>
+              ${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'5'))}</span><span class="kpi-unit">千円</span></td>`).join('')}
+            </tr>
+            <tr style="height:12%;">
+              <td class="cat-cell">目標 経常利益</td>
+              ${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'6'))}</span><span class="kpi-unit">千円</span></td>`).join('')}
+            </tr>
+            <tr style="height:12%;">
+              <td class="cat-cell">目標 社員数</td>
+              ${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'7'))}</span><span class="kpi-unit">名</span></td>`).join('')}
+            </tr>
+            <tr style="height:64%;">
+              <td class="cat-cell">定性目標<br><span style="font-size:7.5pt;font-weight:400;color:var(--ink-sub);">（目指す組織・事業状態）</span></td>
+              ${cols.map(c => `<td style="vertical-align:top;white-space:pre-wrap;font-size:9.5pt;line-height:1.7;padding:10px 14px;">${fmtCell(val(ws, c+'8'))}</td>`).join('')}
+            </tr>
+          </tbody>
+        </table>
+      `);
+    }
+
+    else if (sName === '16_行動計画') {
+      let mh = '';
+      for (let m = 1; m <= 12; m++) {
+        const colL = XLSX.utils.encode_col(4 + m);
+        const rawH = val(ws, colL + '5');
+        const match = rawH.match(/\(([^)]+)\)/);
+        const label = (match && match[1].trim() !== '月') ? match[1].trim() : `${m}月`;
+        mh += `<th class="sub" style="padding:3px 1px;font-size:7.5pt;">${esc(label)}</th>`;
+      }
+      const activeRows = [];
+      for (let r = 6; r <= 21; r++) {
+        if (val(ws,'B'+r).trim() || val(ws,'C'+r).trim()) activeRows.push(r);
+      }
+      const list = activeRows.length > 0 ? activeRows : [6, 7, 8, 9, 10];
+      let trs = list.map((r, i) => {
+        let mc = '';
+        for (let c = 6; c <= 17; c++) {
+          const colL = XLSX.utils.encode_col(c-1);
+          mc += `<td class="ctr" style="padding:2px;">${ganttMark(val(ws, colL+r))}</td>`;
+        }
+        return `<tr>
+          <td class="ctr item-cell">${i + 1}</td>
+          <td class="item-cell">${fmtCell(val(ws,'B'+r))}</td>
+          <td>${fmtCell(val(ws,'C'+r))}</td>
+          <td class="ctr">${fmtCell(val(ws,'D'+r))}</td>
+          <td class="ctr">${fmtCell(val(ws,'E'+r))}</td>
+          ${mc}
+        </tr>`;
+      }).join('');
+      const fSize = list.length <= 7 ? 'font-size:8.6pt;line-height:1.5;' : 'font-size:8pt;';
+      makePage('14 / ACTION PLAN', '１ヵ年 行動プランシート', `
+        <table class="exec fill-height" style="${fSize}">
+          <colgroup>
+            <col style="width:3.5%;"><col style="width:17.5%;"><col style="width:31%;"><col style="width:7%;"><col style="width:7%;">
+            <col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;">
+            <col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;"><col style="width:2.83%;">
+          </colgroup>
+          <thead>
+            <tr><th rowspan="2">No</th><th rowspan="2">年間目標</th><th rowspan="2">具体的な行動項目</th><th rowspan="2">責任者</th><th rowspan="2">担当者</th><th colspan="6">前期</th><th colspan="6">後期</th></tr>
+            <tr>${mh}</tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `);
+    }
+
+    else if (sName === '17_売上計画') {
+      const activeRows = [];
+      for (let r = 6; r <= 21; r++) {
+        if (val(ws,'A'+r).trim() || val(ws,'C'+r).trim() || val(ws,'F'+r).trim() || val(ws,'I'+r).trim()) {
+          activeRows.push(r);
+        }
+      }
+      const list = activeRows.length > 0 ? activeRows : [6, 7, 8];
+      let trs = list.map(r => `<tr>
+        <td class="item-cell">${fmtCell(val(ws,'A'+r))}</td>
+        <td>${fmtCell(val(ws,'B'+r))}</td>
+        <td class="num">${fmtNum(val(ws,'C'+r))}</td><td class="num">${fmtNum(val(ws,'D'+r))}</td><td class="num">${fmtNum(val(ws,'E'+r))}</td>
+        <td class="num">${fmtNum(val(ws,'F'+r))}</td><td class="num">${fmtNum(val(ws,'G'+r))}</td><td class="num">${fmtNum(val(ws,'H'+r))}</td>
+        <td class="num">${fmtNum(val(ws,'I'+r))}</td><td class="num">${fmtNum(val(ws,'J'+r))}</td><td class="num">${fmtNum(val(ws,'K'+r))}</td>
+      </tr>`).join('');
+      trs += `<tr class="row-summary">
+        <td class="item-cell">合　計</td><td></td>
+        <td class="num">${fmtNum(val(ws,'C22'))}</td><td class="num">${fmtNum(val(ws,'D22'))}</td><td class="num">${fmtNum(val(ws,'E22'))}</td>
+        <td class="num">${fmtNum(val(ws,'F22'))}</td><td class="num">${fmtNum(val(ws,'G22'))}</td><td class="num">${fmtNum(val(ws,'H22'))}</td>
+        <td class="num">${fmtNum(val(ws,'I22'))}</td><td class="num">${fmtNum(val(ws,'J22'))}</td><td class="num">${fmtNum(val(ws,'K22'))}</td>
+      </tr>`;
+      const fSize = list.length <= 6 ? 'font-size:9pt;line-height:1.55;' : 'font-size:8.3pt;';
+      makePage('15 / SALES PLAN', '中期3ヵ年 売上計画（単位：千円）', `
+        <table class="exec fill-height" style="${fSize}">
+          <colgroup>
+            <col style="width:19%;"><col style="width:13.5%;">
+            <col style="width:8%;"><col style="width:6.5%;"><col style="width:8%;">
+            <col style="width:8%;"><col style="width:6.5%;"><col style="width:8%;">
+            <col style="width:8%;"><col style="width:6.5%;"><col style="width:8%;">
+          </colgroup>
+          <thead>
+            <tr><th rowspan="2">得意先・事業</th><th rowspan="2">区分・備考</th><th colspan="3">${esc(val(ws,'C4'))}</th><th colspan="3">${esc(val(ws,'F4'))}</th><th colspan="3">${esc(val(ws,'I4'))}</th></tr>
+            <tr><th class="sub">目標売上</th><th class="sub">利益率</th><th class="sub">限界利益</th><th class="sub">目標売上</th><th class="sub">利益率</th><th class="sub">限界利益</th><th class="sub">目標売上</th><th class="sub">利益率</th><th class="sub">限界利益</th></tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      `);
+    }
+  });
+}
+</script>
+</body>
+</html>
