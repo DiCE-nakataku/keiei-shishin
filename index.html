@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>経営指針書 自動レイアウト＆A4横PDF出力ツール v9</title>
+<title>経営指針書 自動レイアウト＆A4横PDF出力ツール v10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
@@ -925,22 +925,77 @@ if (typeof XLSX === 'undefined') {
   .badge-both { background: var(--both-bg); color: var(--both-fg); }
   .badge-neutral { background: #f1f5f9; color: #475569; }
 
+  .gantt-legend {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 6px;
+    padding: 4px 10px;
+    background: var(--primary-tint);
+    border: 0.5pt solid var(--line);
+    border-radius: 4px;
+    font-size: 8pt;
+    color: var(--ink);
+  }
+  .gantt-legend-title {
+    font-weight: 700;
+    color: var(--primary);
+    margin-right: 4px;
+  }
+  .gantt-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
   .gantt-dot {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    line-height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: var(--primary);
     color: #fff;
     font-size: 7.5pt;
     font-weight: 700;
-    text-align: center;
+    line-height: 1;
+  }
+  .gantt-star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .gantt-tri {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    background: #e2e8f0;
+    color: var(--primary);
+    font-size: 7.5pt;
+    font-weight: 800;
+    line-height: 1;
   }
   .gantt-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: var(--accent);
     font-weight: 800;
     font-size: 9.5pt;
+    line-height: 1;
   }
   .kpi-hero-val {
     font-family: "Inter", sans-serif;
@@ -970,7 +1025,7 @@ if (typeof XLSX === 'undefined') {
 <body>
 
 <div class="toolbar">
-  <h1>経営指針書 A4横レイアウト出力ツール v7（表紙ロゴ設置・ビジョン前面/背景切替対応）</h1>
+  <h1>経営指針書 A4横レイアウト出力ツール v10（数式自動評価・行動計画凡例対応）</h1>
   <label class="file-label">
     📂 入力済みExcel(.xlsx)を選択
     <input type="file" id="excelInput" accept=".xlsx,.xls" onclick="this.value=null;" />
@@ -1299,10 +1354,353 @@ document.getElementById('excelInput').addEventListener('change', function(e) {
   reader.readAsArrayBuffer(file);
 });
 
+// =========================================================
+// Built-in Excel Formula Evaluator (Ensures cached-less .xlsx files calculate 100%)
+// =========================================================
+let activeWorkbook = null;
+const evalCache = {};
+const evalVisiting = new Set();
+
+function colToIdx(colStr) {
+  let n = 0;
+  for (let i = 0; i < colStr.length; i++) {
+    n = n * 26 + (colStr.charCodeAt(i) - 64);
+  }
+  return n - 1;
+}
+
+function idxToCol(idx) {
+  let s = '';
+  let n = idx + 1;
+  while (n > 0) {
+    let rem = (n - 1) % 26;
+    s = String.fromCharCode(65 + rem) + s;
+    n = Math.floor((n - 1) / 26);
+  }
+  return s;
+}
+
+function parseRange(rangeStr) {
+  const parts = rangeStr.split(':');
+  const m1 = parts[0].replace(/\$/g, '').match(/^([A-Z]+)(\d+)$/);
+  const m2 = parts[1].replace(/\$/g, '').match(/^([A-Z]+)(\d+)$/);
+  if (!m1 || !m2) return [];
+  const c1 = colToIdx(m1[1]), r1 = parseInt(m1[2], 10);
+  const c2 = colToIdx(m2[1]), r2 = parseInt(m2[2], 10);
+  const addrs = [];
+  for (let r = Math.min(r1, r2); r <= Math.max(r1, r2); r++) {
+    for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++) {
+      addrs.push(idxToCol(c) + r);
+    }
+  }
+  return addrs;
+}
+
+function splitArgs(str) {
+  const args = [];
+  let depth = 0, inStr = false, cur = '';
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    if (ch === '"') {
+      inStr = !inStr;
+      cur += ch;
+    } else if (!inStr) {
+      if (ch === '(') { depth++; cur += ch; }
+      else if (ch === ')') { depth--; cur += ch; }
+      else if (ch === ',' && depth === 0) { args.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    } else {
+      cur += ch;
+    }
+  }
+  if (cur.trim() !== '') args.push(cur.trim());
+  return args;
+}
+
+function toNum(v) {
+  if (v === '' || v === null || v === undefined) return 0;
+  if (typeof v === 'number') return isNaN(v) ? 0 : v;
+  const n = parseFloat(String(v).replace(/,/g, '').replace(/%$/, ''));
+  return isNaN(n) ? 0 : n;
+}
+
+function evalRawCell(sheetName, addr) {
+  const cleanAddr = addr.replace(/\$/g, '');
+  const key = sheetName + '!' + cleanAddr;
+  if (key in evalCache) return evalCache[key];
+  if (evalVisiting.has(key)) return 0;
+
+  const ws = activeWorkbook && activeWorkbook.Sheets[sheetName];
+  if (!ws || !ws[cleanAddr]) {
+    evalCache[key] = '';
+    return '';
+  }
+  const cell = ws[cleanAddr];
+  if (cell.v !== undefined && cell.v !== null && cell.v !== '' && (!cell.f || typeof cell.v === 'number')) {
+    evalCache[key] = cell.v;
+    return cell.v;
+  }
+  if (!cell.f) {
+    const res = cell.v !== undefined ? cell.v : '';
+    evalCache[key] = res;
+    return res;
+  }
+
+  evalVisiting.add(key);
+  let res = '';
+  try {
+    res = evalFormulaExpr(cell.f, sheetName);
+  } catch (e) {
+    res = cell.v !== undefined ? cell.v : '';
+  }
+  evalVisiting.delete(key);
+  evalCache[key] = res;
+  return res;
+}
+
+function evalFormulaExpr(expr, sheetName) {
+  expr = expr.trim();
+  if (expr.startsWith('=')) expr = expr.slice(1).trim();
+
+  // Strip outer matching parentheses
+  while (expr.startsWith('(') && expr.endsWith(')')) {
+    let depth = 0, inStr = false, balanced = true;
+    for (let i = 0; i < expr.length; i++) {
+      const ch = expr[i];
+      if (ch === '"') inStr = !inStr;
+      else if (!inStr) {
+        if (ch === '(') depth++;
+        else if (ch === ')') {
+          depth--;
+          if (depth === 0 && i < expr.length - 1) { balanced = false; break; }
+        }
+      }
+    }
+    if (balanced) expr = expr.slice(1, -1).trim();
+    else break;
+  }
+
+  // String literal
+  if (expr.startsWith('"') && expr.endsWith('"') && expr.indexOf('"', 1) === expr.length - 1) {
+    return expr.slice(1, -1);
+  }
+  // Numeric literal
+  if (/^-?\d+(\.\d+)?$/.test(expr)) {
+    return parseFloat(expr);
+  }
+
+  // String concatenation (&) at top level
+  let depth = 0, inStr = false;
+  for (let i = 0; i < expr.length; i++) {
+    const ch = expr[i];
+    if (ch === '"') inStr = !inStr;
+    else if (!inStr) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (ch === '&' && depth === 0) {
+        const left = evalFormulaExpr(expr.slice(0, i), sheetName);
+        const right = evalFormulaExpr(expr.slice(i + 1), sheetName);
+        return String(left ?? '') + String(right ?? '');
+      }
+    }
+  }
+
+  // Function calls: FUNC(...)
+  const funcMatch = expr.match(/^([A-Z0-9_]+)\((.*)\)$/s);
+  if (funcMatch) {
+    // Verify the opening '(' matches the very last ')'
+    let d = 0, ins = false, isWholeFunc = true;
+    const openIdx = funcMatch[1].length;
+    for (let i = openIdx; i < expr.length; i++) {
+      const ch = expr[i];
+      if (ch === '"') ins = !ins;
+      else if (!ins) {
+        if (ch === '(') d++;
+        else if (ch === ')') {
+          d--;
+          if (d === 0 && i < expr.length - 1) { isWholeFunc = false; break; }
+        }
+      }
+    }
+    if (isWholeFunc) {
+      const fn = funcMatch[1];
+      const args = splitArgs(funcMatch[2]);
+
+      if (fn === 'IF') {
+        const cond = evalCondition(args[0], sheetName);
+        return cond ? evalFormulaExpr(args[1] || '""', sheetName) : evalFormulaExpr(args[2] || '""', sheetName);
+      }
+      if (fn === 'IFERROR') {
+        const v = evalFormulaExpr(args[0], sheetName);
+        if (v === '#DIV/0!' || v === '#VALUE!' || v === '#ERR' || (typeof v === 'number' && (isNaN(v) || !isFinite(v)))) {
+          return evalFormulaExpr(args[1] || '""', sheetName);
+        }
+        return v;
+      }
+      if (fn === 'AND') {
+        return args.every(a => Boolean(evalCondition(a, sheetName)));
+      }
+      if (fn === 'OR') {
+        return args.some(a => Boolean(evalCondition(a, sheetName)));
+      }
+      if (fn === 'ABS') {
+        return Math.abs(toNum(evalFormulaExpr(args[0], sheetName)));
+      }
+      if (fn === 'SUM') {
+        let sum = 0;
+        args.forEach(a => {
+          if (a.includes(':')) {
+            parseRange(a).forEach(ad => {
+              const v = evalRawCell(sheetName, ad);
+              if (typeof v === 'number') sum += v;
+            });
+          } else {
+            sum += toNum(evalFormulaExpr(a, sheetName));
+          }
+        });
+        return sum;
+      }
+      if (fn === 'COUNT') {
+        let cnt = 0;
+        args.forEach(a => {
+          if (a.includes(':')) {
+            parseRange(a).forEach(ad => {
+              const v = evalRawCell(sheetName, ad);
+              if (typeof v === 'number' && !isNaN(v)) cnt++;
+            });
+          } else {
+            const v = evalFormulaExpr(a, sheetName);
+            if (typeof v === 'number' && !isNaN(v)) cnt++;
+          }
+        });
+        return cnt;
+      }
+      if (fn === 'RANK') {
+        const target = toNum(evalFormulaExpr(args[0], sheetName));
+        const nums = [];
+        if (args[1] && args[1].includes(':')) {
+          parseRange(args[1]).forEach(ad => {
+            const v = evalRawCell(sheetName, ad);
+            if (typeof v === 'number' && !isNaN(v)) nums.push(v);
+          });
+        }
+        nums.sort((a, b) => b - a);
+        const idx = nums.indexOf(target);
+        return idx >= 0 ? idx + 1 : '';
+      }
+    }
+  }
+
+  // Binary arithmetic (+, -, *, /) at top level (lowest precedence first: +/- then */)
+  for (const ops of [['+', '-'], ['*', '/']]) {
+    depth = 0; inStr = false;
+    for (let i = expr.length - 1; i >= 1; i--) {
+      const ch = expr[i];
+      if (ch === '"') inStr = !inStr;
+      else if (!inStr) {
+        if (ch === ')') depth++;
+        else if (ch === '(') depth--;
+        else if (depth === 0 && ops.includes(ch)) {
+          const prev = expr.slice(0, i).trim();
+          if (prev === '' || ['+', '-', '*', '/', '(', ',', '=', '<', '>'].includes(prev.slice(-1))) continue;
+          const lv = evalFormulaExpr(prev, sheetName);
+          const rv = evalFormulaExpr(expr.slice(i + 1), sheetName);
+          if (lv === '#DIV/0!' || rv === '#DIV/0!') return '#DIV/0!';
+          const ln = toNum(lv), rn = toNum(rv);
+          if (ch === '+') return ln + rn;
+          if (ch === '-') return ln - rn;
+          if (ch === '*') return ln * rn;
+          if (ch === '/') return rn === 0 ? '#DIV/0!' : ln / rn;
+        }
+      }
+    }
+  }
+
+  // Cross-sheet reference: 'SheetName'!A1 or SheetName!A1
+  const crossMatch = expr.match(/^(?:'([^']+)'|([^!]+))!(\$?[A-Z]+\$?\d+)$/);
+  if (crossMatch) {
+    const targetSheet = crossMatch[1] || crossMatch[2];
+    const targetAddr = crossMatch[3];
+    return evalRawCell(targetSheet, targetAddr);
+  }
+
+  // Same-sheet cell reference: A1 or $B$9
+  if (/^\$?[A-Z]+\$?\d+$/.test(expr)) {
+    return evalRawCell(sheetName, expr);
+  }
+
+  return expr;
+}
+
+function evalCondition(condStr, sheetName) {
+  condStr = condStr.trim();
+  const funcCheck = condStr.match(/^(AND|OR)\(/);
+  if (funcCheck) {
+    return Boolean(evalFormulaExpr(condStr, sheetName));
+  }
+  let depth = 0, inStr = false;
+  for (let i = 0; i < condStr.length; i++) {
+    const ch = condStr[i];
+    if (ch === '"') inStr = !inStr;
+    else if (!inStr) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      else if (depth === 0) {
+        const two = condStr.slice(i, i + 2);
+        if (['<>', '<=', '>='].includes(two)) {
+          const l = evalFormulaExpr(condStr.slice(0, i), sheetName);
+          const r = evalFormulaExpr(condStr.slice(i + 2), sheetName);
+          if (two === '<>') return l !== r;
+          if (two === '<=') return toNum(l) <= toNum(r);
+          if (two === '>=') return toNum(l) >= toNum(r);
+        }
+        if (['=', '<', '>'].includes(ch)) {
+          const l = evalFormulaExpr(condStr.slice(0, i), sheetName);
+          const r = evalFormulaExpr(condStr.slice(i + 1), sheetName);
+          if (ch === '=') return l === r;
+          if (ch === '<') return toNum(l) < toNum(r);
+          if (ch === '>') return toNum(l) > toNum(r);
+        }
+      }
+    }
+  }
+  return Boolean(evalFormulaExpr(condStr, sheetName));
+}
+
+function formatExcelValue(rawVal, fmt) {
+  if (rawVal === '' || rawVal === null || rawVal === undefined) return '';
+  if (rawVal === '#DIV/0!' || rawVal === '#VALUE!' || rawVal === '#ERR') return '';
+  if (typeof rawVal === 'number') {
+    if (isNaN(rawVal) || !isFinite(rawVal)) return '';
+    if (fmt && fmt.includes('%')) {
+      return (rawVal * 100).toFixed(1) + '%';
+    }
+    return Math.round(rawVal).toLocaleString('ja-JP');
+  }
+  return String(rawVal);
+}
+
 function val(ws, addr) {
   if (!ws || !ws[addr]) return '';
-  return (ws[addr].w !== undefined && ws[addr].w !== '') ? ws[addr].w : (ws[addr].v !== undefined ? String(ws[addr].v) : '');
+  const cell = ws[addr];
+  if (cell.w !== undefined && cell.w !== '') return cell.w;
+  // Find sheet name for formula evaluation
+  let sName = '';
+  if (activeWorkbook) {
+    for (const name of activeWorkbook.SheetNames) {
+      if (activeWorkbook.Sheets[name] === ws) { sName = name; break; }
+    }
+  }
+  if (cell.f && sName) {
+    const evaluated = evalRawCell(sName, addr);
+    return formatExcelValue(evaluated, cell.z || '');
+  }
+  if (cell.v !== undefined && cell.v !== null) {
+    return formatExcelValue(cell.v, cell.z || '');
+  }
+  return '';
 }
+
 function esc(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
@@ -1327,7 +1725,8 @@ function ganttMark(s) {
   const t = String(s || '').trim();
   if (!t) return '';
   if (t === '●' || t === '•') return `<span class="gantt-dot">●</span>`;
-  if (t.includes('★')) return `<span class="gantt-dot" style="background:var(--accent);">★</span>`;
+  if (t.startsWith('★') || t.includes('完了')) return `<span class="gantt-star">★</span>`;
+  if (t.startsWith('△') || t.includes('継続')) return `<span class="gantt-tri">△</span>`;
   if (t === '→') return `<span class="gantt-arrow">→</span>`;
   return `<span style="font-weight:700;font-size:8pt;color:var(--primary);">${esc(t)}</span>`;
 }
@@ -1367,6 +1766,10 @@ function buildDynamicCardGrid(cards, emptyFallbackText = '（未入力）') {
 }
 
 function renderBook(wb) {
+  activeWorkbook = wb;
+  for (const k in evalCache) delete evalCache[k];
+  evalVisiting.clear();
+
   const container = document.getElementById('pagesContainer');
   container.innerHTML = '';
   document.getElementById('welcomeBox').style.display = 'none';
@@ -1782,7 +2185,17 @@ function renderBook(wb) {
         </tr>`;
       }).join('');
       const fSize = list.length <= 7 ? 'font-size:8.6pt;line-height:1.5;' : 'font-size:8pt;';
+      const legendHTML = `
+        <div class="gantt-legend">
+          <span class="gantt-legend-title">【記号索引】</span>
+          <span class="gantt-legend-item"><span class="gantt-dot">●</span> 計画・実施</span>
+          <span class="gantt-legend-item"><span class="gantt-arrow">→</span> 進行中</span>
+          <span class="gantt-legend-item"><span class="gantt-star">★</span> 完了</span>
+          <span class="gantt-legend-item"><span class="gantt-tri">△</span> 継続</span>
+        </div>
+      `;
       makePage('14 / ACTION PLAN', '１ヵ年 行動プランシート', `
+        ${legendHTML}
         <table class="exec fill-height" style="${fSize}">
           <colgroup>
             <col style="width:3.5%;"><col style="width:17.5%;"><col style="width:31%;"><col style="width:7%;"><col style="width:7%;">
