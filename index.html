@@ -748,6 +748,28 @@
     padding: 28px 0 56px;
     gap: 28px;
   }
+  @media screen and (max-width: 1140px) {
+    .pages-wrapper { padding: 12px 8px 28px; gap: 12px; }
+    .page-slot {
+      position: relative;
+      width: min(100%, 297mm);
+      aspect-ratio: 297 / 210;
+      overflow: hidden;
+      overflow: clip;
+    }
+    .page-slot > .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: scale(var(--preview-scale, 1));
+      transform-origin: top left;
+    }
+    body.has-pages .app-header { position: static; }
+    .theme-select { max-width: 100%; }
+  }
+  .fixed-pdf-status { flex-basis: 100%; font-size: 12.5px; color: var(--ink-sub); }
+  .btn-print[hidden], .fixed-pdf-status:empty { display: none; }
+  .pdf-ready { font-size: 13px; font-weight: 700; color: var(--primary); }
   .page {
     width: 297mm;
     height: 210mm;
@@ -759,12 +781,8 @@
     justify-content: space-between;
     position: relative;
     overflow: hidden;
-    page-break-after: always;
-    break-after: page;
-  }
-  .page:last-child {
-    page-break-after: auto;
-    break-after: auto;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   /* Header & Footer */
@@ -1483,6 +1501,8 @@
   table.exec tbody tr:nth-child(even) {
     background: #fafbfd;
   }
+  .fixed-pdf-capture table.exec tbody tr:nth-child(even) { background: transparent; }
+  .fixed-pdf-capture table.exec tbody tr:nth-child(even) > td { background: #fafbfd; }
   .cat-cell {
     background: var(--primary-tint) !important;
     color: var(--primary);
@@ -1625,10 +1645,12 @@
     margin: 0;
   }
   @media print {
-    body { background: #fff; }
+    html, body { background: #fff; }
     .app-header, .landing-view, .no-print, .floating-ctrl-bar { display: none !important; }
-    .pages-wrapper { padding: 0; gap: 0; }
-    .page { box-shadow: none; margin: 0; }
+    .pages-wrapper { display: block; padding: 0; }
+    .page-slot { break-inside: avoid; page-break-inside: avoid; }
+    .page-slot + .page-slot { break-before: page; page-break-before: always; }
+    .page { position: relative; transform: none; box-shadow: none; margin: 0; }
     body.print-blocked .pages-wrapper { display: none !important; }
     body.print-blocked #printBlockedNotice { display: block !important; padding: 35mm 25mm; font: 18pt sans-serif; color: #900; }
   }
@@ -1659,8 +1681,11 @@
         <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
       </select>
       <button class="btn-print" id="printButton" onclick="safePrint()" disabled>🖨️ A4横で印刷 / PDF保存</button>
+      <button class="btn-print" id="fixedPdfButton" type="button" onclick="createFixedPdf()" disabled>A4横PDFを作成</button>
+      <a class="pdf-ready" id="fixedPdfLink" target="_blank" rel="noopener" hidden>PDFを開く</a>
       <button class="btn-back-top" onclick="resetToTop()">トップへ戻る</button>
       <span class="status" id="statusText">Excelファイルを選択してください</span>
+      <span class="fixed-pdf-status" id="fixedPdfStatus" role="status" aria-live="polite"></span>
     </div>
   </div>
 </header>
@@ -1776,7 +1801,7 @@
                 <div class="faq-body-content">
                   <ul>
                     <li><strong>PC（Chrome / Edge）</strong>：「🖨️ A4横で印刷 / PDF保存」を押し、送信先で「PDFに保存」、詳細設定の<strong>「背景のグラフィック」にチェック</strong>を入れて保存してください。</li>
-                    <li><strong>iPad / iPhone（Safari）</strong>：「🖨️ A4横で印刷 / PDF保存」を押すと印刷プレビューが開きます。プレビュー画面を2本指でピンチアウト（拡大）するとPDF表示に切り替わり、右上の共有ボタンから「ファイルに保存」できます。</li>
+                    <li><strong>iPad / iPhone（Safari）</strong>：「A4横PDFを作成」を押し、完了したら「PDFを開く」を押してください。PDF画面の共有メニューから「ファイルに保存」または「プリント」を選べます。</li>
                   </ul>
                 </div>
               </div>
@@ -1819,7 +1844,7 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.4 · 更新日 2026-11-18</span></span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.5 · 更新日 2026-11-18</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
   </footer>
 </main>
@@ -1830,8 +1855,143 @@
 
 <script>
 const formulaEngine = window.FormulaEngine;
+const previewContainer = document.getElementById('pagesContainer');
+const nativePrintButton = document.getElementById('printButton');
+const fixedPdfButton = document.getElementById('fixedPdfButton');
+const fixedPdfLink = document.getElementById('fixedPdfLink');
+const fixedPdfStatus = document.getElementById('fixedPdfStatus');
+const iosDevice = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+nativePrintButton.hidden = iosDevice;
+
+function fitPreviewPages() {
+  const slot = previewContainer.firstElementChild;
+  if (!slot) return;
+  const width = slot.firstElementChild.offsetWidth;
+  if (width) previewContainer.style.setProperty('--preview-scale', Math.min(1, slot.clientWidth / width));
+}
+if (typeof ResizeObserver === 'function') {
+  new ResizeObserver(fitPreviewPages).observe(previewContainer);
+} else {
+  window.addEventListener('resize', fitPreviewPages);
+}
+
+let pdfRevision = 0;
+let creatingFixedPdf = false;
+let fixedPdfUrl;
+let pdfLibraries;
+
+function invalidateFixedPdf() {
+  pdfRevision++;
+  if (fixedPdfUrl) URL.revokeObjectURL(fixedPdfUrl);
+  fixedPdfUrl = undefined;
+  fixedPdfLink.removeAttribute('href');
+  fixedPdfLink.hidden = true;
+  fixedPdfStatus.textContent = '';
+}
+
+function canExportPages() {
+  return previewContainer.childElementCount > 0 && formulaEngine.canPrint({
+    hasWorkbook: Boolean(activeWorkbook),
+    calculating: workbookCalculating,
+    hasErrors: workbookHasErrors,
+  });
+}
+
+function updatePrintControls() {
+  const allowed = canExportPages();
+  nativePrintButton.disabled = !allowed;
+  fixedPdfButton.disabled = !allowed || creatingFixedPdf;
+}
+
+function loadPdfLibrary(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = () => { script.remove(); reject(new Error('PDF用のファイルを読み込めませんでした。')); };
+    document.head.append(script);
+  });
+}
+
+function loadPdfLibraries() {
+  if (!pdfLibraries) pdfLibraries = Promise.all([
+    window.html2canvas || loadPdfLibrary('./vendor/html2canvas-1.4.1.min.js'),
+    window.PDFLib || loadPdfLibrary('./vendor/pdf-lib-1.17.1.min.js'),
+  ]).catch(error => { pdfLibraries = undefined; throw error; });
+  return pdfLibraries;
+}
+
+function preparePdfPage(clone, sheet) {
+  sheet.classList.add('fixed-pdf-capture');
+  sheet.parentElement.style.overflow = 'visible';
+  sheet.style.transform = 'none';
+  sheet.style.boxShadow = 'none';
+  const view = clone.defaultView;
+  for (const image of sheet.querySelectorAll('img')) {
+    const { objectFit, width, height } = view.getComputedStyle(image);
+    if (objectFit !== 'contain' && objectFit !== 'cover') continue;
+    // The PDF renderer supports background sizing but does not implement object-fit.
+    image.style.width = width;
+    image.style.height = height;
+    image.style.backgroundImage = `url("${image.src}")`;
+    image.style.backgroundSize = objectFit;
+    image.style.backgroundPosition = 'center';
+    image.style.backgroundRepeat = 'no-repeat';
+    image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  }
+}
+
+async function createFixedPdf() {
+  if (creatingFixedPdf || !canExportPages()) return;
+  invalidateFixedPdf();
+  const revision = pdfRevision;
+  creatingFixedPdf = true;
+  updatePrintControls();
+  fixedPdfStatus.textContent = 'PDFを準備しています…';
+  try {
+    await loadPdfLibraries();
+    if (document.fonts) await document.fonts.ready;
+    const sheets = [...previewContainer.querySelectorAll('.page-slot > .page')];
+    const pdf = await window.PDFLib.PDFDocument.create();
+    pdf.setTitle(document.title);
+    const [height, width] = window.PDFLib.PageSizes.A4;
+    for (const [index, sheet] of sheets.entries()) {
+      if (revision !== pdfRevision) return;
+      fixedPdfStatus.textContent = `PDFを作成しています… ${index + 1} / ${sheets.length}`;
+      const canvas = await window.html2canvas(sheet, {
+        scale: 1.75, scrollX: 0, scrollY: 0, windowWidth: 1200, windowHeight: 900,
+        logging: false,
+        ignoreElements: el => el.classList?.contains('no-print') ||
+          (el.classList?.contains('page-slot') && el !== sheet.parentElement),
+        onclone: preparePdfPage,
+      });
+      try {
+        if (revision !== pdfRevision) return;
+        const image = await pdf.embedJpg(canvas.toDataURL('image/jpeg', 0.94));
+        pdf.addPage([width, height]).drawImage(image, { x: 0, y: 0, width, height });
+      } finally {
+        canvas.width = canvas.height = 0;
+      }
+    }
+    const bytes = await pdf.save();
+    if (revision !== pdfRevision) return;
+    fixedPdfUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+    fixedPdfLink.href = fixedPdfUrl;
+    fixedPdfLink.hidden = false;
+    fixedPdfStatus.textContent = `A4横 ${sheets.length}ページのPDFを作成しました。`;
+  } catch (error) {
+    console.error(error);
+    if (revision === pdfRevision) fixedPdfStatus.textContent = 'PDFを作成できませんでした。もう一度お試しください。';
+  } finally {
+    creatingFixedPdf = false;
+    updatePrintControls();
+  }
+}
+
 // Theme Synchronization (Landing Pills <-> Output Toolbar Select)
 function applyTheme(themeVal) {
+  invalidateFixedPdf();
   document.body.classList.remove('theme-green', 'theme-slate');
   if (themeVal) document.body.classList.add(themeVal);
 
@@ -1851,8 +2011,11 @@ function toggleFaq(btn) {
 }
 
 function resetToTop() {
+  invalidateFixedPdf();
+  activeWorkbook = null;
   document.body.classList.remove('has-pages');
   document.getElementById('pagesContainer').innerHTML = '';
+  updatePrintControls();
   document.getElementById('statusText').textContent = 'Excelファイルを選択してください';
   setUploadFeedback('');
   document.title = '経営指針書 自動レイアウト＆A4横PDF出力ツール';
@@ -1932,6 +2095,7 @@ function removeCoverLogo() {
 }
 
 function renderCoverPage() {
+  invalidateFixedPdf();
   const el = document.getElementById('coverPageContainer');
   if (!el || !currentCoverData) return;
   const { company, rep, term, startYM, endYM, pubDate, subTitle } = currentCoverData;
@@ -2040,6 +2204,7 @@ function removeVisionImage() {
 }
 
 function renderVisionBody() {
+  invalidateFixedPdf();
   const container = document.getElementById('visionPageBody');
   if (!container || !currentVisionData) return;
 
@@ -2185,14 +2350,16 @@ function handleExcelFile(file) {
     console.error(message, { sheetjs: Boolean(window.XLSX), formulaEngine: Boolean(formulaEngine) });
     return;
   }
+  invalidateFixedPdf();
+  activeWorkbook = null;
+  workbookCalculating = true;
+  updatePrintControls();
   statusEl.textContent = 'ファイルを読み込み中...';
   setUploadFeedback(`「${file.name}」を読み込んでいます...`);
   const reader = new FileReader();
   reader.onload = function(evt) {
     try {
       const wb = formulaEngine.parseWorkbook(new Uint8Array(evt.target.result), window.XLSX);
-      workbookCalculating = true;
-      document.getElementById('printButton').disabled = true;
       statusEl.textContent = '計算中...';
       setUploadFeedback('Excelの数式を計算してページを作成しています...');
       setTimeout(() => {
@@ -2200,22 +2367,29 @@ function handleExcelFile(file) {
         catch (err) {
           workbookHasErrors = true;
           workbookCalculating = false;
+          updatePrintControls();
           statusEl.textContent = '計算エラーが発生しました';
           setUploadFeedback(`ページ作成に失敗しました: ${err.message || err}`, true);
           console.error(err);
         }
       }, 0);
     } catch (err) {
+      workbookCalculating = false;
+      updatePrintControls();
       console.error(err);
       statusEl.textContent = '読み込みエラーが発生しました';
       setUploadFeedback(`Excelを解析できませんでした: ${err.message || err}`, true);
     }
   };
   reader.onerror = function() {
+    workbookCalculating = false;
+    updatePrintControls();
     statusEl.textContent = 'ファイル読込失敗';
     setUploadFeedback('ファイルの読み込みに失敗しました。別の場所から保存し直して再度お試しください。', true);
   };
   reader.onabort = function() {
+    workbookCalculating = false;
+    updatePrintControls();
     statusEl.textContent = 'ファイル読込を中断しました';
     setUploadFeedback('ファイルの読み込みが中断されました。もう一度選択してください。', true);
   };
@@ -2287,15 +2461,15 @@ function renderCalculationDiagnostics(results) {
 }
 
 function safePrint() {
-  if (!formulaEngine.canPrint({ hasWorkbook: Boolean(activeWorkbook), calculating: workbookCalculating, hasErrors: workbookHasErrors })) {
+  if (!canExportPages()) {
     alert(workbookCalculating ? '計算中です。完了後に印刷してください。' : '数式エラーまたは未検証のためPDF出力を停止しました。エラー一覧を確認してください。');
     return;
   }
   window.print();
 }
 
-window.addEventListener('beforeprint', event => {
-  if (workbookCalculating || workbookHasErrors || !activeWorkbook) {
+window.addEventListener('beforeprint', () => {
+  if (!canExportPages()) {
     document.body.classList.add('print-blocked');
     document.getElementById('printBlockedNotice').style.display = 'block';
     // Browser UI / Ctrl+P may not be cancellable; ensure the printed pages contain only a stop notice.
@@ -2389,7 +2563,6 @@ function renderBook(wb) {
   formulaResults = formulaEngine.validateWorkbook(wb, calculationAdapter);
   workbookHasErrors = formulaResults.some(result => result.status === 'error');
   workbookCalculating = false;
-  document.getElementById('printButton').disabled = workbookHasErrors;
   renderCalculationDiagnostics(formulaResults);
 
   const container = document.getElementById('pagesContainer');
@@ -2453,7 +2626,10 @@ function renderBook(wb) {
         </div>
       `;
     }
-    container.appendChild(div);
+    const slot = document.createElement('div');
+    slot.className = 'page-slot';
+    slot.append(div);
+    container.append(slot);
   }
 
   selected.forEach(sName => {
@@ -2905,6 +3081,8 @@ function renderBook(wb) {
       `);
     }
   });
+  fitPreviewPages();
+  updatePrintControls();
 }
 
 </script>
