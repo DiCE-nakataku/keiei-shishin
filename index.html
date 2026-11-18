@@ -477,35 +477,40 @@ if (typeof XLSX === 'undefined') {
     line-height: 1.45;
   }
 
-  /* Lower Theme Selector Section */
+  /* Lower 2-Column Section (Left: Theme Selector, Right: Accordion Guide/FAQ) */
   .lower-section {
     max-width: 1120px;
     width: 100%;
     margin: 24px auto 0;
     padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 22px;
+    align-items: start;
     animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
   }
-  .theme-panel {
+  .theme-panel, .faq-panel {
     background: #ffffff;
     border-radius: 14px;
     padding: 20px 24px;
     border: 1px solid var(--line-light);
     box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  }
+  .theme-panel {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    flex-direction: column;
+    gap: 14px;
   }
   .theme-panel-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
   }
-  .theme-panel-label {
-    font-size: 14px;
+  .theme-panel-label, .faq-panel-title {
+    font-size: 14.5px;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--primary);
+    margin: 0;
   }
   .theme-panel-desc {
     font-size: 12px;
@@ -513,8 +518,86 @@ if (typeof XLSX === 'undefined') {
   }
   .theme-pills {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  /* Accordion Guide / FAQ */
+  .faq-panel-title {
+    margin-bottom: 12px;
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line-light);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line-light);
+  }
+  .faq-trigger {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 13px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .faq-trigger:hover {
+    color: var(--primary);
+  }
+  .faq-plus {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--primary-tint);
+    color: var(--primary);
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, color 0.2s ease;
+  }
+  .faq-item.open .faq-plus {
+    transform: rotate(45deg);
+    background: var(--primary);
+    color: #ffffff;
+  }
+  .faq-body-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .faq-item.open .faq-body-wrap {
+    grid-template-rows: 1fr;
+  }
+  .faq-body-inner {
+    overflow: hidden;
+  }
+  .faq-body-content {
+    padding: 0 6px 14px 4px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--ink-sub);
+  }
+  .faq-body-content ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+  }
+  .faq-body-content li + li {
+    margin-top: 4px;
   }
   .theme-pill-btn {
     display: inline-flex;
@@ -582,16 +665,13 @@ if (typeof XLSX === 'undefined') {
       padding: 20px;
     }
     .lower-section {
+      grid-template-columns: 1fr;
       padding: 0 16px;
       margin-top: 16px;
+      gap: 16px;
     }
-    .theme-panel {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .theme-pills {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .theme-panel, .faq-panel {
+      padding: 18px 20px;
     }
   }
   @media (max-width: 540px) {
@@ -1609,7 +1689,7 @@ if (typeof XLSX === 'undefined') {
     <section class="lower-section">
       <div class="theme-panel">
         <div class="theme-panel-info">
-          <div class="theme-panel-label">カラーテーマ選択</div>
+          <h2 class="theme-panel-label">カラーテーマ選択</h2>
           <div class="theme-panel-desc">出力後も画面上部のツールバーからいつでも変更できます</div>
         </div>
         <div class="theme-pills">
@@ -1625,6 +1705,77 @@ if (typeof XLSX === 'undefined') {
             <span class="swatch-pair"><span class="swatch-dot" style="background:#1e293b;"></span><span class="swatch-dot" style="background:#0284c7;"></span></span>
             スレートチャコール × ブルー
           </button>
+        </div>
+      </div>
+
+      <div class="faq-panel">
+        <h2 class="faq-panel-title">ご利用ガイド・よくある質問</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false" onclick="toggleFaq(this)">
+              <span>Excelファイルの準備・入力ルール</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  <ul>
+                    <li>専用の経営指針書Excelファイル（<strong>.xlsx形式</strong>）の薄い黄色セルに必要事項を入力してください。</li>
+                    <li>先頭シート「<code>00_出力設定・表紙</code>」のD列で「出力する／出力しない」を切り替えると、PDF化するページを自由に選択できます。</li>
+                    <li>数式セル（合計・構成比・前年差など）は読み込み時に自動計算されるため、上書き保存直後のファイルでもそのまま正確に反映されます。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false" onclick="toggleFaq(this)">
+              <span>PC・iPad・iPhoneでの印刷 / PDF保存手順</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  <ul>
+                    <li><strong>PC（Chrome / Edge）</strong>：「🖨️ A4横で印刷 / PDF保存」を押し、送信先で「PDFに保存」、詳細設定の<strong>「背景のグラフィック」にチェック</strong>を入れて保存してください。</li>
+                    <li><strong>iPad / iPhone（Safari）</strong>：「🖨️ A4横で印刷 / PDF保存」を押すと印刷プレビューが開きます。プレビュー画面を2本指でピンチアウト（拡大）するとPDF表示に切り替わり、右上の共有ボタンから「ファイルに保存」できます。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false" onclick="toggleFaq(this)">
+              <span>表紙ロゴや10年ビジョン画像の挿入方法</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  <ul>
+                    <li>Excel読み込み後、「表紙」ページの右上バーから<strong>自社ロゴ（PNG / JPG）</strong>を挿入でき、4パターンの配置と白プレート処理を選べます。</li>
+                    <li>「長期（10年）ビジョン」ページでは、上部バーからビジョン画像・イラストを挿入し、「右隅」「右半分」「全面背景」「全面前面」のレイアウトを切り替えられます。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false" onclick="toggleFaq(this)">
+              <span>データの安全性・プライバシーについて</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  選択したExcelファイルや画像データは、お使いのPC・タブレット・スマートフォンの<strong>ブラウザ内部（メモリ上）のみで処理</strong>されます。外部サーバーへの送信・保存は一切行われないため、機密性の高い経営数値や計画も安心してご利用いただけます。
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1650,6 +1801,13 @@ function applyTheme(themeVal) {
   document.querySelectorAll('.theme-pill-btn').forEach(btn => {
     btn.classList.toggle('active', (btn.dataset.theme || '') === themeVal);
   });
+}
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  if (!item) return;
+  const isOpen = item.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 
 function resetToTop() {
