@@ -7,12 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-<script>
-if (typeof XLSX === 'undefined') {
-  document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"><\/script>');
-}
-</script>
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="dist/formula-engine.js"></script>
 <style>
 
   :root {
@@ -1601,7 +1597,15 @@ if (typeof XLSX === 'undefined') {
     .app-header, .landing-view, .no-print, .floating-ctrl-bar { display: none !important; }
     .pages-wrapper { padding: 0; gap: 0; }
     .page { box-shadow: none; margin: 0; }
+    body.print-blocked .pages-wrapper { display: none !important; }
+    body.print-blocked #printBlockedNotice { display: block !important; padding: 35mm 25mm; font: 18pt sans-serif; color: #900; }
   }
+  #printBlockedNotice { display:none; }
+  .calc-ok,.calc-error { margin:12px auto; max-width:1100px; padding:12px 18px; border-radius:8px; font-size:14px; }
+  .calc-ok { background:#eaf6ee; color:#176536; }
+  .calc-error { background:#fff0ef; color:#8c201b; }
+  .calc-error ul { max-height:240px; overflow:auto; padding-left:24px; }
+  .btn-print:disabled { opacity:.5; cursor:not-allowed; }
 
 </style>
 </head>
@@ -1610,7 +1614,7 @@ if (typeof XLSX === 'undefined') {
 <header class="app-header">
   <div class="app-header-inner">
     <div class="brand-title-group">
-      <h1 class="app-title">経営指針書 自動レイアウト＆PDF出力ツール <span style="font-size:11px;font-weight:700;background:var(--primary-tint);color:var(--primary);padding:2px 8px;border-radius:999px;margin-left:4px;vertical-align:middle;">v14</span></h1>
+      <h1 class="app-title">経営指針書 自動レイアウト＆PDF出力ツール</h1>
       <span class="privacy-pill"><span class="privacy-dot"></span>ブラウザ内完結・外部送信なし</span>
     </div>
     <div class="output-controls" id="outputControls">
@@ -1622,7 +1626,7 @@ if (typeof XLSX === 'undefined') {
         <option value="theme-green">カラー：フォレストグリーン × ゴールド</option>
         <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
       </select>
-      <button class="btn-print" onclick="window.print()">🖨️ A4横で印刷 / PDF保存</button>
+      <button class="btn-print" id="printButton" onclick="safePrint()" disabled>🖨️ A4横で印刷 / PDF保存</button>
       <button class="btn-back-top" onclick="resetToTop()">トップへ戻る</button>
       <span class="status" id="statusText">Excelファイルを選択してください</span>
     </div>
@@ -1788,8 +1792,11 @@ if (typeof XLSX === 'undefined') {
 </main>
 
 <div class="pages-wrapper" id="pagesContainer"></div>
+<section id="calcDiagnostics" class="no-print" aria-live="polite" hidden></section>
+<div id="printBlockedNotice" class="print-blocked-notice">計算エラーがあるため印刷を停止しました。画面上のエラー一覧を確認してください。</div>
 
 <script>
+const FormulaEngine = window.FormulaEngine;
 // Theme Synchronization (Landing Pills <-> Output Toolbar Select)
 function applyTheme(themeVal) {
   document.body.classList.remove('theme-green', 'theme-slate');
@@ -2134,8 +2141,20 @@ function handleExcelFile(file) {
   const reader = new FileReader();
   reader.onload = function(evt) {
     try {
-      const wb = XLSX.read(new Uint8Array(evt.target.result), { type: 'array' });
-      renderBook(wb);
+      const wb = FormulaEngine.parseWorkbook(new Uint8Array(evt.target.result), XLSX);
+      workbookCalculating = true;
+      document.getElementById('printButton').disabled = true;
+      statusEl.textContent = '計算中...';
+      setTimeout(() => {
+        try { renderBook(wb); }
+        catch (err) {
+          workbookHasErrors = true;
+          workbookCalculating = false;
+          statusEl.textContent = '計算エラーが発生しました';
+          console.error(err);
+          alert('数式の計算中にエラーが発生しました：\n' + err.message);
+        }
+      }, 0);
     } catch (err) {
       console.error(err);
       statusEl.textContent = '読み込みエラーが発生しました';
@@ -2153,387 +2172,57 @@ document.getElementById('excelInput').addEventListener('change', function(e) {
   handleExcelFile(e.target.files[0]);
 });
 
-// =========================================================
-// Built-in Excel Formula Evaluator v11 (Live formula execution, ignores empty <v></v> cache)
-// =========================================================
+// Workbook formula calculation is delegated to the bundled fast-formula-parser adapter.
 let activeWorkbook = null;
-const evalCache = {};
-const evalVisiting = new Set();
-
-function colToIdx(colStr) {
-  let n = 0;
-  for (let i = 0; i < colStr.length; i++) {
-    n = n * 26 + (colStr.charCodeAt(i) - 64);
-  }
-  return n - 1;
-}
-
-function idxToCol(idx) {
-  let s = '';
-  let n = idx + 1;
-  while (n > 0) {
-    let rem = (n - 1) % 26;
-    s = String.fromCharCode(65 + rem) + s;
-    n = Math.floor((n - 1) / 26);
-  }
-  return s;
-}
-
-function parseRange(rangeStr) {
-  const parts = rangeStr.split(':');
-  const m1 = parts[0].replace(/\$/g, '').match(/^([A-Z]+)(\d+)$/);
-  const m2 = parts[1].replace(/\$/g, '').match(/^([A-Z]+)(\d+)$/);
-  if (!m1 || !m2) return [];
-  const c1 = colToIdx(m1[1]), r1 = parseInt(m1[2], 10);
-  const c2 = colToIdx(m2[1]), r2 = parseInt(m2[2], 10);
-  const addrs = [];
-  for (let r = Math.min(r1, r2); r <= Math.max(r1, r2); r++) {
-    for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++) {
-      addrs.push(idxToCol(c) + r);
-    }
-  }
-  return addrs;
-}
-
-function splitArgs(str) {
-  const args = [];
-  let depth = 0, inStr = false, cur = '';
-  for (let i = 0; i < str.length; i++) {
-    const ch = str[i];
-    if (ch === '"') {
-      inStr = !inStr;
-      cur += ch;
-    } else if (!inStr) {
-      if (ch === '(') { depth++; cur += ch; }
-      else if (ch === ')') { depth--; cur += ch; }
-      else if (ch === ',' && depth === 0) { args.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
-    } else {
-      cur += ch;
-    }
-  }
-  if (cur.trim() !== '') args.push(cur.trim());
-  return args;
-}
-
-function toNum(v) {
-  if (v === '' || v === null || v === undefined) return 0;
-  if (typeof v === 'number') return isNaN(v) ? 0 : v;
-  const s = String(v).trim();
-  if (s.endsWith('%')) {
-    const p = parseFloat(s.slice(0, -1).replace(/,/g, ''));
-    return isNaN(p) ? 0 : p / 100;
-  }
-  const n = parseFloat(s.replace(/,/g, ''));
-  return isNaN(n) ? 0 : n;
-}
-
-function evalRawCell(sheetName, addr) {
-  const cleanAddr = addr.replace(/\$/g, '');
-  const key = sheetName + '!' + cleanAddr;
-  if (key in evalCache) return evalCache[key];
-  if (evalVisiting.has(key)) return 0;
-
-  const ws = activeWorkbook && activeWorkbook.Sheets[sheetName];
-  if (!ws || !ws[cleanAddr]) {
-    evalCache[key] = '';
-    return '';
-  }
-  const cell = ws[cleanAddr];
-
-  // Always evaluate formula strings live so empty <v></v> tags (parsed as v=0 / w="-") never mask real results
-  if (cell.f) {
-    evalVisiting.add(key);
-    let res = '';
-    try {
-      res = evalFormulaExpr(cell.f, sheetName);
-    } catch (e) {
-      res = (cell.v !== undefined && cell.v !== null) ? cell.v : '';
-    }
-    evalVisiting.delete(key);
-    evalCache[key] = res;
-    return res;
-  }
-
-  const res = (cell.v !== undefined && cell.v !== null) ? cell.v : '';
-  evalCache[key] = res;
-  return res;
-}
-
-function evalFormulaExpr(expr, sheetName) {
-  expr = expr.trim();
-  if (expr.startsWith('=')) expr = expr.slice(1).trim();
-
-  // Strip outer matching parentheses
-  while (expr.startsWith('(') && expr.endsWith(')')) {
-    let depth = 0, inStr = false, balanced = true;
-    for (let i = 0; i < expr.length; i++) {
-      const ch = expr[i];
-      if (ch === '"') inStr = !inStr;
-      else if (!inStr) {
-        if (ch === '(') depth++;
-        else if (ch === ')') {
-          depth--;
-          if (depth === 0 && i < expr.length - 1) { balanced = false; break; }
-        }
-      }
-    }
-    if (balanced) expr = expr.slice(1, -1).trim();
-    else break;
-  }
-
-  // String literal
-  if (expr.startsWith('"') && expr.endsWith('"') && expr.indexOf('"', 1) === expr.length - 1) {
-    return expr.slice(1, -1);
-  }
-  // Numeric literal (including percentage literal like 5%)
-  if (/^-?\d+(\.\d+)?%$/.test(expr)) {
-    return parseFloat(expr.slice(0, -1)) / 100;
-  }
-  if (/^-?\d+(\.\d+)?$/.test(expr)) {
-    return parseFloat(expr);
-  }
-
-  // String concatenation (&) at top level
-  let depth = 0, inStr = false;
-  for (let i = 0; i < expr.length; i++) {
-    const ch = expr[i];
-    if (ch === '"') inStr = !inStr;
-    else if (!inStr) {
-      if (ch === '(') depth++;
-      else if (ch === ')') depth--;
-      else if (ch === '&' && depth === 0) {
-        const left = evalFormulaExpr(expr.slice(0, i), sheetName);
-        const right = evalFormulaExpr(expr.slice(i + 1), sheetName);
-        const lStr = (typeof left === 'number' && Number.isInteger(left)) ? String(left) : String(left ?? '');
-        const rStr = (typeof right === 'number' && Number.isInteger(right)) ? String(right) : String(right ?? '');
-        return lStr + rStr;
-      }
-    }
-  }
-
-  // Function calls: FUNC(...)
-  const funcMatch = expr.match(/^([A-Z0-9_]+)\((.*)\)$/s);
-  if (funcMatch) {
-    let d = 0, ins = false, isWholeFunc = true;
-    const openIdx = funcMatch[1].length;
-    for (let i = openIdx; i < expr.length; i++) {
-      const ch = expr[i];
-      if (ch === '"') ins = !ins;
-      else if (!ins) {
-        if (ch === '(') d++;
-        else if (ch === ')') {
-          d--;
-          if (d === 0 && i < expr.length - 1) { isWholeFunc = false; break; }
-        }
-      }
-    }
-    if (isWholeFunc) {
-      const fn = funcMatch[1];
-      const args = splitArgs(funcMatch[2]);
-
-      if (fn === 'IF') {
-        const cond = evalCondition(args[0], sheetName);
-        return cond ? evalFormulaExpr(args[1] || '""', sheetName) : evalFormulaExpr(args[2] || '""', sheetName);
-      }
-      if (fn === 'IFERROR') {
-        const v = evalFormulaExpr(args[0], sheetName);
-        if (v === '#DIV/0!' || v === '#VALUE!' || v === '#ERR' || (typeof v === 'number' && (isNaN(v) || !isFinite(v)))) {
-          return evalFormulaExpr(args[1] || '""', sheetName);
-        }
-        return v;
-      }
-      if (fn === 'AND') {
-        return args.every(a => Boolean(evalCondition(a, sheetName)));
-      }
-      if (fn === 'OR') {
-        return args.some(a => Boolean(evalCondition(a, sheetName)));
-      }
-      if (fn === 'ABS') {
-        return Math.abs(toNum(evalFormulaExpr(args[0], sheetName)));
-      }
-      if (fn === 'ROUND') {
-        const valNum = toNum(evalFormulaExpr(args[0], sheetName));
-        const digits = args[1] !== undefined ? toNum(evalFormulaExpr(args[1], sheetName)) : 0;
-        const factor = Math.pow(10, digits);
-        return Math.round(valNum * factor) / factor;
-      }
-      if (fn === 'SUM') {
-        let sum = 0;
-        args.forEach(a => {
-          if (a.includes(':')) {
-            parseRange(a).forEach(ad => {
-              const v = evalRawCell(sheetName, ad);
-              if (typeof v === 'number' && !isNaN(v)) sum += v;
-            });
-          } else {
-            sum += toNum(evalFormulaExpr(a, sheetName));
-          }
-        });
-        return sum;
-      }
-      if (fn === 'AVERAGE') {
-        let sum = 0, cnt = 0;
-        args.forEach(a => {
-          if (a.includes(':')) {
-            parseRange(a).forEach(ad => {
-              const v = evalRawCell(sheetName, ad);
-              if (typeof v === 'number' && !isNaN(v)) { sum += v; cnt++; }
-            });
-          } else {
-            const v = evalFormulaExpr(a, sheetName);
-            if (typeof v === 'number' && !isNaN(v)) { sum += v; cnt++; }
-          }
-        });
-        return cnt === 0 ? '#DIV/0!' : sum / cnt;
-      }
-      if (fn === 'COUNT') {
-        let cnt = 0;
-        args.forEach(a => {
-          if (a.includes(':')) {
-            parseRange(a).forEach(ad => {
-              const v = evalRawCell(sheetName, ad);
-              if (typeof v === 'number' && !isNaN(v)) cnt++;
-            });
-          } else {
-            const v = evalFormulaExpr(a, sheetName);
-            if (typeof v === 'number' && !isNaN(v)) cnt++;
-          }
-        });
-        return cnt;
-      }
-      if (fn === 'RANK') {
-        const target = toNum(evalFormulaExpr(args[0], sheetName));
-        const nums = [];
-        if (args[1] && args[1].includes(':')) {
-          parseRange(args[1]).forEach(ad => {
-            const v = evalRawCell(sheetName, ad);
-            if (typeof v === 'number' && !isNaN(v)) nums.push(v);
-          });
-        }
-        nums.sort((a, b) => b - a);
-        const idx = nums.indexOf(target);
-        return idx >= 0 ? idx + 1 : '';
-      }
-    }
-  }
-
-  // Binary arithmetic (+, -, *, /) at top level
-  for (const ops of [['+', '-'], ['*', '/']]) {
-    depth = 0; inStr = false;
-    for (let i = expr.length - 1; i >= 1; i--) {
-      const ch = expr[i];
-      if (ch === '"') inStr = !inStr;
-      else if (!inStr) {
-        if (ch === ')') depth++;
-        else if (ch === '(') depth--;
-        else if (depth === 0 && ops.includes(ch)) {
-          const prev = expr.slice(0, i).trim();
-          if (prev === '' || ['+', '-', '*', '/', '(', ',', '=', '<', '>'].includes(prev.slice(-1))) continue;
-          const lv = evalFormulaExpr(prev, sheetName);
-          const rv = evalFormulaExpr(expr.slice(i + 1), sheetName);
-          if (lv === '#DIV/0!' || rv === '#DIV/0!') return '#DIV/0!';
-          const ln = toNum(lv), rn = toNum(rv);
-          if (ch === '+') return ln + rn;
-          if (ch === '-') return ln - rn;
-          if (ch === '*') return ln * rn;
-          if (ch === '/') return rn === 0 ? '#DIV/0!' : ln / rn;
-        }
-      }
-    }
-  }
-
-  // Unary minus/plus at index 0 (e.g. -B14)
-  if (expr.startsWith('-')) {
-    return -toNum(evalFormulaExpr(expr.slice(1), sheetName));
-  }
-  if (expr.startsWith('+')) {
-    return toNum(evalFormulaExpr(expr.slice(1), sheetName));
-  }
-
-  // Cross-sheet reference: 'SheetName'!A1 or SheetName!A1
-  const crossMatch = expr.match(/^(?:'([^']+)'|([^!]+))!(\$?[A-Z]+\$?\d+)$/);
-  if (crossMatch) {
-    const targetSheet = crossMatch[1] || crossMatch[2];
-    const targetAddr = crossMatch[3];
-    return evalRawCell(targetSheet, targetAddr);
-  }
-
-  // Same-sheet cell reference: A1 or $B$9
-  if (/^\$?[A-Z]+\$?\d+$/.test(expr)) {
-    return evalRawCell(sheetName, expr);
-  }
-
-  return expr;
-}
-
-function evalCondition(condStr, sheetName) {
-  condStr = condStr.trim();
-  const funcCheck = condStr.match(/^(AND|OR)\(/);
-  if (funcCheck) {
-    return Boolean(evalFormulaExpr(condStr, sheetName));
-  }
-  let depth = 0, inStr = false;
-  for (let i = 0; i < condStr.length; i++) {
-    const ch = condStr[i];
-    if (ch === '"') inStr = !inStr;
-    else if (!inStr) {
-      if (ch === '(') depth++;
-      else if (ch === ')') depth--;
-      else if (depth === 0) {
-        const two = condStr.slice(i, i + 2);
-        if (['<>', '<=', '>='].includes(two)) {
-          const l = evalFormulaExpr(condStr.slice(0, i), sheetName);
-          const r = evalFormulaExpr(condStr.slice(i + 2), sheetName);
-          if (two === '<>') return l !== r;
-          if (two === '<=') return toNum(l) <= toNum(r);
-          if (two === '>=') return toNum(l) >= toNum(r);
-        }
-        if (['=', '<', '>'].includes(ch)) {
-          const l = evalFormulaExpr(condStr.slice(0, i), sheetName);
-          const r = evalFormulaExpr(condStr.slice(i + 1), sheetName);
-          if (ch === '=') return l === r;
-          if (ch === '<') return toNum(l) < toNum(r);
-          if (ch === '>') return toNum(l) > toNum(r);
-        }
-      }
-    }
-  }
-  return Boolean(evalFormulaExpr(condStr, sheetName));
-}
+let calculationAdapter = null;
+let formulaResults = [];
+let workbookHasErrors = true;
+let workbookCalculating = false;
 
 function formatExcelValue(rawVal, fmt) {
-  if (rawVal === '' || rawVal === null || rawVal === undefined) return '';
-  if (rawVal === '#DIV/0!' || rawVal === '#VALUE!' || rawVal === '#ERR') return '';
-  if (typeof rawVal === 'number') {
-    if (isNaN(rawVal) || !isFinite(rawVal)) return '';
-    if (fmt && fmt.includes('%')) {
-      return (rawVal * 100).toFixed(1) + '%';
-    }
-    return Math.round(rawVal).toLocaleString('ja-JP');
-  }
-  return String(rawVal);
+  return FormulaEngine.formatValue(rawVal, fmt, XLSX);
 }
 
 function val(ws, addr) {
   if (!ws || !ws[addr]) return '';
   const cell = ws[addr];
-  let sName = '';
-  if (activeWorkbook) {
-    for (const name of activeWorkbook.SheetNames) {
-      if (activeWorkbook.Sheets[name] === ws) { sName = name; break; }
-    }
-  }
-  if (cell.f && sName) {
-    const evaluated = evalRawCell(sName, addr);
-    return formatExcelValue(evaluated, cell.z || '');
-  }
-  if (cell.w !== undefined && cell.w !== '') return cell.w;
-  if (cell.v !== undefined && cell.v !== null) {
-    return formatExcelValue(cell.v, cell.z || '');
-  }
+  const sheet = activeWorkbook.SheetNames.find(name => activeWorkbook.Sheets[name] === ws);
+  if (cell.f && sheet) return formatExcelValue(calculationAdapter.evaluateCell(sheet, addr), cell.z || 'General');
+  if (cell.v !== undefined && cell.v !== null) return formatExcelValue(cell.v, cell.z || 'General');
   return '';
 }
+
+function renderCalculationDiagnostics(results) {
+  const errors = results.filter(result => result.status === 'error');
+  const blanks = results.filter(result => result.status === 'intentional-blank').length;
+  const diagnostics = document.getElementById('calcDiagnostics');
+  diagnostics.hidden = false;
+  if (errors.length === 0) {
+    diagnostics.innerHTML = `<div class="calc-ok">計算確認OK：数式 ${results.length} 件（正常な空欄 ${blanks} 件）</div>`;
+    return;
+  }
+  diagnostics.innerHTML = `<div class="calc-error"><strong>要確認：${errors.length} 件の数式エラーがあり、PDF出力を無効にしました。</strong><ul>${errors.map(e => `<li>${esc(e.sheet)}!${esc(e.cell)}　${esc(e.formula)}　${esc(e.message || e.value?.__formulaError?.message || '計算エラー')}</li>`).join('')}</ul></div>`;
+}
+
+function safePrint() {
+  if (!FormulaEngine.canPrint({ hasWorkbook: Boolean(activeWorkbook), calculating: workbookCalculating, hasErrors: workbookHasErrors })) {
+    alert(workbookCalculating ? '計算中です。完了後に印刷してください。' : '数式エラーまたは未検証のためPDF出力を停止しました。エラー一覧を確認してください。');
+    return;
+  }
+  window.print();
+}
+
+window.addEventListener('beforeprint', event => {
+  if (workbookCalculating || workbookHasErrors || !activeWorkbook) {
+    document.body.classList.add('print-blocked');
+    document.getElementById('printBlockedNotice').style.display = 'block';
+    // Browser UI / Ctrl+P may not be cancellable; ensure the printed pages contain only a stop notice.
+  }
+});
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('print-blocked');
+  document.getElementById('printBlockedNotice').style.display = 'none';
+});
 
 function esc(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -2613,8 +2302,13 @@ function buildDynamicCardGrid(cards, emptyFallbackText = '（未入力）') {
 
 function renderBook(wb) {
   activeWorkbook = wb;
-  for (const k in evalCache) delete evalCache[k];
-  evalVisiting.clear();
+  calculationAdapter = FormulaEngine.createCalculationAdapter(wb);
+  calculationAdapter.calculateAll();
+  formulaResults = FormulaEngine.validateWorkbook(wb, calculationAdapter);
+  workbookHasErrors = formulaResults.some(result => result.status === 'error');
+  workbookCalculating = false;
+  document.getElementById('printButton').disabled = workbookHasErrors;
+  renderCalculationDiagnostics(formulaResults);
 
   const container = document.getElementById('pagesContainer');
   container.innerHTML = '';
@@ -2650,7 +2344,7 @@ function renderBook(wb) {
     return;
   }
 
-  document.getElementById('statusText').textContent = `読み込み完了：全 ${selected.length} ページ出力対象`;
+  document.getElementById('statusText').textContent = workbookHasErrors ? `要確認：数式エラー ${formulaResults.filter(x => x.status === 'error').length} 件` : `確認OK：全 ${selected.length} ページ出力対象`;
   let pageNum = 0;
   const total = selected.length;
 
