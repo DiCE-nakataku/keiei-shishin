@@ -4,10 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>経営指針書 自動レイアウト＆A4横PDF出力ツール</title>
-<link rel="icon" href="./favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<link rel="manifest" href="./site.webmanifest">
+<link rel="icon" href="./favicon.svg?v=1.2.4" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="./favicon.svg?v=1.2.4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
@@ -1821,7 +1819,7 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.3 · 更新日 2026-11-18</span></span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.4 · 更新日 2026-11-18</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
   </footer>
 </main>
@@ -1831,7 +1829,7 @@
 <div id="printBlockedNotice" class="print-blocked-notice">計算エラーがあるため印刷を停止しました。画面上のエラー一覧を確認してください。</div>
 
 <script>
-const FormulaEngine = window.FormulaEngine;
+const formulaEngine = window.FormulaEngine;
 // Theme Synchronization (Landing Pills <-> Output Toolbar Select)
 function applyTheme(themeVal) {
   document.body.classList.remove('theme-green', 'theme-slate');
@@ -2180,11 +2178,11 @@ function handleExcelFile(file) {
     return;
   }
   const statusEl = document.getElementById('statusText');
-  if (!window.XLSX || !FormulaEngine) {
+  if (!window.XLSX || !formulaEngine) {
     const message = 'Excel読み込みライブラリを読み込めませんでした。ページを再読み込みしてください。';
     statusEl.textContent = 'ライブラリ読込エラー';
     setUploadFeedback(message, true);
-    console.error(message, { sheetjs: Boolean(window.XLSX), formulaEngine: Boolean(FormulaEngine) });
+    console.error(message, { sheetjs: Boolean(window.XLSX), formulaEngine: Boolean(formulaEngine) });
     return;
   }
   statusEl.textContent = 'ファイルを読み込み中...';
@@ -2192,7 +2190,7 @@ function handleExcelFile(file) {
   const reader = new FileReader();
   reader.onload = function(evt) {
     try {
-      const wb = FormulaEngine.parseWorkbook(new Uint8Array(evt.target.result), window.XLSX);
+      const wb = formulaEngine.parseWorkbook(new Uint8Array(evt.target.result), window.XLSX);
       workbookCalculating = true;
       document.getElementById('printButton').disabled = true;
       statusEl.textContent = '計算中...';
@@ -2264,7 +2262,7 @@ let workbookHasErrors = true;
 let workbookCalculating = false;
 
 function formatExcelValue(rawVal, fmt) {
-  return FormulaEngine.formatValue(rawVal, fmt, XLSX);
+  return formulaEngine.formatValue(rawVal, fmt, XLSX);
 }
 
 function val(ws, addr) {
@@ -2289,7 +2287,7 @@ function renderCalculationDiagnostics(results) {
 }
 
 function safePrint() {
-  if (!FormulaEngine.canPrint({ hasWorkbook: Boolean(activeWorkbook), calculating: workbookCalculating, hasErrors: workbookHasErrors })) {
+  if (!formulaEngine.canPrint({ hasWorkbook: Boolean(activeWorkbook), calculating: workbookCalculating, hasErrors: workbookHasErrors })) {
     alert(workbookCalculating ? '計算中です。完了後に印刷してください。' : '数式エラーまたは未検証のためPDF出力を停止しました。エラー一覧を確認してください。');
     return;
   }
@@ -2386,9 +2384,9 @@ function buildDynamicCardGrid(cards, emptyFallbackText = '（未入力）') {
 
 function renderBook(wb) {
   activeWorkbook = wb;
-  calculationAdapter = FormulaEngine.createCalculationAdapter(wb);
+  calculationAdapter = formulaEngine.createCalculationAdapter(wb);
   calculationAdapter.calculateAll();
-  formulaResults = FormulaEngine.validateWorkbook(wb, calculationAdapter);
+  formulaResults = formulaEngine.validateWorkbook(wb, calculationAdapter);
   workbookHasErrors = formulaResults.some(result => result.status === 'error');
   workbookCalculating = false;
   document.getElementById('printButton').disabled = workbookHasErrors;
