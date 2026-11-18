@@ -401,6 +401,22 @@
     color: var(--ink-sub);
     font-weight: 500;
   }
+  .upload-feedback {
+    max-width: 560px;
+    margin: 12px auto 0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--primary-tint);
+    color: var(--primary);
+    font-size: 12.5px;
+    line-height: 1.6;
+    font-weight: 600;
+  }
+  .upload-feedback.is-error {
+    background: #fef2f2;
+    color: #b42318;
+  }
+  .upload-feedback[hidden] { display: none; }
 
   /* 3-Step Guide Card */
   .steps-card {
@@ -647,6 +663,15 @@
     font-size: 11.5px;
     color: var(--ink-muted);
   }
+  .landing-footer > span:first-child {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+  }
+  .app-version {
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
 
   /* Tablet & Smartphone Responsive Breakpoints */
   @media (max-width: 900px) {
@@ -671,6 +696,11 @@
     }
   }
   @media (max-width: 540px) {
+    .landing-footer {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
     .app-header {
       padding: 10px 14px;
     }
@@ -1656,6 +1686,7 @@
               📂 入力済みExcel(.xlsx)を選択
             </label>
             <div class="dropzone-hint">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
+            <div class="upload-feedback" id="uploadFeedback" role="status" aria-live="polite" hidden></div>
           </div>
         </div>
 
@@ -1786,7 +1817,7 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール</span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.0 · 更新日 2026-11-18</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
   </footer>
 </main>
@@ -1821,6 +1852,7 @@ function resetToTop() {
   document.body.classList.remove('has-pages');
   document.getElementById('pagesContainer').innerHTML = '';
   document.getElementById('statusText').textContent = 'Excelファイルを選択してください';
+  setUploadFeedback('');
   document.title = '経営指針書 自動レイアウト＆A4横PDF出力ツール';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -2130,47 +2162,81 @@ function renderVisionBody() {
   container.innerHTML = ctrlHTML + `<div style="flex:1;overflow:hidden;">${bodyHTML}</div>`;
 }
 
+function setUploadFeedback(message, isError = false) {
+  const feedback = document.getElementById('uploadFeedback');
+  if (!feedback) return;
+  feedback.textContent = message;
+  feedback.classList.toggle('is-error', isError);
+  feedback.hidden = !message;
+}
+
 function handleExcelFile(file) {
-  if (!file) return;
+  if (!file) {
+    setUploadFeedback('Excelファイルが選択されませんでした。もう一度選択してください。', true);
+    return;
+  }
   const statusEl = document.getElementById('statusText');
-  if (typeof XLSX === 'undefined') {
-    alert('Excel読み込みライブラリ（SheetJS）が読み込めていません。インターネット接続を確認してページを再読み込みしてください。');
+  if (!window.XLSX || !FormulaEngine) {
+    const message = 'Excel読み込みライブラリを読み込めませんでした。ページを再読み込みしてください。';
+    statusEl.textContent = 'ライブラリ読込エラー';
+    setUploadFeedback(message, true);
+    console.error(message, { sheetjs: Boolean(window.XLSX), formulaEngine: Boolean(FormulaEngine) });
     return;
   }
   statusEl.textContent = 'ファイルを読み込み中...';
+  setUploadFeedback(`「${file.name}」を読み込んでいます...`);
   const reader = new FileReader();
   reader.onload = function(evt) {
     try {
-      const wb = FormulaEngine.parseWorkbook(new Uint8Array(evt.target.result), XLSX);
+      const wb = FormulaEngine.parseWorkbook(new Uint8Array(evt.target.result), window.XLSX);
       workbookCalculating = true;
       document.getElementById('printButton').disabled = true;
       statusEl.textContent = '計算中...';
+      setUploadFeedback('Excelの数式を計算してページを作成しています...');
       setTimeout(() => {
         try { renderBook(wb); }
         catch (err) {
           workbookHasErrors = true;
           workbookCalculating = false;
           statusEl.textContent = '計算エラーが発生しました';
+          setUploadFeedback(`ページ作成に失敗しました: ${err.message || err}`, true);
           console.error(err);
-          alert('数式の計算中にエラーが発生しました：\n' + err.message);
         }
       }, 0);
     } catch (err) {
       console.error(err);
       statusEl.textContent = '読み込みエラーが発生しました';
-      alert('Excelファイルの解析中にエラーが発生しました：\n' + err.message);
+      setUploadFeedback(`Excelを解析できませんでした: ${err.message || err}`, true);
     }
   };
   reader.onerror = function() {
     statusEl.textContent = 'ファイル読込失敗';
-    alert('ファイルの読み込みに失敗しました。');
+    setUploadFeedback('ファイルの読み込みに失敗しました。別の場所から保存し直して再度お試しください。', true);
+  };
+  reader.onabort = function() {
+    statusEl.textContent = 'ファイル読込を中断しました';
+    setUploadFeedback('ファイルの読み込みが中断されました。もう一度選択してください。', true);
   };
   reader.readAsArrayBuffer(file);
 }
 
-document.getElementById('excelInput').addEventListener('change', function(e) {
-  handleExcelFile(e.target.files[0]);
+const excelInput = document.getElementById('excelInput');
+let lastHandledExcelKey = '';
+excelInput.addEventListener('click', function() {
+  this.value = '';
+  lastHandledExcelKey = '';
+  setUploadFeedback('');
 });
+function handleExcelSelection(e) {
+  const file = e.currentTarget.files && e.currentTarget.files[0];
+  if (!file) return;
+  const fileKey = `${file.name}:${file.size}:${file.lastModified}`;
+  if (fileKey === lastHandledExcelKey) return;
+  lastHandledExcelKey = fileKey;
+  handleExcelFile(file);
+}
+excelInput.addEventListener('input', handleExcelSelection);
+excelInput.addEventListener('change', handleExcelSelection);
 
 // Workbook formula calculation is delegated to the bundled fast-formula-parser adapter.
 let activeWorkbook = null;
