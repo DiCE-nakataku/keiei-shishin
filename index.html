@@ -1652,9 +1652,9 @@
                 <polyline points="9 15 12 12 15 15"></polyline>
               </svg>
             </div>
-            <button type="button" class="cta-upload-btn" onclick="document.getElementById('excelInput').click()">
+            <label class="cta-upload-btn" for="excelInput" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('excelInput').click()}">
               📂 入力済みExcel(.xlsx)を選択
-            </button>
+            </label>
             <div class="dropzone-hint">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
           </div>
         </div>
