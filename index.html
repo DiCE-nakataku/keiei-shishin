@@ -1817,7 +1817,7 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.0 · 更新日 2026-11-18</span></span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.1 · 更新日 2026-11-18</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
   </footer>
 </main>
@@ -2225,7 +2225,7 @@ let lastHandledExcelKey = '';
 excelInput.addEventListener('click', function() {
   this.value = '';
   lastHandledExcelKey = '';
-  setUploadFeedback('');
+  setUploadFeedback('ファイル選択ダイアログでExcelを選び、「開く」を押してください。');
 });
 function handleExcelSelection(e) {
   const file = e.currentTarget.files && e.currentTarget.files[0];
@@ -2237,6 +2237,20 @@ function handleExcelSelection(e) {
 }
 excelInput.addEventListener('input', handleExcelSelection);
 excelInput.addEventListener('change', handleExcelSelection);
+// Some browser/file-picker combinations return focus without delivering change promptly.
+// Check the native input after the picker closes; the file key prevents duplicate reads.
+window.addEventListener('focus', function() {
+  window.setTimeout(function() {
+    if (excelInput.files && excelInput.files[0]) {
+      handleExcelSelection({ currentTarget: excelInput });
+    } else if (!document.body.classList.contains('has-pages')) {
+      const feedback = document.getElementById('uploadFeedback');
+      if (feedback && feedback.textContent.includes('ファイル選択ダイアログ')) {
+        setUploadFeedback('ファイルが選択されませんでした。Excelを選び、「開く」を押してください。', true);
+      }
+    }
+  }, 120);
+});
 
 // Workbook formula calculation is delegated to the bundled fast-formula-parser adapter.
 let activeWorkbook = null;
