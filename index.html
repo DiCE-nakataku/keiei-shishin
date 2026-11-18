@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>経営指針書 自動レイアウト＆A4横PDF出力ツール v10</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>経営指針書 自動レイアウト＆A4横PDF出力ツール</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
@@ -13,6 +14,7 @@ if (typeof XLSX === 'undefined') {
 }
 </script>
 <style>
+
   :root {
     --primary: #14284b;
     --primary-mid: #234375;
@@ -63,76 +65,573 @@ if (typeof XLSX === 'undefined') {
     letter-spacing: 0.02em;
   }
 
-  /* Control Toolbar (Screen only) */
-  .toolbar {
+  /* =========================================================
+     0. MODERN RESPONSIVE TOP SCREEN & MOTION UI (v12)
+  ========================================================= */
+  body {
+    background: #f1f5f9;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  body.has-pages {
+    background: #cbd5e1;
+  }
+
+  /* Top App Bar (Clean white bar on landing, sticky dark executive bar when viewing pages) */
+  .app-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: #0f172a;
-    color: #fff;
-    padding: 12px 28px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line-light);
+    padding: 12px 24px;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .app-header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 14px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
+    justify-content: space-between;
+    gap: 12px;
   }
-  .toolbar h1 {
-    font-size: 14.5px;
-    margin: 0;
+  .brand-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .app-title {
+    font-size: 16px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    color: var(--primary);
+    margin: 0;
+    letter-spacing: 0.03em;
+    transition: color 0.3s ease;
   }
-  .file-label {
-    background: #2563eb;
+  .privacy-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .privacy-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: pulseDot 2.4s infinite ease-in-out;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.82); }
+  }
+
+  /* Active Output Toolbar (Appears cleanly once Excel is loaded) */
+  .output-controls {
+    display: none;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid var(--line-light);
+  }
+  body.has-pages .output-controls {
+    display: flex;
+    animation: fadeSlideDown 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .btn-reselect {
+    background: var(--primary);
     color: #fff;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 12.5px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease, box-shadow 0.2s ease;
   }
-  .file-label:hover { background: #1d4ed8; }
-  input[type="file"] { display: none; }
+  .btn-reselect:hover {
+    background: var(--primary-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 40, 75, 0.2);
+  }
   .theme-select {
-    background: #1e293b;
-    color: #fff;
-    border: 1px solid #475569;
+    background: #f8fafc;
+    color: var(--ink);
+    border: 1px solid var(--line);
     padding: 7px 12px;
-    border-radius: 6px;
+    border-radius: 7px;
     font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .theme-select:hover, .theme-select:focus {
+    border-color: var(--primary);
+    outline: none;
   }
   .btn-print {
     background: #10b981;
     color: #fff;
     border: none;
-    padding: 8px 20px;
-    border-radius: 6px;
+    padding: 8px 18px;
+    border-radius: 7px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
   }
-  .btn-print:hover { background: #059669; }
+  .btn-print:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.32);
+  }
+  .btn-print:active {
+    transform: scale(0.98);
+  }
+  .btn-back-top {
+    background: transparent;
+    color: var(--ink-sub);
+    border: 1px solid var(--line);
+    padding: 7px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-back-top:hover {
+    background: #f1f5f9;
+    color: var(--ink);
+  }
   .status {
     font-size: 12px;
-    color: #cbd5e1;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-tint);
+    padding: 5px 12px;
+    border-radius: 999px;
     margin-left: auto;
   }
 
-  /* Welcome Guide */
-  .welcome-box {
-    max-width: 780px;
-    margin: 56px auto;
-    background: #fff;
-    border-radius: 12px;
-    padding: 36px 42px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
-    line-height: 1.8;
-  }
-  .welcome-box h2 { margin-top: 0; color: var(--primary); font-size: 19px; }
+  input[type="file"] { display: none; }
 
+  /* =========================================================
+     LANDING VIEW (PC / Tablet / Smartphone Responsive + Ambient Motion)
+  ========================================================= */
+  .landing-view {
+    min-height: calc(100vh - 54px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  body.has-pages .landing-view {
+    display: none;
+  }
+
+  /* Aurora / Mesh Gradient Hero Section */
+  .hero-band {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+    border-bottom: 3px solid var(--accent);
+    padding: 36px 24px 42px;
+    overflow: hidden;
+    transition: background 0.45s ease;
+  }
+  .hero-aurora {
+    position: absolute;
+    inset: -40%;
+    background:
+      radial-gradient(circle at 22% 30%, rgba(184, 137, 43, 0.22) 0%, transparent 45%),
+      radial-gradient(circle at 78% 65%, rgba(56, 189, 248, 0.16) 0%, transparent 48%),
+      radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+    animation: auroraFloat 14s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes auroraFloat {
+    0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+    50% { transform: translate3d(2%, 2%, 0) scale(1.04); }
+    100% { transform: translate3d(-1%, 3%, 0) scale(1.01); }
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 2;
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 22px;
+    align-items: stretch;
+  }
+
+  /* Staggered Entrance Keyframes */
+  @keyframes cardRise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Interactive Dropzone Card */
+  .dropzone-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.22);
+    display: flex;
+    flex-direction: column;
+    animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+  }
+  .dropzone-inner {
+    flex: 1;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  }
+  .dropzone-inner:hover,
+  .dropzone-inner.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-tint);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(184, 137, 43, 0.14);
+  }
+  .dropzone-icon-wrap {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: var(--primary-tint);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
+  }
+  .dropzone-inner:hover .dropzone-icon-wrap,
+  .dropzone-inner.drag-over .dropzone-icon-wrap {
+    transform: scale(1.08) rotate(-3deg);
+    background: var(--primary);
+    color: #fff;
+  }
+
+  /* Shimmer + Spring Primary CTA Button */
+  .cta-upload-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(20, 40, 75, 0.25);
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, background 0.35s ease;
+  }
+  .cta-upload-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -75%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+    transform: rotate(25deg);
+    transition: left 0.65s ease;
+    pointer-events: none;
+  }
+  .dropzone-inner:hover .cta-upload-btn::after,
+  .cta-upload-btn:hover::after {
+    left: 135%;
+  }
+  .cta-upload-btn:hover {
+    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 12px 26px rgba(20, 40, 75, 0.32);
+  }
+  .cta-upload-btn:active {
+    transform: scale(0.98);
+  }
+  .dropzone-hint {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--ink-sub);
+    font-weight: 500;
+  }
+
+  /* 3-Step Guide Card */
+  .steps-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px 26px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+  }
+  .steps-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 14px 0;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid var(--line-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid transparent;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .step-row:hover {
+    transform: translateX(4px);
+    background: var(--primary-tint);
+    border-color: var(--line);
+  }
+  .step-num-badge {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    font-family: "Inter", sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: background-color 0.3s ease;
+  }
+  .step-text-main {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .step-text-sub {
+    font-size: 11.5px;
+    color: var(--ink-sub);
+    margin-top: 2px;
+    line-height: 1.45;
+  }
+
+  /* Lower Theme Selector Section */
+  .lower-section {
+    max-width: 1120px;
+    width: 100%;
+    margin: 24px auto 0;
+    padding: 0 24px;
+    animation: cardRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+  }
+  .theme-panel {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px 24px;
+    border: 1px solid var(--line-light);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .theme-panel-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .theme-panel-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .theme-panel-desc {
+    font-size: 12px;
+    color: var(--ink-sub);
+  }
+  .theme-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .theme-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: #ffffff;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .theme-pill-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+  }
+  .theme-pill-btn.active {
+    border-color: var(--primary);
+    background: var(--primary-tint);
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(20, 40, 75, 0.12);
+  }
+  .swatch-pair {
+    display: inline-flex;
+    align-items: center;
+  }
+  .swatch-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
+  }
+  .swatch-dot + .swatch-dot {
+    margin-left: -4px;
+  }
+
+  /* Minimal Footer */
+  .landing-footer {
+    max-width: 1120px;
+    width: 100%;
+    margin: 28px auto 0;
+    padding: 14px 24px 20px;
+    border-top: 1px solid var(--line-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: var(--ink-muted);
+  }
+
+  /* Tablet & Smartphone Responsive Breakpoints */
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .hero-band {
+      padding: 24px 16px 28px;
+    }
+    .dropzone-card, .steps-card {
+      padding: 20px;
+    }
+    .lower-section {
+      padding: 0 16px;
+      margin-top: 16px;
+    }
+    .theme-panel {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .theme-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 540px) {
+    .app-header {
+      padding: 10px 14px;
+    }
+    .app-title {
+      font-size: 14.5px;
+    }
+    .dropzone-inner {
+      padding: 24px 14px;
+    }
+    .cta-upload-btn {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 14.5px;
+    }
+    .theme-pills {
+      grid-template-columns: 1fr;
+    }
+    .theme-pill-btn {
+      justify-content: flex-start;
+      padding: 12px 14px;
+    }
+    .status {
+      margin-left: 0;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  /* Respect OS Reduced Motion Preference */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-aurora, .privacy-dot, .dropzone-card, .steps-card, .lower-section {
+      animation: none !important;
+    }
+    * {
+      transition: none !important;
+    }
+  }
   /* Page Wrapper & A4 Landscape Canvas */
   .pages-wrapper {
     display: flex;
@@ -893,6 +1392,9 @@ if (typeof XLSX === 'undefined') {
     font-variant-numeric: tabular-nums;
     letter-spacing: 0;
   }
+  .num.neg {
+    color: #c5221f;
+  }
   .ctr {
     text-align: center;
   }
@@ -1016,44 +1518,180 @@ if (typeof XLSX === 'undefined') {
   }
   @media print {
     body { background: #fff; }
-    .toolbar, .welcome-box, .no-print, .floating-ctrl-bar { display: none !important; }
+    .app-header, .landing-view, .no-print, .floating-ctrl-bar { display: none !important; }
     .pages-wrapper { padding: 0; gap: 0; }
     .page { box-shadow: none; margin: 0; }
   }
+
 </style>
 </head>
 <body>
 
-<div class="toolbar">
-  <h1>経営指針書 A4横レイアウト出力ツール v10（数式自動評価・行動計画凡例対応）</h1>
-  <label class="file-label">
-    📂 入力済みExcel(.xlsx)を選択
-    <input type="file" id="excelInput" accept=".xlsx,.xls" onclick="this.value=null;" />
-  </label>
-  <select class="theme-select" onchange="document.body.className=this.value">
-    <option value="">カラー：ロイヤルネイビー × ゴールド</option>
-    <option value="theme-green">カラー：フォレストグリーン × ゴールド</option>
-    <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
-  </select>
-  <button class="btn-print" onclick="window.print()">🖨️ A4横で印刷 / PDF保存</button>
-  <span class="status" id="statusText">Excelファイルを選択してください</span>
-</div>
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="brand-title-group">
+      <h1 class="app-title">経営指針書 自動レイアウト＆PDF出力ツール</h1>
+      <span class="privacy-pill"><span class="privacy-dot"></span>ブラウザ内完結・外部送信なし</span>
+    </div>
+    <div class="output-controls" id="outputControls">
+      <label class="btn-reselect" for="excelInput" onclick="document.getElementById('excelInput').value=null;">
+        📂 別のExcel(.xlsx)を選択
+      </label>
+      <select class="theme-select" id="toolbarThemeSelect" onchange="applyTheme(this.value)">
+        <option value="">カラー：ロイヤルネイビー × ゴールド</option>
+        <option value="theme-green">カラー：フォレストグリーン × ゴールド</option>
+        <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
+      </select>
+      <button class="btn-print" onclick="window.print()">🖨️ A4横で印刷 / PDF保存</button>
+      <button class="btn-back-top" onclick="resetToTop()">トップへ戻る</button>
+      <span class="status" id="statusText">Excelファイルを選択してください</span>
+    </div>
+  </div>
+</header>
 
-<div class="welcome-box" id="welcomeBox">
-  <h2>使い方</h2>
-  <ol style="padding-left:20px;">
-    <li>左上の<strong>「📂 入力済みExcel(.xlsx)を選択」</strong>から入力済みの経営指針書Excelファイル（<code>.xlsx</code>）を選択します。</li>
-    <li><strong>「表紙」</strong>右上の操作バーから自社ロゴ画像を挿入でき、<strong>配置場所（4パターン）</strong>と<strong>背景処理（そのまま／白プレート／枠線）</strong>を選択できます。</li>
-    <li><strong>「長期（10年）ビジョン」</strong>ページでは、画像を挿入すると<strong>「右隅」「右半分」「全面背景（文字重ね）」「全面前面（画像主役）」</strong>の4パターンから選択できます。</li>
-  </ol>
-</div>
-
+<input type="file" id="excelInput" accept=".xlsx,.xls" onclick="this.value=null;" />
 <input type="file" id="coverLogoInput" accept="image/*" />
 <input type="file" id="visionImgInput" accept="image/*" />
+
+<main class="landing-view" id="landingView">
+  <div>
+    <section class="hero-band">
+      <div class="hero-aurora"></div>
+      <div class="hero-grid">
+        <div class="dropzone-card">
+          <div class="dropzone-inner" id="landingDropzone">
+            <div class="dropzone-icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <polyline points="9 15 12 12 15 15"></polyline>
+              </svg>
+            </div>
+            <button type="button" class="cta-upload-btn" onclick="document.getElementById('excelInput').click()">
+              📂 入力済みExcel(.xlsx)を選択
+            </button>
+            <div class="dropzone-hint">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
+          </div>
+        </div>
+
+        <aside class="steps-card">
+          <div>
+            <h2 class="steps-card-title">使い方（3ステップ）</h2>
+            <div class="step-list">
+              <div class="step-row">
+                <div class="step-num-badge">1</div>
+                <div>
+                  <div class="step-text-main">入力済みExcel（.xlsx）を選択</div>
+                  <div class="step-text-sub">PCのフォルダやiPad/iPhoneの「ファイル」から選択します</div>
+                </div>
+              </div>
+              <div class="step-row">
+                <div class="step-num-badge">2</div>
+                <div>
+                  <div class="step-text-main">表紙ロゴ・ビジョン画像やカラーを調整</div>
+                  <div class="step-text-sub">出力後の画面上で自社ロゴ配置や配色をいつでも切替できます</div>
+                </div>
+              </div>
+              <div class="step-row">
+                <div class="step-num-badge">3</div>
+                <div>
+                  <div class="step-text-main">A4横レイアウトで印刷・PDF保存</div>
+                  <div class="step-text-sub">全シートの数値を自動計算し、A4横1ページ単位で美しく出力します</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="lower-section">
+      <div class="theme-panel">
+        <div class="theme-panel-info">
+          <div class="theme-panel-label">カラーテーマ選択</div>
+          <div class="theme-panel-desc">出力後も画面上部のツールバーからいつでも変更できます</div>
+        </div>
+        <div class="theme-pills">
+          <button type="button" class="theme-pill-btn active" data-theme="" onclick="applyTheme('')">
+            <span class="swatch-pair"><span class="swatch-dot" style="background:#14284b;"></span><span class="swatch-dot" style="background:#b8892b;"></span></span>
+            ロイヤルネイビー × ゴールド
+          </button>
+          <button type="button" class="theme-pill-btn" data-theme="theme-green" onclick="applyTheme('theme-green')">
+            <span class="swatch-pair"><span class="swatch-dot" style="background:#143d29;"></span><span class="swatch-dot" style="background:#b8892b;"></span></span>
+            フォレストグリーン × ゴールド
+          </button>
+          <button type="button" class="theme-pill-btn" data-theme="theme-slate" onclick="applyTheme('theme-slate')">
+            <span class="swatch-pair"><span class="swatch-dot" style="background:#1e293b;"></span><span class="swatch-dot" style="background:#0284c7;"></span></span>
+            スレートチャコール × ブルー
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="landing-footer">
+    <span>経営指針書 自動レイアウト＆PDF出力ツール</span>
+    <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
+  </footer>
+</main>
 
 <div class="pages-wrapper" id="pagesContainer"></div>
 
 <script>
+// Theme Synchronization (Landing Pills <-> Output Toolbar Select)
+function applyTheme(themeVal) {
+  document.body.classList.remove('theme-green', 'theme-slate');
+  if (themeVal) document.body.classList.add(themeVal);
+
+  const sel = document.getElementById('toolbarThemeSelect');
+  if (sel && sel.value !== themeVal) sel.value = themeVal;
+
+  document.querySelectorAll('.theme-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', (btn.dataset.theme || '') === themeVal);
+  });
+}
+
+function resetToTop() {
+  document.body.classList.remove('has-pages');
+  document.getElementById('pagesContainer').innerHTML = '';
+  document.getElementById('statusText').textContent = 'Excelファイルを選択してください';
+  document.title = '経営指針書 自動レイアウト＆A4横PDF出力ツール';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Drag & Drop Support on Landing Dropzone
+(function initDropzone() {
+  const dz = document.getElementById('landingDropzone');
+  const fileInput = document.getElementById('excelInput');
+  if (!dz || !fileInput) return;
+
+  ['dragenter', 'dragover'].forEach(evtName => {
+    dz.addEventListener(evtName, e => {
+      e.preventDefault();
+      e.stopPropagation();
+      dz.classList.add('drag-over');
+    });
+  });
+  ['dragleave', 'drop'].forEach(evtName => {
+    dz.addEventListener(evtName, e => {
+      e.preventDefault();
+      e.stopPropagation();
+      dz.classList.remove('drag-over');
+    });
+  });
+  dz.addEventListener('drop', e => {
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleExcelFile(files[0]);
+    }
+  });
+  dz.addEventListener('click', e => {
+    if (e.target.closest('button') || e.target.closest('label')) return;
+    fileInput.click();
+  });
+})();
+
 // State for Cover Logo
 let coverLogoDataUrl = null;
 let coverLogoPos = 'right-top';   // 'right-top' | 'left-top' | 'right-bottom' | 'center-hero'
@@ -1327,8 +1965,7 @@ function renderVisionBody() {
   container.innerHTML = ctrlHTML + `<div style="flex:1;overflow:hidden;">${bodyHTML}</div>`;
 }
 
-document.getElementById('excelInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
+function handleExcelFile(file) {
   if (!file) return;
   const statusEl = document.getElementById('statusText');
   if (typeof XLSX === 'undefined') {
@@ -1352,10 +1989,14 @@ document.getElementById('excelInput').addEventListener('change', function(e) {
     alert('ファイルの読み込みに失敗しました。');
   };
   reader.readAsArrayBuffer(file);
+}
+
+document.getElementById('excelInput').addEventListener('change', function(e) {
+  handleExcelFile(e.target.files[0]);
 });
 
 // =========================================================
-// Built-in Excel Formula Evaluator (Ensures cached-less .xlsx files calculate 100%)
+// Built-in Excel Formula Evaluator v11 (Live formula execution, ignores empty <v></v> cache)
 // =========================================================
 let activeWorkbook = null;
 const evalCache = {};
@@ -1420,7 +2061,12 @@ function splitArgs(str) {
 function toNum(v) {
   if (v === '' || v === null || v === undefined) return 0;
   if (typeof v === 'number') return isNaN(v) ? 0 : v;
-  const n = parseFloat(String(v).replace(/,/g, '').replace(/%$/, ''));
+  const s = String(v).trim();
+  if (s.endsWith('%')) {
+    const p = parseFloat(s.slice(0, -1).replace(/,/g, ''));
+    return isNaN(p) ? 0 : p / 100;
+  }
+  const n = parseFloat(s.replace(/,/g, ''));
   return isNaN(n) ? 0 : n;
 }
 
@@ -1436,24 +2082,22 @@ function evalRawCell(sheetName, addr) {
     return '';
   }
   const cell = ws[cleanAddr];
-  if (cell.v !== undefined && cell.v !== null && cell.v !== '' && (!cell.f || typeof cell.v === 'number')) {
-    evalCache[key] = cell.v;
-    return cell.v;
-  }
-  if (!cell.f) {
-    const res = cell.v !== undefined ? cell.v : '';
+
+  // Always evaluate formula strings live so empty <v></v> tags (parsed as v=0 / w="-") never mask real results
+  if (cell.f) {
+    evalVisiting.add(key);
+    let res = '';
+    try {
+      res = evalFormulaExpr(cell.f, sheetName);
+    } catch (e) {
+      res = (cell.v !== undefined && cell.v !== null) ? cell.v : '';
+    }
+    evalVisiting.delete(key);
     evalCache[key] = res;
     return res;
   }
 
-  evalVisiting.add(key);
-  let res = '';
-  try {
-    res = evalFormulaExpr(cell.f, sheetName);
-  } catch (e) {
-    res = cell.v !== undefined ? cell.v : '';
-  }
-  evalVisiting.delete(key);
+  const res = (cell.v !== undefined && cell.v !== null) ? cell.v : '';
   evalCache[key] = res;
   return res;
 }
@@ -1484,7 +2128,10 @@ function evalFormulaExpr(expr, sheetName) {
   if (expr.startsWith('"') && expr.endsWith('"') && expr.indexOf('"', 1) === expr.length - 1) {
     return expr.slice(1, -1);
   }
-  // Numeric literal
+  // Numeric literal (including percentage literal like 5%)
+  if (/^-?\d+(\.\d+)?%$/.test(expr)) {
+    return parseFloat(expr.slice(0, -1)) / 100;
+  }
   if (/^-?\d+(\.\d+)?$/.test(expr)) {
     return parseFloat(expr);
   }
@@ -1508,7 +2155,6 @@ function evalFormulaExpr(expr, sheetName) {
   // Function calls: FUNC(...)
   const funcMatch = expr.match(/^([A-Z0-9_]+)\((.*)\)$/s);
   if (funcMatch) {
-    // Verify the opening '(' matches the very last ')'
     let d = 0, ins = false, isWholeFunc = true;
     const openIdx = funcMatch[1].length;
     for (let i = openIdx; i < expr.length; i++) {
@@ -1546,19 +2192,40 @@ function evalFormulaExpr(expr, sheetName) {
       if (fn === 'ABS') {
         return Math.abs(toNum(evalFormulaExpr(args[0], sheetName)));
       }
+      if (fn === 'ROUND') {
+        const valNum = toNum(evalFormulaExpr(args[0], sheetName));
+        const digits = args[1] !== undefined ? toNum(evalFormulaExpr(args[1], sheetName)) : 0;
+        const factor = Math.pow(10, digits);
+        return Math.round(valNum * factor) / factor;
+      }
       if (fn === 'SUM') {
         let sum = 0;
         args.forEach(a => {
           if (a.includes(':')) {
             parseRange(a).forEach(ad => {
               const v = evalRawCell(sheetName, ad);
-              if (typeof v === 'number') sum += v;
+              if (typeof v === 'number' && !isNaN(v)) sum += v;
             });
           } else {
             sum += toNum(evalFormulaExpr(a, sheetName));
           }
         });
         return sum;
+      }
+      if (fn === 'AVERAGE') {
+        let sum = 0, cnt = 0;
+        args.forEach(a => {
+          if (a.includes(':')) {
+            parseRange(a).forEach(ad => {
+              const v = evalRawCell(sheetName, ad);
+              if (typeof v === 'number' && !isNaN(v)) { sum += v; cnt++; }
+            });
+          } else {
+            const v = evalFormulaExpr(a, sheetName);
+            if (typeof v === 'number' && !isNaN(v)) { sum += v; cnt++; }
+          }
+        });
+        return cnt === 0 ? '#DIV/0!' : sum / cnt;
       }
       if (fn === 'COUNT') {
         let cnt = 0;
@@ -1591,7 +2258,7 @@ function evalFormulaExpr(expr, sheetName) {
     }
   }
 
-  // Binary arithmetic (+, -, *, /) at top level (lowest precedence first: +/- then */)
+  // Binary arithmetic (+, -, *, /) at top level
   for (const ops of [['+', '-'], ['*', '/']]) {
     depth = 0; inStr = false;
     for (let i = expr.length - 1; i >= 1; i--) {
@@ -1614,6 +2281,14 @@ function evalFormulaExpr(expr, sheetName) {
         }
       }
     }
+  }
+
+  // Unary minus/plus at index 0 (e.g. -B14)
+  if (expr.startsWith('-')) {
+    return -toNum(evalFormulaExpr(expr.slice(1), sheetName));
+  }
+  if (expr.startsWith('+')) {
+    return toNum(evalFormulaExpr(expr.slice(1), sheetName));
   }
 
   // Cross-sheet reference: 'SheetName'!A1 or SheetName!A1
@@ -1683,8 +2358,6 @@ function formatExcelValue(rawVal, fmt) {
 function val(ws, addr) {
   if (!ws || !ws[addr]) return '';
   const cell = ws[addr];
-  if (cell.w !== undefined && cell.w !== '') return cell.w;
-  // Find sheet name for formula evaluation
   let sName = '';
   if (activeWorkbook) {
     for (const name of activeWorkbook.SheetNames) {
@@ -1695,6 +2368,7 @@ function val(ws, addr) {
     const evaluated = evalRawCell(sName, addr);
     return formatExcelValue(evaluated, cell.z || '');
   }
+  if (cell.w !== undefined && cell.w !== '') return cell.w;
   if (cell.v !== undefined && cell.v !== null) {
     return formatExcelValue(cell.v, cell.z || '');
   }
@@ -1711,6 +2385,9 @@ function fmtCell(s, placeholder = '—') {
 function fmtNum(s) {
   const t = String(s || '').trim();
   if (!t || t === '-') return `<span class="empty-dash">—</span>`;
+  if (t.startsWith('-') && t.length > 1) {
+    return `<span style="color:#c5221f;">${esc(t)}</span>`;
+  }
   return esc(t);
 }
 function impactBadge(s) {
@@ -1746,7 +2423,16 @@ function buildDynamicCatTable(rows, colgroupHTML, theadHTML, tableStyle = '') {
       ${r.cellsHTML}
     </tr>`;
   });
-  const autoFont = displayRows.length <= 6 ? 'font-size:9.5pt;line-height:1.6;' : (displayRows.length <= 10 ? 'font-size:9pt;line-height:1.5;' : '');
+  let autoFont = '';
+  if (displayRows.length <= 6) {
+    autoFont = 'font-size:9.5pt;line-height:1.6;';
+  } else if (displayRows.length <= 10) {
+    autoFont = 'font-size:9pt;line-height:1.5;';
+  } else if (displayRows.length <= 15) {
+    autoFont = 'font-size:8.1pt;line-height:1.35;';
+  } else {
+    autoFont = 'font-size:7.3pt;line-height:1.22;';
+  }
   return `<table class="exec fill-height" style="${autoFont}${tableStyle}">${colgroupHTML}${theadHTML}<tbody>${trs}</tbody></table>`;
 }
 
@@ -1772,23 +2458,36 @@ function renderBook(wb) {
 
   const container = document.getElementById('pagesContainer');
   container.innerHTML = '';
-  document.getElementById('welcomeBox').style.display = 'none';
+  document.body.classList.add('has-pages');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const ws0 = wb.Sheets['00_出力設定・表紙'];
   if (!ws0) { alert('「00_出力設定・表紙」シートが見つかりません。'); return; }
 
-  const company = val(ws0, 'B24') || '（会社名未入力）';
-  const rep = val(ws0, 'B25');
-  const term = val(ws0, 'B26');
-  const startYM = val(ws0, 'B27');
-  const endYM = val(ws0, 'B28');
-  const pubDate = val(ws0, 'B29');
+  const company = val(ws0, 'B24').trim() || '（会社名未入力）';
+  const rep = val(ws0, 'B25').trim();
+  const rawTerm = val(ws0, 'B26').trim();
+  const term = rawTerm.replace(/^第/, '').replace(/期$/, '').trim();
+  const startYM = val(ws0, 'B27').trim();
+  const endYM = val(ws0, 'B28').trim();
+  const pubDate = val(ws0, 'B29').trim();
+
+  // Set document.title so browser PDF export defaults to "対象期数_会社名_経営指針書.pdf"
+  const safeTerm = term ? `第${term}期` : '経営指針書';
+  const safeCompany = company.replace(/[\\/:*?"<>|]/g, '_');
+  document.title = `${safeTerm}_${safeCompany}_経営指針書`;
 
   const selected = [];
   for (let r = 5; r <= 21; r++) {
     if (val(ws0, 'B'+r).trim() && val(ws0, 'D'+r).trim() === '出力する') {
       selected.push(val(ws0, 'B'+r).trim());
     }
+  }
+
+  if (selected.length === 0) {
+    document.getElementById('statusText').textContent = '出力対象シートが0件です';
+    alert('「00_出力設定・表紙」シートで「出力する」に設定されているシートがありません。');
+    return;
   }
 
   document.getElementById('statusText').textContent = `読み込み完了：全 ${selected.length} ページ出力対象`;
@@ -2102,8 +2801,15 @@ function renderBook(wb) {
           <td class="num">${fmtNum(val(ws,'H'+r))}</td><td class="num">${fmtNum(val(ws,'I'+r))}</td>
         </tr>`;
       }
+      const memoText = val(ws, 'B24').trim();
+      const memoHTML = memoText ? `
+        <div style="margin-top:5px;padding:5px 10px;background:var(--surface-sub);border:0.5pt solid var(--line);border-left:3pt solid var(--primary);border-radius:4px;font-size:7.3pt;line-height:1.38;white-space:pre-wrap;">
+          <strong style="color:var(--primary);">【検討事項メモ】</strong> ${esc(memoText.replace(/\n+/g, '　'))}
+        </div>
+      ` : '';
+      const tblFont = memoText ? 'font-size:7.2pt;line-height:1.12;' : 'font-size:7.6pt;line-height:1.18;';
       makePage('12 / MID-TERM FINANCIAL PLAN', '中期3ヵ年 利益・資金計画（単位：千円）', `
-        <table class="exec fill-height" style="font-size:7.6pt;line-height:1.18;">
+        <table class="exec fill-height" style="${tblFont}">
           <colgroup>
             <col style="width:28%;">
             <col style="width:11%;"><col style="width:7%;">
@@ -2117,6 +2823,7 @@ function renderBook(wb) {
           </thead>
           <tbody>${trs}</tbody>
         </table>
+        ${memoHTML}
       `);
     }
 
@@ -2156,12 +2863,24 @@ function renderBook(wb) {
     }
 
     else if (sName === '16_行動計画') {
+      // Auto-derive calendar month numbers from startYM (e.g. "2026年4月") if cell header is "(　月)"
+      const startMonthMatch = startYM.match(/(\d{1,2})\s*月/);
+      const baseMonth = startMonthMatch ? parseInt(startMonthMatch[1], 10) : null;
+
       let mh = '';
       for (let m = 1; m <= 12; m++) {
         const colL = XLSX.utils.encode_col(4 + m);
         const rawH = val(ws, colL + '5');
         const match = rawH.match(/\(([^)]+)\)/);
-        const label = (match && match[1].trim() !== '月') ? match[1].trim() : `${m}月`;
+        let label = (match && match[1].trim() !== '月') ? match[1].trim() : '';
+        if (!label) {
+          if (baseMonth && baseMonth >= 1 && baseMonth <= 12) {
+            const calM = ((baseMonth - 1 + (m - 1)) % 12) + 1;
+            label = `${calM}月`;
+          } else {
+            label = `${m}月`;
+          }
+        }
         mh += `<th class="sub" style="padding:3px 1px;font-size:7.5pt;">${esc(label)}</th>`;
       }
       const activeRows = [];
@@ -2251,6 +2970,7 @@ function renderBook(wb) {
     }
   });
 }
+
 </script>
 </body>
 </html>
