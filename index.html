@@ -1610,7 +1610,7 @@ if (typeof XLSX === 'undefined') {
 <header class="app-header">
   <div class="app-header-inner">
     <div class="brand-title-group">
-      <h1 class="app-title">経営指針書 自動レイアウト＆PDF出力ツール</h1>
+      <h1 class="app-title">経営指針書 自動レイアウト＆PDF出力ツール <span style="font-size:11px;font-weight:700;background:var(--primary-tint);color:var(--primary);padding:2px 8px;border-radius:999px;margin-left:4px;vertical-align:middle;">v14</span></h1>
       <span class="privacy-pill"><span class="privacy-dot"></span>ブラウザ内完結・外部送信なし</span>
     </div>
     <div class="output-controls" id="outputControls">
@@ -2305,7 +2305,9 @@ function evalFormulaExpr(expr, sheetName) {
       else if (ch === '&' && depth === 0) {
         const left = evalFormulaExpr(expr.slice(0, i), sheetName);
         const right = evalFormulaExpr(expr.slice(i + 1), sheetName);
-        return String(left ?? '') + String(right ?? '');
+        const lStr = (typeof left === 'number' && Number.isInteger(left)) ? String(left) : String(left ?? '');
+        const rStr = (typeof right === 'number' && Number.isInteger(right)) ? String(right) : String(right ?? '');
+        return lStr + rStr;
       }
     }
   }
