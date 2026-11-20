@@ -18,6 +18,7 @@
     dialog.showModal();
     const player = MotionSlides.mount(dialog, {
       slides, width, height, transition: 'S08', focus: true,
+      manualSteps: true,
       onClose: () => dialog.close(),
       configure(slide) {
         const heading = slide.querySelector('.page-title, .cover-title');
@@ -27,6 +28,7 @@
         }
         const body = slide.querySelector('.page-body');
         if (body) {
+          body.dataset.msStep = '1';
           const tables = [...body.querySelectorAll('table.exec')];
           for (const table of tables) {
             MotionPresets.setEffect(table, 'B01');
@@ -36,9 +38,8 @@
             const table = rows[0].closest('table');
             if (table) MotionPresets.setEffect(table, 'B01');
           }
-          const highlights = body.querySelectorAll('.kpi-hero-val, .vision-highlight, .strategy-card');
+          const highlights = body.querySelectorAll('.vision-highlight, .strategy-card');
           highlights.forEach((item, index) => {
-            item.dataset.msStep = String(Math.min(3, index + 1));
             item.dataset.msDelay = String(index * 90);
             item.dataset.msEffect = 'T01';
           });

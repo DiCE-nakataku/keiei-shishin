@@ -46,7 +46,7 @@
 
   function mount(host, {
     slides, title = '発表モード', width, height, transition = 'S01', onClose,
-    configure, onChange, focus = false, demoTiming = false,
+    configure, onChange, focus = false, demoTiming = false, manualSteps = false,
   }) {
     if (!slides.length || width <= 0 || height <= 0) return null;
     const root = document.createElement('div');
@@ -168,8 +168,9 @@
       cancel();
       const cutoff = steps[stepIndex];
       const animated = activeMotion();
+      const stepping = manualSteps || animated;
       for (const [node, wasInert] of gates) {
-        const pending = animated && stepOf(node) > cutoff;
+        const pending = stepping && stepOf(node) > cutoff;
         if (pending && node.contains(document.activeElement)) stage.focus({ preventScroll: true });
         node.toggleAttribute('data-ms-pending', pending);
         node.inert = wasInert || pending;
@@ -185,10 +186,14 @@
       }
       jump.value = current;
       pageNumber.textContent = `${current + 1} / ${slides.length}`;
-      stepNumber.textContent = animated && steps.length > 1 ? `段階 ${stepIndex} / ${steps.length - 1}` : '';
-      prevButton.setAttribute('aria-disabled', current === 0 && (!animated || stepIndex === 0));
+      stepNumber.textContent = stepping && steps.length > 1
+        ? manualSteps
+          ? `${stepIndex === 0 ? 'Enterで表示' : 'Enterで次へ'}（段階 ${stepIndex} / ${steps.length - 1}）`
+          : `段階 ${stepIndex} / ${steps.length - 1}`
+        : '';
+      prevButton.setAttribute('aria-disabled', current === 0 && (!stepping || stepIndex === 0));
       nextButton.setAttribute('aria-disabled',
-        current === slides.length - 1 && (!animated || stepIndex === steps.length - 1));
+        current === slides.length - 1 && (!stepping || stepIndex === steps.length - 1));
       onChange?.(state());
     }
 
@@ -239,7 +244,7 @@
     }
 
     function next() {
-      if (activeMotion() && stepIndex < steps.length - 1) {
+      if ((manualSteps || activeMotion()) && stepIndex < steps.length - 1) {
         const previous = steps[stepIndex++];
         render(previous);
       } else {
@@ -248,7 +253,7 @@
     }
 
     function previous() {
-      if (activeMotion() && stepIndex > 0) {
+      if ((manualSteps || activeMotion()) && stepIndex > 0) {
         stepIndex--;
         render(Infinity);
       } else {
@@ -303,6 +308,10 @@
           event.target.closest('input, select, textarea, [contenteditable]:not([contenteditable="false"])')) return;
       switch (event.key) {
         case ' ':
+          if (event.target.closest('button, a')) return;
+          next();
+          break;
+        case 'Enter':
           if (event.target.closest('button, a')) return;
           next();
           break;
