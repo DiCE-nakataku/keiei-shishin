@@ -1,0 +1,87 @@
+dialog.ms-dialog {
+  margin: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  padding: 0;
+}
+.ms-dialog::backdrop { background: #111a29; }
+.ms-dialog[open], .ms-player {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  color: #f3f5f9;
+  background: #111a29;
+  color-scheme: dark;
+  font: 15px/1.4 system-ui, "Yu Gothic UI", sans-serif;
+}
+.ms-player {
+  --ms-controls-bg: #192536;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+    max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+}
+.ms-chrome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  padding: 4px;
+}
+.ms-heading { margin: 0 auto 0 0; font: inherit; font-weight: 700; }
+.ms-chrome button, .ms-chrome select {
+  box-sizing: border-box;
+  min-height: 44px;
+  min-width: 44px;
+  color: inherit;
+  background: var(--ms-controls-bg);
+  border: 1px solid #8593a8;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font: inherit;
+}
+.ms-chrome button { cursor: pointer; }
+.ms-chrome button[aria-disabled="true"] { opacity: .46; cursor: default; }
+.ms-chrome button:focus-visible, .ms-chrome select:focus-visible {
+  outline: 2px solid #ffdb85;
+  outline-offset: 2px;
+}
+.ms-caption { margin: 0; min-width: 78px; text-align: center; font-variant-numeric: tabular-nums; }
+.ms-step { display: block; color: #c0cfdf; font-size: .8em; }
+.ms-stage {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.ms-frame { position: relative; overflow: hidden; }
+.ms-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+.ms-canvas > .page { margin: 0; box-shadow: none; }
+.ms-canvas [data-ms-pending] { visibility: hidden !important; }
+@media print {
+  .ms-player, .ms-dialog[open] { display: none !important; }
+  .ms-canvas [data-ms-pending] { visibility: visible !important; }
+}
+@media (max-width: 620px) {
+  .ms-heading { flex-basis: 100%; text-align: center; }
+  .ms-chrome { gap: 4px 6px; }
+  .ms-chrome select { max-width: min(44vw, 210px); }
+}
+
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+  .ms-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .ms-chrome .ms-jump { max-width: min(31vw, 225px); }
+}

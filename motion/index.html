@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HTML モーションスライド｜演出ショーケース</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="player.css">
+  <link rel="stylesheet" href="showcase.css">
+</head>
+<body>
+  <div class="showcase" id="showcase" data-theme="report">
+    <header class="showcase-tools">
+      <a href="../index.html">経営指針書ツール</a>
+      <label>テーマ <select id="demoTheme">
+        <option value="report">経営報告</option>
+        <option value="proposal">B2B 提案</option>
+        <option value="training">研修</option>
+      </select></label>
+      <label>演出を比較 <select id="demoEffect" disabled><option value="">演出を選択</option></select></label>
+      <button id="demoTry" type="button" disabled>試す</button>
+      <label>再生速度 <select id="demoSpeed">
+        <option value="1">標準</option>
+        <option value="0.5">半速</option>
+      </select></label>
+      <button id="demoPrint" type="button">静止版を印刷</button>
+    </header>
+    <div id="demoPlayer"></div>
+    <main id="demoSource" class="demo-source" aria-label="全スライドの静止版">
+<section class="demo-slide demo-intro" data-title="はじめに" aria-labelledby="intro">
+  <div class="demo-intro-content">
+    <p class="demo-kicker" data-ms-effect="T01" data-ms-duration="420">HTML モーションスライド</p>
+    <h2 id="intro" data-ms-effect="T02" data-ms-duration="1150" data-ms-delay="240" data-ms-stagger="360">
+      <span data-ms-mask-line data-ms-duration="930">発表の流れを、</span>
+      <span data-ms-mask-line data-ms-duration="1190">動きで伝える。</span>
+    </h2>
+    <p data-ms-effect="T01" data-ms-duration="690" data-ms-delay="1580">見出し・写真・図表を、説明する順番で見せる。<br>矢印キーで進み、比較するときは「半速」で再生できます。</p>
+  </div>
+  <div class="demo-cover-art" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <footer>デモ用の架空データと生成画像を使用</footer>
+</section>
+<section class="demo-slide demo-t" data-title="文字" data-transition="S01" aria-labelledby="heading-1">
+  <p class="demo-kicker">文字</p>
+  <h2 id="heading-1">次に読む言葉へ、視線を運ぶ。</h2>
+  <p class="demo-sub">短い見出しに演出をつけ、読む順番を示す。</p>
+  <div class="demo-grid">
+    <article class="demo-card" data-example="T01">
+      <div class="demo-id">T01</div>
+      <h3>フェード＆ライズ</h3>
+      <div class="demo-visual"><div class="demo-type" data-ms-effect="T01" data-ms-step="1"><span>現場から、</span><b>次の改善へ。</b></div></div>
+      <p>本文や見出しを静かに導入する。</p>
+    </article>
+    <article class="demo-card" data-example="T02">
+      <div class="demo-id">T02</div>
+      <h3>マスク表示</h3>
+      <div class="demo-visual">
+        <div class="demo-type demo-mask" data-ms-step="2" data-ms-effect="T02">
+          <span class="demo-mask-row"><span data-ms-mask-line>現場から、</span></span>
+          <span class="demo-mask-row"><b data-ms-mask-line>次の改善へ。</b></span>
+        </div>
+      </div>
+      <p>基準線から1行ずつ現れる。</p>
+    </article>
+    <article class="demo-card" data-example="T06">
+      <div class="demo-id">T06</div>
+      <h3>強調帯</h3>
+      <div class="demo-visual"><div class="demo-type" data-ms-effect="T06" data-ms-at="3"><span>現場から、</span><span class="demo-mark"><i aria-hidden="true" data-ms-highlight></i><b>次の改善へ。</b></span></div></div>
+      <p>読ませたい言葉の位置を示す。</p>
+    </article>
+  </div>
+  <footer></footer>
+</section>
+<section class="demo-slide demo-i" data-title="イラスト" data-transition="S01" aria-labelledby="heading-2">
+  <p class="demo-kicker">イラスト</p>
+  <h2 id="heading-2">関係が見える順に、図を組み立てる。</h2>
+  <p class="demo-sub">同じ「観測・分析・改善」の流れを比較する。</p>
+  <div class="demo-grid">
+    <article class="demo-card" data-example="I01">
+      <div class="demo-id">I01</div>
+      <h3>パーツの組み立て</h3>
+      <div class="demo-visual"><div class="demo-object" data-ms-effect="I01" data-ms-step="1"><div class="demo-flow"><div data-ms-part data-ms-node>観測</div><div data-ms-part data-ms-node>分析</div><div data-ms-part data-ms-node>改善</div></div></div></div>
+      <p>構成要素をひとつずつ見せる。</p>
+    </article>
+    <article class="demo-card" data-example="I02">
+      <div class="demo-id">I02</div>
+      <h3>輪郭の描画</h3>
+      <div class="demo-visual"><div class="demo-object" data-ms-effect="I02" data-ms-step="2"><svg viewBox="0 0 290 95" role="img" aria-label="観測から分析を経て改善へ"><g fill="none" stroke="currentColor" stroke-width="2.5"><rect data-ms-stroke x="5" y="21" width="76" height="52" rx="9"/><rect data-ms-stroke x="107" y="21" width="76" height="52" rx="9"/><rect data-ms-stroke x="209" y="21" width="76" height="52" rx="9"/><path d="M81 47h26m76 0h26"/></g><text x="43" y="52" text-anchor="middle">観測</text><text x="145" y="52" text-anchor="middle">分析</text><text x="247" y="52" text-anchor="middle">改善</text></svg></div></div>
+      <p>図の範囲や形状を目で追える。</p>
+    </article>
+    <article class="demo-card" data-example="I05">
+      <div class="demo-id">I05</div>
+      <h3>因果の連鎖</h3>
+      <div class="demo-visual"><div class="demo-object" data-ms-effect="I05" data-ms-step="3"><div class="demo-flow"><div data-ms-part data-ms-node>観測</div><div data-ms-part data-ms-node>分析</div><div data-ms-part data-ms-node>改善</div></div></div></div>
+      <p>最初の行動から結果まで順に示す。</p>
+    </article>
+  </div>
+  <footer></footer>
+</section>
+<section class="demo-slide demo-p" data-title="写真" data-transition="S02" aria-labelledby="heading-3">
+  <p class="demo-kicker">写真</p>
+  <h2 id="heading-3">全体を見せてから、一点に導く。</h2>
+  <p class="demo-sub">同じ写真で、場面の導入と注釈の使い分けを比較する。</p>
+  <div class="demo-grid">
+    <article class="demo-card" data-example="P01">
+      <div class="demo-id">P01</div>
+      <h3>クロスフェード</h3>
+      <div class="demo-visual">
+        <figure class="demo-photo demo-crossfade">
+          <img src="example-bridge.jpg" width="1672" height="941" alt="川を渡る鉄道橋の全景">
+          <span class="demo-shot-label" aria-hidden="true">全景</span>
+          <div class="demo-photo-layer" data-ms-step="1" data-ms-effect="P01">
+            <img class="demo-photo-detail" src="example-bridge.jpg" width="1672" height="941" alt="同じ鉄道橋の橋脚を拡大した写真">
+            <span class="demo-shot-label" aria-hidden="true">橋脚の拡大</span>
+          </div>
+        </figure>
+      </div>
+      <p>橋の全景から橋脚の拡大へ。</p>
+    </article>
+    <article class="demo-card" data-example="P02">
+      <div class="demo-id">P02</div>
+      <h3>方向付きワイプ</h3>
+      <div class="demo-visual"><figure class="demo-photo"><div class="demo-photo-layer" data-ms-step="2" data-ms-effect="P02"><img width="1672" height="941" src="example-bridge.jpg" alt="川を渡る鉄道橋と、中央付近の橋脚"></div></figure></div>
+      <p>見る方向に沿って公開する。</p>
+    </article>
+    <article class="demo-card" data-example="P08">
+      <div class="demo-id">P08</div>
+      <h3>注釈フォーカス</h3>
+      <div class="demo-visual"><figure class="demo-photo"><img width="1672" height="941" src="example-bridge.jpg" alt="川を渡る鉄道橋と、中央付近の橋脚"><div class="demo-photo-layer" data-ms-step="3" data-ms-effect="P08"><span class="demo-annotation" data-ms-annotation>橋脚</span></div></figure></div>
+      <p>写真を動かさず橋脚に視線を誘導する。</p>
+    </article>
+  </div>
+  <footer>生成画像・架空の場所</footer>
+</section>
+<section class="demo-slide demo-c" data-title="グラフ" data-transition="S01" aria-labelledby="heading-4">
+  <p class="demo-kicker">グラフ</p>
+  <h2 id="heading-4">数字の大きさ、変化、目標を伝える。</h2>
+  <p class="demo-sub">目盛りと元データを固定した四半期の完了率。</p>
+  <div class="demo-grid">
+    <article class="demo-card" data-example="C01">
+      <div class="demo-id">C01</div>
+      <h3>棒の成長</h3>
+      <div class="demo-visual"><figure class="demo-chart"><svg viewBox="0 0 294 176" aria-hidden="true" focusable="false"><g class="demo-axis"><path d="M35 150.0H280"/><text x="28" y="154.0" text-anchor="end">0</text><path d="M35 82.0H280"/><text x="28" y="86.0" text-anchor="end">50</text><path d="M35 14.0H280"/><text x="28" y="18.0" text-anchor="end">100</text><text x="61" y="170" text-anchor="middle">1Q</text><text x="123" y="170" text-anchor="middle">2Q</text><text x="185" y="170" text-anchor="middle">3Q</text><text x="247" y="170" text-anchor="middle">4Q</text></g><g class="demo-data" data-ms-effect="C01" data-ms-step="1"><rect data-ms-bar x="48" y="84.72" width="26" height="65.28" rx="2"/><rect data-ms-bar x="110" y="65.68" width="26" height="84.32" rx="2"/><rect data-ms-bar x="172" y="49.36" width="26" height="100.64" rx="2"/><rect data-ms-bar x="234" y="27.599999999999994" width="26" height="122.4" rx="2"/></g></svg><figcaption>1Q 48%　2Q 62%　3Q 74%　4Q 90%</figcaption></figure></div>
+      <p>ゼロ起点で四半期を比べる。</p>
+    </article>
+    <article class="demo-card" data-example="C02">
+      <div class="demo-id">C02</div>
+      <h3>折れ線の描画</h3>
+      <div class="demo-visual"><figure class="demo-chart"><svg viewBox="0 0 294 176" aria-hidden="true" focusable="false"><g class="demo-axis"><path d="M35 150.0H280"/><text x="28" y="154.0" text-anchor="end">0</text><path d="M35 82.0H280"/><text x="28" y="86.0" text-anchor="end">50</text><path d="M35 14.0H280"/><text x="28" y="18.0" text-anchor="end">100</text><text x="61" y="170" text-anchor="middle">1Q</text><text x="123" y="170" text-anchor="middle">2Q</text><text x="185" y="170" text-anchor="middle">3Q</text><text x="247" y="170" text-anchor="middle">4Q</text></g><g class="demo-data" data-ms-effect="C02" data-ms-step="2"><polyline data-ms-stroke points="61,84.72 123,65.68 185,49.36 247,27.599999999999994"/><circle cx="61" cy="84.72" r="4"/><circle cx="123" cy="65.68" r="4"/><circle cx="185" cy="49.36" r="4"/><circle cx="247" cy="27.599999999999994" r="4"/></g></svg><figcaption>1Q 48%　2Q 62%　3Q 74%　4Q 90%</figcaption></figure></div>
+      <p>時間に沿って上昇を追う。</p>
+    </article>
+    <article class="demo-card" data-example="C09">
+      <div class="demo-id">C09</div>
+      <h3>基準線の表示</h3>
+      <div class="demo-visual"><figure class="demo-chart"><svg viewBox="0 0 294 176" aria-hidden="true" focusable="false"><g class="demo-axis"><path d="M35 150.0H280"/><text x="28" y="154.0" text-anchor="end">0</text><path d="M35 82.0H280"/><text x="28" y="86.0" text-anchor="end">50</text><path d="M35 14.0H280"/><text x="28" y="18.0" text-anchor="end">100</text><text x="61" y="170" text-anchor="middle">1Q</text><text x="123" y="170" text-anchor="middle">2Q</text><text x="185" y="170" text-anchor="middle">3Q</text><text x="247" y="170" text-anchor="middle">4Q</text></g><g class="demo-data"><rect data-ms-bar x="48" y="84.72" width="26" height="65.28" rx="2"/><rect data-ms-bar x="110" y="65.68" width="26" height="84.32" rx="2"/><rect data-ms-bar x="172" y="49.36" width="26" height="100.64" rx="2"/><rect data-ms-bar x="234" y="27.599999999999994" width="26" height="122.4" rx="2"/></g><g data-ms-step="3" data-ms-effect="C09"><g data-ms-benchmark><path class="demo-benchmark" d="M35 41.2H280"/><text x="41" y="34.2" text-anchor="start">目標 80%</text></g></g></svg><figcaption>1Q 48%　2Q 62%　3Q 74%　4Q 90%</figcaption></figure></div>
+      <p>実績を見せてから目標80%を重ねる。</p>
+    </article>
+  </div>
+  <footer>デモ用の架空データ</footer>
+</section>
+<section class="demo-slide demo-l" data-title="罫線・矢印" data-transition="S02" aria-labelledby="heading-5">
+  <p class="demo-kicker">罫線・矢印</p>
+  <h2 id="heading-5">線に、つながりや方向を持たせる。</h2>
+  <p class="demo-sub">境界・因果・現在地点の違いを短い線で表す。</p>
+  <div class="demo-grid">
+    <article class="demo-card" data-example="L01">
+      <div class="demo-id">L01</div>
+      <h3>下線の描画</h3>
+      <div class="demo-visual"><div class="demo-line-title">次期計画<div data-ms-effect="L01" data-ms-step="1"></div></div></div>
+      <p>見出しから説明への区切りをつくる。</p>
+    </article>
+    <article class="demo-card" data-example="L03">
+      <div class="demo-id">L03</div>
+      <h3>接続線</h3>
+      <div class="demo-visual"><div class="demo-connection"><span>分析</span><svg viewBox="0 0 80 26" aria-hidden="true" data-ms-effect="L03" data-ms-step="2"><path data-ms-stroke d="M2 13h73m-9-8 9 8-9 8"/></svg><span>実行</span></div></div>
+      <p>起点から次の工程を指し示す。</p>
+    </article>
+    <article class="demo-card" data-example="L08">
+      <div class="demo-id">L08</div>
+      <h3>進捗の線</h3>
+      <div class="demo-visual"><div class="demo-progress" data-ms-effect="L08" data-ms-step="3"><div class="demo-track"><i data-ms-progress></i></div><div><span>計画</span><strong>実行中</strong><span>評価</span></div></div></div>
+      <p>工程のどこにいるかを示す。</p>
+    </article>
+  </div>
+  <footer></footer>
+</section>
+<section class="demo-slide demo-b" data-title="表" data-transition="S01" aria-labelledby="heading-6">
+  <p class="demo-kicker">表</p>
+  <h2 id="heading-6">比較できる形で、差分を見せる。</h2>
+  <p class="demo-sub">方式Bと方式Aの違いは、列名・単位・値と一緒に示す。</p>
+  <div class="demo-grid">
+    <article class="demo-card" data-example="B01">
+      <div class="demo-id">B01</div>
+      <h3>行の段階表示</h3>
+      <div class="demo-visual"><table class="demo-table" data-ms-effect="B01" data-ms-at="1"><caption>模擬データ・方式別の比較</caption><thead><tr><th scope="col">項目</th><th scope="col">方式A</th><th scope="col" data-ms-recommended>方式B<small>推奨</small></th><th scope="col">差分</th></tr></thead><tbody><tr data-ms-step="1"><th scope="row">対応件数</th><td>48</td><td data-ms-recommended>62</td><td data-ms-delta>+14</td></tr><tr data-ms-step="1"><th scope="row">完了率</th><td>74%</td><td data-ms-recommended>90%</td><td data-ms-delta>+16pt</td></tr></tbody></table></div>
+      <p>項目を上から順に解説する。</p>
+    </article>
+    <article class="demo-card" data-example="B03">
+      <div class="demo-id">B03</div>
+      <h3>推奨列の強調</h3>
+      <div class="demo-visual"><table class="demo-table" data-ms-effect="B03" data-ms-at="2"><caption>模擬データ・方式別の比較</caption><thead><tr><th scope="col">項目</th><th scope="col">方式A</th><th scope="col" data-ms-recommended>方式B<small>推奨</small></th><th scope="col">差分</th></tr></thead><tbody><tr><th scope="row">対応件数</th><td>48</td><td data-ms-recommended>62</td><td data-ms-delta>+14</td></tr><tr><th scope="row">完了率</th><td>74%</td><td data-ms-recommended>90%</td><td data-ms-delta>+16pt</td></tr></tbody></table></div>
+      <p>方式Bの列全体に枠を残し、推奨案を示す。</p>
+    </article>
+    <article class="demo-card" data-example="B07">
+      <div class="demo-id">B07</div>
+      <h3>差分の強調</h3>
+      <div class="demo-visual"><table class="demo-table" data-ms-effect="B07" data-ms-at="3"><caption>模擬データ・方式別の比較</caption><thead><tr><th scope="col">項目</th><th scope="col">方式A</th><th scope="col" data-ms-recommended>方式B<small>推奨</small></th><th scope="col">差分</th></tr></thead><tbody><tr><th scope="row">対応件数</th><td>48</td><td data-ms-recommended>62</td><td data-ms-delta>+14</td></tr><tr><th scope="row">完了率</th><td>74%</td><td data-ms-recommended>90%</td><td data-ms-delta>+16pt</td></tr></tbody></table></div>
+      <p>差分の枠は再生後も残る。</p>
+    </article>
+  </div>
+  <footer>デモ用の架空データ</footer>
+</section>
+<section class="demo-slide demo-outro" data-title="場面転換" data-transition="S08" aria-labelledby="outro">
+  <p class="demo-kicker">スライド間の遷移</p>
+  <h2 id="outro">話題が変わる瞬間を、伝える。</h2>
+  <p>「演出を比較」で違いを試せます。→で橋脚の詳細へ進みます。</p>
+  <div class="demo-grid">
+    <article class="demo-card"><div class="demo-id">S01</div><h3>フェード</h3><p>関連する話題へ静かに切り替える。</p></article>
+    <article class="demo-card"><div class="demo-id">S02</div><h3>方向付き</h3><p>工程や章の進み方を示す。</p></article>
+    <article class="demo-card"><div class="demo-id">S08</div><h3>即時切替</h3><p>結果や結論をその場で表示する。</p></article>
+    <article class="demo-card"><div class="demo-id">S03</div><h3>同じ要素を追う</h3><p>橋の写真を次の画面へ移し、そのまま拡大する。</p></article>
+  </div>
+  <figure class="demo-shared-photo" data-ms-shared="bridge">
+    <img src="example-bridge.jpg" width="1672" height="941" alt="川を渡る鉄道橋">
+  </figure>
+  <footer>架空の場所を示す生成画像</footer>
+</section>
+<section class="demo-slide demo-detail" data-title="全体から詳細へ" data-transition="S03" aria-labelledby="detail">
+  <p class="demo-kicker">S03 · 同じ要素を追う</p>
+  <h2 id="detail">橋脚の位置を確認する。</h2>
+  <div class="demo-detail-layout">
+    <figure class="demo-shared-photo" data-ms-shared="bridge">
+      <img src="example-bridge.jpg" width="1672" height="941" alt="川を渡る鉄道橋">
+      <div class="demo-photo-layer" data-ms-effect="P08" data-ms-delay="1250" data-ms-duration="530">
+        <span class="demo-annotation" data-ms-annotation>橋脚</span>
+      </div>
+    </figure>
+    <p>全景で位置関係をつかみ、同じ写真で確認箇所を示します。<br>←で全体の画面へ戻れます。</p>
+  </div>
+  <footer>架空の場所を示す生成画像</footer>
+</section>
+    </main>
+  </div>
+  <script src="effects.js"></script>
+  <script src="player.js"></script>
+  <script src="showcase.js"></script>
+</body>
+</html>

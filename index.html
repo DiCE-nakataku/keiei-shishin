@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
 <script src="vendor/xlsx.full.min.js"></script>
 <script src="dist/formula-engine.js"></script>
+<link rel="stylesheet" href="./motion/player.css">
 <style>
 
   :root {
@@ -1680,6 +1681,7 @@
         <option value="theme-green">カラー：フォレストグリーン × ゴールド</option>
         <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
       </select>
+      <button class="btn-print" id="presentationButton" type="button" disabled hidden>発表モード</button>
       <button class="btn-print" id="printButton" onclick="safePrint()" disabled>🖨️ A4横で印刷 / PDF保存</button>
       <button class="btn-print" id="fixedPdfButton" type="button" onclick="createFixedPdf()" disabled>A4横PDFを作成</button>
       <a class="pdf-ready" id="fixedPdfLink" target="_blank" rel="noopener" hidden>PDFを開く</a>
@@ -1844,12 +1846,14 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.2.5 · 更新日 2026-11-18</span></span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.3.1 · 更新日 2026-11-20</span></span>
+    <a href="./motion/index.html">モーション演出デモ</a>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
   </footer>
 </main>
 
 <div class="pages-wrapper" id="pagesContainer"></div>
+<dialog id="presentationDialog" class="ms-dialog no-print" aria-label="経営指針書の発表モード"></dialog>
 <section id="calcDiagnostics" class="no-print" aria-live="polite" hidden></section>
 <div id="printBlockedNotice" class="print-blocked-notice">計算エラーがあるため印刷を停止しました。画面上のエラー一覧を確認してください。</div>
 
@@ -1901,6 +1905,7 @@ function canExportPages() {
 function updatePrintControls() {
   const allowed = canExportPages();
   nativePrintButton.disabled = !allowed;
+  document.getElementById('presentationButton').disabled = !allowed;
   fixedPdfButton.disabled = !allowed || creatingFixedPdf;
 }
 
@@ -2487,6 +2492,98 @@ function fmtCell(s, placeholder = '—') {
   const t = String(s || '').trim();
   return t ? esc(t) : `<span class="empty-dash">${placeholder}</span>`;
 }
+function targetNarrativeStyle(text) {
+  const length = Array.from(String(text || '')).length;
+  const fontSize = length > 300 ? 8 : length > 200 ? 8.6 : 9.5;
+  return `font-size:${fontSize}pt;line-height:1.4;padding:7px 9px;vertical-align:top;white-space:pre-wrap;overflow-wrap:anywhere;`;
+}
+function splitTargetNarrative(text, limit = 280) {
+  const source = String(text || '');
+  if (!source) return [''];
+  const chunks = [];
+  let rest = source;
+  while (rest.length > limit) {
+    let cut = rest.lastIndexOf('\n', limit);
+    if (cut < limit * 0.55) cut = limit;
+    else cut++;
+    chunks.push(rest.slice(0, cut));
+    rest = rest.slice(cut);
+  }
+  chunks.push(rest);
+  return chunks;
+}
+
+function paginateDenseTables(container) {
+  const slots = [...container.querySelectorAll('.page-slot')];
+  const continuationSlots = [];
+  for (const slot of slots) {
+    const page = slot.querySelector('.page');
+    const body = page?.querySelector('.page-body');
+    const table = body?.querySelector(':scope > table.exec');
+    const rows = table ? [...table.tBodies[0]?.rows || []] : [];
+    if (rows.length < 2) continue;
+    const section = page.dataset.section || '';
+    let maxRows = 12;
+    if (section.includes('MICRO ENVIRONMENT') || section.includes('MACRO ENVIRONMENT')) maxRows = 8;
+    if (section.includes('INTERNAL ANALYSIS')) maxRows = 8;
+    if (section.includes('STRATEGIC ISSUES')) maxRows = 4;
+    if (section.includes('ACTIONS') || section.includes('SALES PLAN')) maxRows = 8;
+    if (rows.length <= maxRows) continue;
+
+    const units = [];
+    for (let index = 0; index < rows.length;) {
+      const firstCell = rows[index].cells[0];
+      const span = firstCell?.classList.contains('cat-cell') ? Math.max(1, firstCell.rowSpan || 1) : 1;
+      units.push(rows.slice(index, Math.min(rows.length, index + span)));
+      index += span;
+    }
+    const chunks = [];
+    let chunk = [], count = 0;
+    for (const unit of units) {
+      if (chunk.length && count + unit.length > maxRows) { chunks.push(chunk); chunk = []; count = 0; }
+      chunk.push(unit); count += unit.length;
+    }
+    if (chunk.length) chunks.push(chunk);
+    if (chunks.length < 2) continue;
+
+    const writeRows = (targetPage, unitsForPage) => {
+      const targetTable = targetPage.querySelector('.page-body > table.exec');
+      const targetBody = targetTable.tBodies[0];
+      targetBody.replaceChildren(...unitsForPage.flat().map(row => row.cloneNode(true)));
+      const rowCount = targetBody.rows.length;
+      if (section.includes('STRATEGIC ISSUES')) {
+        targetTable.style.fontSize = rowCount <= 4 ? '8.8pt' : '8.2pt';
+        targetTable.style.lineHeight = '1.45';
+      } else {
+        targetTable.style.fontSize = rowCount <= 6 ? '9.5pt' : rowCount <= 8 ? '9pt' : '8.2pt';
+        targetTable.style.lineHeight = rowCount <= 6 ? '1.55' : '1.4';
+      }
+    };
+    writeRows(page, chunks[0]);
+    for (const rowsForPage of chunks.slice(1)) {
+      const nextPage = page.cloneNode(true);
+      nextPage.querySelector('h2')?.append(document.createTextNode('（続き）'));
+      nextPage.querySelector('.sec-tag')?.append(document.createTextNode(' / CONT.'));
+      writeRows(nextPage, rowsForPage);
+      const nextSlot = document.createElement('div');
+      nextSlot.className = 'page-slot';
+      nextSlot.append(nextPage);
+      continuationSlots.push({ after: slot, node: nextSlot });
+    }
+  }
+  const afterLast = new Map();
+  for (const item of continuationSlots) {
+    const previous = afterLast.get(item.after) || item.after;
+    previous.after(item.node);
+    afterLast.set(item.after, item.node);
+  }
+  const pages = [...container.querySelectorAll('.page-slot > .page')];
+  pages.forEach((page, index) => {
+    const number = page.querySelector('.page-num');
+    if (number) number.textContent = `${String(index + 1).padStart(2, '0')} / ${String(pages.length).padStart(2, '0')}`;
+  });
+  return pages.length;
+}
 function fmtNum(s) {
   const t = String(s || '').trim();
   if (!t || t === '-') return `<span class="empty-dash">—</span>`;
@@ -2607,6 +2704,8 @@ function renderBook(wb) {
     pageNum++;
     const div = document.createElement('div');
     div.className = isCover ? 'page cover-page' : 'page';
+    div.dataset.section = secTag;
+    div.dataset.title = title;
     if (isCover && bodyId) div.id = bodyId;
     if (isCover) {
       div.innerHTML = html;
@@ -2941,37 +3040,43 @@ function renderBook(wb) {
 
     else if (sName === '15_目標設定') {
       const activeCols = ['B','C','D'].filter(c => {
-        return val(ws, c+'5').trim() !== '' || val(ws, c+'6').trim() !== '' || val(ws, c+'7').trim() !== '' || val(ws, c+'8').trim() !== '';
+        const standard = [5, 6, 7, 8].some(r => val(ws, c+r).trim() !== '');
+        const flexible = [9, 10, 11, 12].some(r => val(ws, 'A'+r).trim() || val(ws, c+r).trim());
+        return standard || flexible;
       });
       const cols = activeCols.length > 0 ? activeCols : ['B','C','D'];
       const labelW = 19;
       const dataW = ((100 - labelW) / cols.length).toFixed(2);
       const colgroup = `<colgroup><col style="width:${labelW}%;">${cols.map(() => `<col style="width:${dataW}%;">`).join('')}</colgroup>`;
-
-      makePage('13 / 3-YEAR TARGETS', '3ヵ年 目標設定シート', `
-        <table class="exec fill-height">
-          ${colgroup}
-          <thead><tr><th>目標区分</th>${cols.map(c => `<th>${esc(val(ws, c+'4'))}</th>`).join('')}</tr></thead>
-          <tbody>
-            <tr style="height:12%;">
-              <td class="cat-cell">目標 売上高</td>
-              ${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'5'))}</span><span class="kpi-unit">千円</span></td>`).join('')}
-            </tr>
-            <tr style="height:12%;">
-              <td class="cat-cell">目標 経常利益</td>
-              ${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'6'))}</span><span class="kpi-unit">千円</span></td>`).join('')}
-            </tr>
-            <tr style="height:12%;">
-              <td class="cat-cell">目標 社員数</td>
-              ${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'7'))}</span><span class="kpi-unit">名</span></td>`).join('')}
-            </tr>
-            <tr style="height:64%;">
-              <td class="cat-cell">定性目標<br><span style="font-size:7.5pt;font-weight:400;color:var(--ink-sub);">（目指す組織・事業状態）</span></td>
-              ${cols.map(c => `<td style="vertical-align:top;white-space:pre-wrap;font-size:9.5pt;line-height:1.7;padding:10px 14px;">${fmtCell(val(ws, c+'8'))}</td>`).join('')}
-            </tr>
-          </tbody>
-        </table>
-      `);
+      const flexibleRows = [9, 10, 11, 12].filter(r => ['B','C','D'].some(c => val(ws, 'A'+r).trim() || val(ws, c+r).trim()));
+      const narratives = cols.map(c => splitTargetNarrative(val(ws, c+'8').trim()));
+      const narrativePageCount = Math.max(1, ...narratives.map(parts => parts.length));
+      for (let pageIndex = 0; pageIndex < narrativePageCount; pageIndex++) {
+        const firstPage = pageIndex === 0;
+        const kpis = firstPage ? `
+          <tr style="height:9%;"><td class="cat-cell">目標 売上高</td>${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'5'))}</span><span class="kpi-unit">千円</span></td>`).join('')}</tr>
+          <tr style="height:9%;"><td class="cat-cell">目標 経常利益</td>${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'6'))}</span><span class="kpi-unit">千円</span></td>`).join('')}</tr>
+          <tr style="height:9%;"><td class="cat-cell">目標 社員数</td>${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'7'))}</span><span class="kpi-unit">名</span></td>`).join('')}</tr>
+          ${flexibleRows.map((r, index) => `<tr style="height:5.5%;"><td class="cat-cell">${fmtCell(val(ws, 'A'+r) || `自由目標${index+1}`)}</td>${cols.map(c => `<td class="num">${fmtCell(val(ws, c+r))}</td>`).join('')}</tr>`).join('')}
+        ` : '';
+        const narrativeLabel = firstPage ? '定性目標' : '定性目標（続き）';
+        const narrativeHeight = firstPage ? 100 - 27 - flexibleRows.length * 5.5 : 100;
+        const html = `
+          <table class="exec fill-height">
+            ${colgroup}
+            <thead><tr><th>目標区分</th>${cols.map(c => `<th>${esc(val(ws, c+'4'))}</th>`).join('')}</tr></thead>
+            <tbody>
+              ${kpis}
+              <tr style="height:${narrativeHeight}%;">
+                <td class="cat-cell">${narrativeLabel}${firstPage ? '<br><span style="font-size:7.5pt;font-weight:400;color:var(--ink-sub);">（目指す組織・事業状態）</span>' : ''}</td>
+                ${cols.map((c, index) => { const text = narratives[index][pageIndex] || ''; return `<td class="target-narrative" style="${targetNarrativeStyle(text)}">${fmtCell(text)}</td>`; }).join('')}
+              </tr>
+            </tbody>
+          </table>
+        `;
+        const title = firstPage ? '3ヵ年 目標設定シート' : '3ヵ年 目標設定シート（続き）';
+        makePage('13 / 3-YEAR TARGETS', title, html);
+      }
     }
 
     else if (sName === '16_行動計画') {
@@ -3081,10 +3186,16 @@ function renderBook(wb) {
       `);
     }
   });
+  const renderedPages = paginateDenseTables(container);
+  if (!workbookHasErrors) document.getElementById('statusText').textContent = `確認OK：全 ${renderedPages} ページ出力対象`;
   fitPreviewPages();
   updatePrintControls();
 }
 
 </script>
+<script src="./motion/effects.js"></script>
+<script src="./motion/presets.js"></script>
+<script src="./motion/player.js"></script>
+<script src="./motion/book.js"></script>
 </body>
 </html>
