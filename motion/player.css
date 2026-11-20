@@ -68,7 +68,7 @@ dialog.ms-dialog {
   left: 0;
   transform-origin: top left;
 }
-.ms-canvas > .page { margin: 0; box-shadow: none; }
+.ms-canvas > .page { margin: 0; box-shadow: none; color: var(--ink, #17243b); }
 .ms-canvas [data-ms-pending] { visibility: hidden !important; }
 @media print {
   .ms-player, .ms-dialog[open] { display: none !important; }

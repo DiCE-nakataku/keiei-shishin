@@ -25,6 +25,24 @@
           const [effect] = MotionPresets.recommend({ kind: 'text', purpose: 'explain' });
           MotionPresets.setEffect(heading, effect);
         }
+        const body = slide.querySelector('.page-body');
+        if (body) {
+          const tables = [...body.querySelectorAll('table.exec')];
+          for (const table of tables) {
+            MotionPresets.setEffect(table, 'B01');
+          }
+          const rows = body.querySelectorAll('table.exec tbody tr');
+          if (!tables.length && rows.length) {
+            const table = rows[0].closest('table');
+            if (table) MotionPresets.setEffect(table, 'B01');
+          }
+          const highlights = body.querySelectorAll('.kpi-hero-val, .vision-highlight, .strategy-card');
+          highlights.forEach((item, index) => {
+            item.dataset.msStep = String(Math.min(3, index + 1));
+            item.dataset.msDelay = String(index * 90);
+            item.dataset.msEffect = 'T01';
+          });
+        }
         const image = slide.querySelector('.page-body img');
         if (image) {
           const [effect] = MotionPresets.recommend({ kind: 'image', purpose: 'compare' });

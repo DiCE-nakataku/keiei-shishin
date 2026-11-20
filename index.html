@@ -398,6 +398,8 @@
   .cta-upload-btn:active {
     transform: scale(0.98);
   }
+  .template-downloads { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:18px; }
+  .template-downloads p { flex-basis:100%; margin:2px 0 0; color:var(--ink-sub); font-size:12px; }
   .dropzone-hint {
     margin-top: 12px;
     font-size: 12.5px;
@@ -1714,6 +1716,11 @@
             <button type="button" class="cta-upload-btn" onclick="document.getElementById('excelInput').click()">
               📂 入力済みExcel(.xlsx)を選択
             </button>
+            <div class="template-downloads" aria-label="Excelテンプレートと入力例">
+              <a class="btn-print" href="./downloads/経営指針書_ベースシート.xlsx" download>⬇ 経営指針書ベースシート</a>
+              <a class="btn-print" href="./downloads/サンプル製作所_入力例.xlsx" download>⬇ サンプル製作所の入力例</a>
+              <p>自由目標欄は、売上高・利益など数値で測る目標を追加する場合に使用します。</p>
+            </div>
             <div class="dropzone-hint">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
             <div class="upload-feedback" id="uploadFeedback" role="status" aria-live="polite" hidden></div>
           </div>
@@ -2497,7 +2504,7 @@ function targetNarrativeStyle(text) {
   const fontSize = length > 300 ? 8 : length > 200 ? 8.6 : 9.5;
   return `font-size:${fontSize}pt;line-height:1.4;padding:7px 9px;vertical-align:top;white-space:pre-wrap;overflow-wrap:anywhere;`;
 }
-function splitTargetNarrative(text, limit = 280) {
+function splitTargetNarrative(text, limit = 1000) {
   const source = String(text || '');
   if (!source) return [''];
   const chunks = [];
@@ -2523,11 +2530,12 @@ function paginateDenseTables(container) {
     const rows = table ? [...table.tBodies[0]?.rows || []] : [];
     if (rows.length < 2) continue;
     const section = page.dataset.section || '';
-    let maxRows = 12;
-    if (section.includes('MICRO ENVIRONMENT') || section.includes('MACRO ENVIRONMENT')) maxRows = 8;
-    if (section.includes('INTERNAL ANALYSIS')) maxRows = 8;
-    if (section.includes('STRATEGIC ISSUES')) maxRows = 4;
-    if (section.includes('ACTIONS') || section.includes('SALES PLAN')) maxRows = 8;
+    let maxRows = 20;
+    if (section.includes('MACRO ENVIRONMENT')) maxRows = 8;
+    if (section.includes('MICRO ENVIRONMENT')) maxRows = 12;
+    if (section.includes('INTERNAL ANALYSIS')) maxRows = 20;
+    if (section.includes('STRATEGIC ISSUES')) maxRows = 8;
+    if (section.includes('ACTIONS') || section.includes('SALES PLAN')) maxRows = 12;
     if (rows.length <= maxRows) continue;
 
     const units = [];
@@ -3048,7 +3056,12 @@ function renderBook(wb) {
       const labelW = 19;
       const dataW = ((100 - labelW) / cols.length).toFixed(2);
       const colgroup = `<colgroup><col style="width:${labelW}%;">${cols.map(() => `<col style="width:${dataW}%;">`).join('')}</colgroup>`;
-      const flexibleRows = [9, 10, 11, 12].filter(r => ['B','C','D'].some(c => val(ws, 'A'+r).trim() || val(ws, c+r).trim()));
+      const flexibleRows = [9, 10, 11, 12].filter(r => {
+        const label = val(ws, 'A'+r).trim();
+        const values = ['B','C','D'].map(c => val(ws, c+r).trim());
+        const defaultLabel = /^自由目標\s*\d+$/.test(label);
+        return values.some(Boolean) || (label && !defaultLabel && values.some(Boolean));
+      });
       const narratives = cols.map(c => splitTargetNarrative(val(ws, c+'8').trim()));
       const narrativePageCount = Math.max(1, ...narratives.map(parts => parts.length));
       for (let pageIndex = 0; pageIndex < narrativePageCount; pageIndex++) {
@@ -3057,7 +3070,7 @@ function renderBook(wb) {
           <tr style="height:9%;"><td class="cat-cell">目標 売上高</td>${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'5'))}</span><span class="kpi-unit">千円</span></td>`).join('')}</tr>
           <tr style="height:9%;"><td class="cat-cell">目標 経常利益</td>${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'6'))}</span><span class="kpi-unit">千円</span></td>`).join('')}</tr>
           <tr style="height:9%;"><td class="cat-cell">目標 社員数</td>${cols.map(c => `<td class="num"><span class="kpi-hero-val">${fmtNum(val(ws, c+'7'))}</span><span class="kpi-unit">名</span></td>`).join('')}</tr>
-          ${flexibleRows.map((r, index) => `<tr style="height:5.5%;"><td class="cat-cell">${fmtCell(val(ws, 'A'+r) || `自由目標${index+1}`)}</td>${cols.map(c => `<td class="num">${fmtCell(val(ws, c+r))}</td>`).join('')}</tr>`).join('')}
+          ${flexibleRows.map((r, index) => `<tr style="height:5.5%;"><td class="cat-cell">${fmtCell(val(ws, 'A'+r) || `自由目標${index+1}`)}<br><span style="font-size:7pt;font-weight:400;">定量目標のみ</span></td>${cols.map(c => `<td class="num">${fmtCell(val(ws, c+r))}</td>`).join('')}</tr>`).join('')}
         ` : '';
         const narrativeLabel = firstPage ? '定性目標' : '定性目標（続き）';
         const narrativeHeight = firstPage ? 100 - 27 - flexibleRows.length * 5.5 : 100;
