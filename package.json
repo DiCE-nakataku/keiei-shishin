@@ -1,0 +1,21 @@
+{
+  "name": "keiei-shishin-static-app",
+  "private": true,
+  "scripts": {
+    "test": "node tests/smoke.test.cjs",
+    "check:syntax": "node scripts/check-syntax.cjs",
+    "format:check": "prettier --check package.json .prettierrc.json eslint.config.mjs tsconfig.json README.md docs/refactor-audit.md scripts/check-syntax.cjs src/*.js tests/smoke.test.cjs",
+    "format:write": "prettier --write package.json .prettierrc.json eslint.config.mjs tsconfig.json README.md docs/refactor-audit.md scripts/check-syntax.cjs src/*.js tests/smoke.test.cjs",
+    "lint": "eslint motion/*.js src/*.js scripts/*.cjs tests/*.cjs",
+    "typecheck": "tsc --noEmit",
+    "check": "npm test && npm run check:syntax && npm run format:check && npm run lint && npm run typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "eslint": "10.15.0",
+    "prettier": "3.10.1",
+    "typescript": "7.0.2"
+  }
+}

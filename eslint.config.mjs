@@ -1,0 +1,57 @@
+export default [
+  {
+    files: ['motion/**/*.js', 'src/**/*.js'],
+    languageOptions: {
+      globals: {
+        AbortController: 'readonly',
+        CustomEvent: 'readonly',
+        Element: 'readonly',
+        Event: 'readonly',
+        FileReader: 'readonly',
+        HTMLDialogElement: 'readonly',
+        HTMLElement: 'readonly',
+        KeyframeEffect: 'readonly',
+        MotionEffects: 'readonly',
+        MotionPresets: 'readonly',
+        MotionSlides: 'readonly',
+        MutationObserver: 'readonly',
+        Option: 'readonly',
+        ResizeObserver: 'readonly',
+        URL: 'readonly',
+        document: 'readonly',
+        getComputedStyle: 'readonly',
+        matchMedia: 'readonly',
+        navigator: 'readonly',
+        requestAnimationFrame: 'readonly',
+        window: 'readonly',
+      },
+    },
+    rules: {
+      eqeqeq: ['warn', 'always'],
+      'no-debugger': 'error',
+      'no-constant-condition': 'warn',
+      'no-undef': 'error',
+      'no-unreachable': 'error',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+  {
+    files: ['scripts/**/*.cjs', 'tests/**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+        require: 'readonly',
+      },
+    },
+    rules: {
+      'no-debugger': 'error',
+      'no-constant-condition': 'warn',
+      'no-undef': 'error',
+      'no-unreachable': 'error',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+];
