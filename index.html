@@ -771,9 +771,8 @@
     body.has-pages .app-header { position: static; }
     .theme-select { max-width: 100%; }
   }
-  .fixed-pdf-status { flex-basis: 100%; font-size: 12.5px; color: var(--ink-sub); }
-  .btn-print[hidden], .fixed-pdf-status:empty { display: none; }
-  .pdf-ready { font-size: 13px; font-weight: 700; color: var(--primary); }
+  .print-pdf-status { flex-basis: 100%; font-size: 12.5px; color: var(--ink-sub); }
+  .btn-print[hidden], .print-pdf-status:empty { display: none; }
   .page {
     width: 297mm;
     height: 210mm;
@@ -1505,9 +1504,7 @@
   table.exec tbody tr:nth-child(even) {
     background: #fafbfd;
   }
-  .fixed-pdf-capture table.exec tbody tr:nth-child(even) { background: transparent; }
-  .fixed-pdf-capture table.exec tbody tr:nth-child(even) > td { background: #fafbfd; }
-  .cat-cell {
+capture css  .cat-cell {
     background: var(--primary-tint) !important;
     color: var(--primary);
     font-weight: 700;
@@ -1685,12 +1682,11 @@
         <option value="theme-slate">カラー：スレートチャコール × ブルー</option>
       </select>
       <button class="btn-print" id="presentationButton" type="button" disabled hidden>発表モード</button>
-      <button class="btn-print" id="printButton" onclick="safePrint()" disabled>🖨️ A4横で印刷 / PDF保存</button>
-      <button class="btn-print" id="fixedPdfButton" type="button" onclick="createFixedPdf()" disabled>A4横PDFを作成</button>
-      <a class="pdf-ready" id="fixedPdfLink" target="_blank" rel="noopener" hidden>PDFを開く</a>
+      <button class="btn-print" id="printButton" onclick="safePrint()" disabled>🖨️ A4横で印刷 / PDF保存（文字検索可）</button>
+      <button class="btn-print" id="fixedPdfButton" type="button" onclick="safePrint()" disabled>A4横PDFを保存（文字検索可）</button>
       <button class="btn-back-top" onclick="resetToTop()">トップへ戻る</button>
       <span class="status" id="statusText">Excelファイルを選択してください</span>
-      <span class="fixed-pdf-status" id="fixedPdfStatus" role="status" aria-live="polite"></span>
+      <span class="print-pdf-status" id="printPdfStatus" role="status" aria-live="polite"></span>
     </div>
   </div>
 </header>
@@ -1824,8 +1820,8 @@
               <div class="faq-body-inner">
                 <div class="faq-body-content">
                   <ul>
-                    <li><strong>PC（Chrome / Edge）</strong>：「🖨️ A4横で印刷 / PDF保存」を押し、送信先で「PDFに保存」、詳細設定の<strong>「背景のグラフィック」にチェック</strong>を入れて保存してください。</li>
-                    <li><strong>iPad / iPhone（Safari）</strong>：「A4横PDFを作成」を押し、完了したら「PDFを開く」を押してください。PDF画面の共有メニューから「ファイルに保存」または「プリント」を選べます。</li>
+                    <li><strong>PC（Chrome / Edge）</strong>：「A4横で印刷 / PDF保存（文字検索可）」を押し、送信先で「PDFに保存」を選んでください。保存したPDFでは文字を選択・検索・コピーできます。</li>
+                    <li><strong>iPad / iPhone（Safari）</strong>：「A4横PDFを保存（文字検索可）」を押し、印刷画面からPDFを共有またはファイルに保存してください。出力後も文字を選択・検索・コピーできます。</li>
                   </ul>
                 </div>
               </div>
@@ -1884,11 +1880,11 @@ const formulaEngine = window.FormulaEngine;
 const previewContainer = document.getElementById('pagesContainer');
 const nativePrintButton = document.getElementById('printButton');
 const fixedPdfButton = document.getElementById('fixedPdfButton');
-const fixedPdfLink = document.getElementById('fixedPdfLink');
-const fixedPdfStatus = document.getElementById('fixedPdfStatus');
+const printPdfStatus = document.getElementById('printPdfStatus');
 const iosDevice = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 nativePrintButton.hidden = iosDevice;
+fixedPdfButton.hidden = !iosDevice;
 
 function fitPreviewPages() {
   const slot = previewContainer.firstElementChild;
@@ -1902,18 +1898,8 @@ if (typeof ResizeObserver === 'function') {
   window.addEventListener('resize', fitPreviewPages);
 }
 
-let pdfRevision = 0;
-let creatingFixedPdf = false;
-let fixedPdfUrl;
-let pdfLibraries;
-
-function invalidateFixedPdf() {
-  pdfRevision++;
-  if (fixedPdfUrl) URL.revokeObjectURL(fixedPdfUrl);
-  fixedPdfUrl = undefined;
-  fixedPdfLink.removeAttribute('href');
-  fixedPdfLink.hidden = true;
-  fixedPdfStatus.textContent = '';
+function clearPrintGuidance() {
+  printPdfStatus.textContent = '';
 }
 
 function canExportPages() {
@@ -1928,97 +1914,12 @@ function updatePrintControls() {
   const allowed = canExportPages();
   nativePrintButton.disabled = !allowed;
   document.getElementById('presentationButton').disabled = !allowed;
-  fixedPdfButton.disabled = !allowed || creatingFixedPdf;
-}
-
-function loadPdfLibrary(src) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.onload = resolve;
-    script.onerror = () => { script.remove(); reject(new Error('PDF用のファイルを読み込めませんでした。')); };
-    document.head.append(script);
-  });
-}
-
-function loadPdfLibraries() {
-  if (!pdfLibraries) pdfLibraries = Promise.all([
-    window.html2canvas || loadPdfLibrary('./vendor/html2canvas-1.4.1.min.js'),
-    window.PDFLib || loadPdfLibrary('./vendor/pdf-lib-1.17.1.min.js'),
-  ]).catch(error => { pdfLibraries = undefined; throw error; });
-  return pdfLibraries;
-}
-
-function preparePdfPage(clone, sheet) {
-  sheet.classList.add('fixed-pdf-capture');
-  sheet.parentElement.style.overflow = 'visible';
-  sheet.style.transform = 'none';
-  sheet.style.boxShadow = 'none';
-  const view = clone.defaultView;
-  for (const image of sheet.querySelectorAll('img')) {
-    const { objectFit, width, height } = view.getComputedStyle(image);
-    if (objectFit !== 'contain' && objectFit !== 'cover') continue;
-    // The PDF renderer supports background sizing but does not implement object-fit.
-    image.style.width = width;
-    image.style.height = height;
-    image.style.backgroundImage = `url("${image.src}")`;
-    image.style.backgroundSize = objectFit;
-    image.style.backgroundPosition = 'center';
-    image.style.backgroundRepeat = 'no-repeat';
-    image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-  }
-}
-
-async function createFixedPdf() {
-  if (creatingFixedPdf || !canExportPages()) return;
-  invalidateFixedPdf();
-  const revision = pdfRevision;
-  creatingFixedPdf = true;
-  updatePrintControls();
-  fixedPdfStatus.textContent = 'PDFを準備しています…';
-  try {
-    await loadPdfLibraries();
-    if (document.fonts) await document.fonts.ready;
-    const sheets = [...previewContainer.querySelectorAll('.page-slot > .page')];
-    const pdf = await window.PDFLib.PDFDocument.create();
-    pdf.setTitle(document.title);
-    const [height, width] = window.PDFLib.PageSizes.A4;
-    for (const [index, sheet] of sheets.entries()) {
-      if (revision !== pdfRevision) return;
-      fixedPdfStatus.textContent = `PDFを作成しています… ${index + 1} / ${sheets.length}`;
-      const canvas = await window.html2canvas(sheet, {
-        scale: 1.75, scrollX: 0, scrollY: 0, windowWidth: 1200, windowHeight: 900,
-        logging: false,
-        ignoreElements: el => el.classList?.contains('no-print') ||
-          (el.classList?.contains('page-slot') && el !== sheet.parentElement),
-        onclone: preparePdfPage,
-      });
-      try {
-        if (revision !== pdfRevision) return;
-        const image = await pdf.embedJpg(canvas.toDataURL('image/jpeg', 0.94));
-        pdf.addPage([width, height]).drawImage(image, { x: 0, y: 0, width, height });
-      } finally {
-        canvas.width = canvas.height = 0;
-      }
-    }
-    const bytes = await pdf.save();
-    if (revision !== pdfRevision) return;
-    fixedPdfUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-    fixedPdfLink.href = fixedPdfUrl;
-    fixedPdfLink.hidden = false;
-    fixedPdfStatus.textContent = `A4横 ${sheets.length}ページのPDFを作成しました。`;
-  } catch (error) {
-    console.error(error);
-    if (revision === pdfRevision) fixedPdfStatus.textContent = 'PDFを作成できませんでした。もう一度お試しください。';
-  } finally {
-    creatingFixedPdf = false;
-    updatePrintControls();
-  }
+  fixedPdfButton.disabled = !allowed;
 }
 
 // Theme Synchronization (Landing Pills <-> Output Toolbar Select)
 function applyTheme(themeVal) {
-  invalidateFixedPdf();
+  clearPrintGuidance();
   document.body.classList.remove('theme-green', 'theme-slate');
   if (themeVal) document.body.classList.add(themeVal);
 
@@ -2038,7 +1939,7 @@ function toggleFaq(btn) {
 }
 
 function resetToTop() {
-  invalidateFixedPdf();
+  clearPrintGuidance();
   activeWorkbook = null;
   document.body.classList.remove('has-pages');
   document.getElementById('pagesContainer').innerHTML = '';
@@ -2122,7 +2023,7 @@ function removeCoverLogo() {
 }
 
 function renderCoverPage() {
-  invalidateFixedPdf();
+  clearPrintGuidance();
   const el = document.getElementById('coverPageContainer');
   if (!el || !currentCoverData) return;
   const { company, rep, term, startYM, endYM, pubDate, subTitle } = currentCoverData;
@@ -2231,7 +2132,7 @@ function removeVisionImage() {
 }
 
 function renderVisionBody() {
-  invalidateFixedPdf();
+  clearPrintGuidance();
   const container = document.getElementById('visionPageBody');
   if (!container || !currentVisionData) return;
 
@@ -2377,7 +2278,7 @@ function handleExcelFile(file) {
     console.error(message, { sheetjs: Boolean(window.XLSX), formulaEngine: Boolean(formulaEngine) });
     return;
   }
-  invalidateFixedPdf();
+  clearPrintGuidance();
   activeWorkbook = null;
   workbookCalculating = true;
   updatePrintControls();
@@ -2492,6 +2393,7 @@ function safePrint() {
     alert(workbookCalculating ? '計算中です。完了後に印刷してください。' : '数式エラーまたは未検証のためPDF出力を停止しました。エラー一覧を確認してください。');
     return;
   }
+  printPdfStatus.textContent = '印刷画面で「PDFに保存」を選択してください。文字を選択・検索・コピーできるPDFで保存されます。';
   window.print();
 }
 
