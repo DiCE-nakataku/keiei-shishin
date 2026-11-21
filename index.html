@@ -400,6 +400,7 @@
   }
   .template-downloads { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:18px; }
   .template-downloads p { flex-basis:100%; margin:2px 0 0; color:var(--ink-sub); font-size:12px; }
+  .template-downloads a { position:relative; z-index:1; }
   .dropzone-hint {
     margin-top: 12px;
     font-size: 12.5px;
@@ -423,7 +424,7 @@
   }
   .upload-feedback[hidden] { display: none; }
 
-  /* 3-Step Guide Card */
+  /* Getting Started Guide Card */
   .steps-card {
     background: #ffffff;
     border-radius: 16px;
@@ -1728,27 +1729,41 @@
 
         <aside class="steps-card">
           <div>
-            <h2 class="steps-card-title">使い方（3ステップ）</h2>
+            <h2 class="steps-card-title">使い方（5ステップ）</h2>
             <div class="step-list">
               <div class="step-row">
                 <div class="step-num-badge">1</div>
                 <div>
-                  <div class="step-text-main">入力済みExcel（.xlsx）を選択</div>
-                  <div class="step-text-sub">PCのフォルダやiPad/iPhoneの「ファイル」から選択します</div>
+                  <div class="step-text-main">入力用シートをダウンロード</div>
+                  <div class="step-text-sub">ベースシートに入力するか、サンプル製作所の例を確認します。保存したExcelを次のステップで選びます</div>
                 </div>
               </div>
               <div class="step-row">
                 <div class="step-num-badge">2</div>
                 <div>
-                  <div class="step-text-main">表紙ロゴ・ビジョン画像やカラーを調整</div>
-                  <div class="step-text-sub">出力後の画面上で自社ロゴ配置や配色をいつでも切替できます</div>
+                  <div class="step-text-main">入力済みExcel（.xlsx）を選択</div>
+                  <div class="step-text-sub">PCのフォルダやiPad/iPhoneの「ファイル」からアップロードします</div>
                 </div>
               </div>
               <div class="step-row">
                 <div class="step-num-badge">3</div>
                 <div>
-                  <div class="step-text-main">A4横レイアウトで印刷・PDF保存</div>
-                  <div class="step-text-sub">全シートの数値を自動計算し、A4横1ページ単位で美しく出力します</div>
+                  <div class="step-text-main">表紙ロゴ・ビジョン画像やカラーを調整</div>
+                  <div class="step-text-sub">出力後の画面上部で配色や画像を調整できます</div>
+                </div>
+              </div>
+              <div class="step-row">
+                <div class="step-num-badge">4</div>
+                <div>
+                  <div class="step-text-main">発表モードでスライドを表示</div>
+                  <div class="step-text-sub">ページ移動後、Enterまたは「→」で本文を表示します。全画面ではメニューを隠し、Mキーで切り替えられます</div>
+                </div>
+              </div>
+              <div class="step-row">
+                <div class="step-num-badge">5</div>
+                <div>
+                  <div class="step-text-main">A4横で印刷・PDF保存</div>
+                  <div class="step-text-sub">全シートの数値を自動計算し、A4横で出力します</div>
                 </div>
               </div>
             </div>
@@ -2061,7 +2076,7 @@ function resetToTop() {
     }
   });
   dz.addEventListener('click', e => {
-    if (e.target.closest('button') || e.target.closest('label')) return;
+    if (e.target.closest('button, label, a')) return;
     fileInput.click();
   });
 })();

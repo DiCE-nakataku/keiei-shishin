@@ -55,13 +55,14 @@
       <div class="ms-chrome">
         <h2 class="ms-heading"></h2>
         <select class="ms-jump" aria-label="ページへ移動"></select>
-        <select class="ms-level" aria-label="演出の強度">
-          <option value="subtle">演出：控えめ</option>
-          <option value="standard" selected>演出：標準</option>
-          <option value="expressive">演出：強め</option>
+        <select class="ms-level" aria-label="表示速度">
+          <option value="fast">表示速度：速い</option>
+          <option value="standard" selected>表示速度：標準</option>
+          <option value="slow">表示速度：遅い</option>
           <option value="off">演出：OFF</option>
         </select>
         <button type="button" class="ms-replay">このページを再生</button>
+        <button type="button" class="ms-menu-toggle" aria-pressed="false">メニューを隠す</button>
         <button type="button" class="ms-full">全画面</button>
         <button type="button" class="ms-close">発表を終了</button>
       </div>
@@ -83,6 +84,7 @@
     const jump = find('.ms-jump');
     const level = find('.ms-level');
     const full = find('.ms-full');
+    const menuToggle = find('.ms-menu-toggle');
     const close = find('.ms-close');
     const prevButton = find('.ms-prev');
     const nextButton = find('.ms-next');
@@ -107,7 +109,20 @@
     let animations = [];
     let playbackRate = 1;
     let fullscreenOwned = false;
+    let menusBeforeFullscreen = false;
     let destroyed = false;
+
+    function setMenusHidden(hidden) {
+      if (hidden && root.contains(document.activeElement)) stage.focus({ preventScroll: true });
+      root.dataset.menus = hidden ? 'hidden' : 'visible';
+      for (const bar of root.querySelectorAll('.ms-chrome')) {
+        bar.inert = hidden;
+        bar.setAttribute('aria-hidden', String(hidden));
+      }
+      menuToggle.textContent = hidden ? 'メニューを表示' : 'メニューを隠す';
+      menuToggle.setAttribute('aria-pressed', String(hidden));
+      fit();
+    }
 
     function activeMotion() {
       return !reduced.matches && level.value !== 'off' && typeof canvas.animate === 'function';
@@ -280,6 +295,7 @@
       next();
     });
     listen(find('.ms-replay'), 'click', () => goTo(current));
+    listen(menuToggle, 'click', () => setMenusHidden(root.dataset.menus !== 'hidden'));
     listen(jump, 'change', () => goTo(Number(jump.value)));
     listen(level, 'change', () => setMotionLevel(level.value));
     listen(reduced, 'change', () => render(Infinity));
@@ -288,6 +304,7 @@
       try {
         if (document.fullscreenElement === fullscreenTarget) await document.exitFullscreen();
         else {
+          menusBeforeFullscreen = root.dataset.menus === 'hidden';
           await fullscreenTarget.requestFullscreen();
           fullscreenOwned = true;
           if (destroyed && document.fullscreenElement === fullscreenTarget) await document.exitFullscreen();
@@ -298,7 +315,9 @@
       }
     });
     listen(document, 'fullscreenchange', () => {
-      full.textContent = document.fullscreenElement === fullscreenTarget ? '全画面を終了' : '全画面';
+      const inFullscreen = document.fullscreenElement === fullscreenTarget;
+      full.textContent = inFullscreen ? '全画面を終了' : '全画面';
+      setMenusHidden(inFullscreen || (fullscreenOwned && menusBeforeFullscreen));
       fit();
     });
     const scope = focus ? host : root;
@@ -314,6 +333,10 @@
         case 'Enter':
           if (event.target.closest('button, a')) return;
           next();
+          break;
+        case 'm':
+        case 'M':
+          setMenusHidden(root.dataset.menus !== 'hidden');
           break;
         case 'ArrowRight':
         case 'PageDown':

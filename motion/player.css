@@ -26,6 +26,8 @@ dialog.ms-dialog {
   padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
     max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
 }
+.ms-player[data-menus="hidden"] { grid-template-rows: minmax(0, 1fr); }
+.ms-player[data-menus="hidden"] .ms-chrome { display: none; }
 .ms-chrome {
   display: flex;
   flex-wrap: wrap;

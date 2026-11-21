@@ -78,7 +78,7 @@
     S01: [660, 0, steady], S02: [880, 0, steady], S03: [1220, 0, steady],
   };
 
-  const levels = Object.freeze({ off: 0, subtle: .7, standard: 1, expressive: 1.3 });
+  const levels = Object.freeze({ fast: .7, standard: 1, slow: 1.4, off: 0 });
 
   function milliseconds(raw, fallback) {
     if (raw === undefined || raw === '') return fallback;
