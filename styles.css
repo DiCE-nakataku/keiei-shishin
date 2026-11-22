@@ -1700,7 +1700,7 @@ capture css  .cat-cell {
     outline-offset: 2px;
   }
   .appearance-editing #visionPageBody > .floating-ctrl-bar,
-  .appearance-editing #coverPageContainer > .cover-ctrl-wrap {
+  .appearance-editing #coverPageContainer .cover-ctrl-wrap {
     display: none;
   }
   #openWorkFileButton { justify-content: center; width: 100%; }

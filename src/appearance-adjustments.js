@@ -14,6 +14,27 @@
     const boxNumbers = new Map();
     for (const page of container.querySelectorAll('.page')) {
       const section = page.dataset.section || 'PAGE';
+      if (page.classList.contains('cover-page')) {
+        const coverBlocks = [
+          ['.cover-en', 'english-title'],
+          ['.cover-term-label', 'term-label'],
+          ['.cover-term-num', 'term-number'],
+          ['.cover-range', 'term-range'],
+          ['.cover-left-foot', 'company-left'],
+          ['.cover-doc-type', 'document-type'],
+          ['.cover-title', 'title'],
+          ['.cover-motto', 'subtitle'],
+          ['.cover-company', 'company-signature'],
+          ['.cover-rep', 'representative'],
+          ['.cover-date', 'publication-date'],
+        ];
+        for (const [selector, name] of coverBlocks) {
+          page.querySelectorAll(selector).forEach((block) => {
+            block.dataset.appearanceKey = stableKey(section, name);
+            block.dataset.appearanceBox = stableKey(section, name);
+          });
+        }
+      }
       const title = page.querySelector('.page-title');
       if (title) title.dataset.appearanceKey = stableKey(section, 'title');
       const table = page.querySelector('.page-body table.exec');

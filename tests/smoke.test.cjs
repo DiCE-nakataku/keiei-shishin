@@ -164,7 +164,7 @@ test('landing page keeps the template and full sample bundle downloads', () => {
 });
 
 test('external stylesheet keeps screen and print page layout rules', () => {
-  assert.match(html, /<link rel="stylesheet" href="\.\/styles\.css">/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/styles\.css\?v=1\.4\.1">/);
   assert.doesNotMatch(html, /<style>/);
   assert.match(stylesheet, /@page\s*\{[^}]*size:\s*A4\s+landscape/is);
   assert.match(stylesheet, /@media print/);
@@ -1285,7 +1285,7 @@ test('financial pages preserve active columns, summaries, and memo layout', () =
 });
 
 test('targets, action plan, and sales pages preserve workbook-driven layouts', () => {
-  assert.match(html, /<script src="\.\/src\/page-planning\.js"><\/script>/);
+  assert.match(html, /<script src="\.\/src\/page-planning\.js\?v=1\.4\.1"><\/script>/);
   const context = {
     XLSX: { utils: { encode_col: (index) => String.fromCharCode(65 + index) } },
   };
@@ -1731,4 +1731,76 @@ test('appearance editor can reopen text blocks containing only generated line br
     context.canEditAppearanceText({ ...target, matches: (selector) => selector === 'th' }),
     false,
   );
+});
+
+test('cover appearance targets are restored with stable keys after logo rerenders', () => {
+  const source = fs.readFileSync(path.join(root, 'src/appearance-adjustments.js'), 'utf8');
+  assert.match(
+    stylesheet,
+    /\.appearance-editing #coverPageContainer \.cover-ctrl-wrap\s*\{\s*display:\s*none/s,
+  );
+  const coverClasses = ['.cover-title', '.cover-company', '.cover-term-num', '.cover-motto'];
+  const makeBlock = () => ({ dataset: {} });
+  const makeCoverPage = () => {
+    const blocks = new Map(coverClasses.map((selector) => [selector, [makeBlock()]]));
+    return {
+      dataset: { section: 'COVER' },
+      classList: { contains: (name) => name === 'cover-page' },
+      querySelector: () => null,
+      querySelectorAll(selector) {
+        if (selector === '.panel-card, .hero-quote') return [];
+        if (selector === '.cover-motto, .panel-body, .hero-quote-text, .vision-text') return [];
+        return blocks.get(selector) || [];
+      },
+      blocks,
+    };
+  };
+  const page = makeCoverPage();
+  const container = { querySelectorAll: (selector) => (selector === '.page' ? [page] : []) };
+  const context = {
+    document: { getElementById: () => null },
+    workbookState: { appearanceSettings: {} },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  context.assignAppearanceBlockIds(container);
+  assert.equal(page.blocks.get('.cover-title')[0].dataset.appearanceKey, 'COVER|title');
+  assert.equal(
+    page.blocks.get('.cover-company')[0].dataset.appearanceKey,
+    'COVER|company-signature',
+  );
+  assert.equal(page.blocks.get('.cover-term-num')[0].dataset.appearanceKey, 'COVER|term-number');
+  const subtitle = page.blocks.get('.cover-motto')[0];
+  assert.equal(subtitle.dataset.appearanceKey, 'COVER|subtitle');
+  assert.equal(
+    context.canEditAppearanceText({
+      dataset: { appearanceKey: subtitle.dataset.appearanceKey },
+      children: [],
+      matches: () => false,
+    }),
+    true,
+  );
+
+  const rerenderedPage = makeCoverPage();
+  context.assignAppearanceBlockIds({
+    querySelectorAll: (selector) => (selector === '.page' ? [rerenderedPage] : []),
+  });
+  assert.equal(rerenderedPage.blocks.get('.cover-title')[0].dataset.appearanceKey, 'COVER|title');
+  assert.equal(
+    rerenderedPage.blocks.get('.cover-motto')[0].dataset.appearanceKey,
+    'COVER|subtitle',
+  );
+});
+
+test('action plan legend and versioned assets use the revised PDCA symbols', () => {
+  const planning = fs.readFileSync(path.join(root, 'src/page-planning.js'), 'utf8');
+  assert.match(planning, /●<\/span> 計画（P）/);
+  assert.match(planning, /→<\/span> 実施（D）/);
+  assert.match(planning, /△<\/span> 評価（C）/);
+  assert.match(planning, /⭐︎<\/span> 改善（A）/);
+  assert.match(html, /page-planning\.js\?v=1\.4\.1/);
+  assert.match(html, /appearance-adjustments\.js\?v=1\.4\.1/);
+  assert.match(html, /styles\.css\?v=1\.4\.1/);
+  assert.match(html, /v1\.4\.1 · 更新日 2026-11-22/);
 });
