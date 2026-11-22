@@ -19,19 +19,84 @@
       index += span;
     }
 
-    const chunks = [];
-    let chunk = [];
-    let count = 0;
-    for (const unit of units) {
-      if (chunk.length && count + unit.length > maxRows) {
-        chunks.push(chunk.flat());
-        chunk = [];
-        count = 0;
+    const totals = [0];
+    units.forEach((unit) => totals.push(totals.at(-1) + unit.length));
+    let best = null;
+
+    function search(start, boundaries) {
+      if (start === units.length) {
+        const counts = boundaries.map(
+          (end, index) => totals[end] - totals[index ? boundaries[index - 1] : 0],
+        );
+        const mean = counts.reduce((sum, count) => sum + count, 0) / counts.length;
+        const cost = counts.reduce((sum, count) => sum + (count - mean) ** 2, 0);
+        if (
+          !best ||
+          boundaries.length < best.boundaries.length ||
+          (boundaries.length === best.boundaries.length && cost < best.cost)
+        ) {
+          best = { boundaries, cost };
+        }
+        return;
       }
-      chunk.push(unit);
-      count += unit.length;
+      if (best && boundaries.length >= best.boundaries.length) return;
+
+      for (let end = start + 1; end <= units.length; end++) {
+        const count = totals[end] - totals[start];
+        if (count > maxRows && end > start + 1) break;
+        if (best && boundaries.length + 1 > best.boundaries.length) break;
+        search(end, [...boundaries, end]);
+      }
     }
-    if (chunk.length) chunks.push(chunk.flat());
+
+    search(0, []);
+    let start = 0;
+    return best.boundaries.map((end) => {
+      const chunk = units.slice(start, end).flat();
+      start = end;
+      return chunk;
+    });
+  }
+
+  function balanceDenseTableRows(rows, maxRows) {
+    const groupedChunks = chunkDenseTableRows(rows, maxRows);
+    const counts = groupedChunks.map((chunk) => chunk.length);
+    const imbalance = (Math.max(...counts) - Math.min(...counts)) / rows.length;
+    if (groupedChunks.length < 2 || imbalance <= 0.25) return groupedChunks;
+
+    const pageCount = Math.ceil(rows.length / maxRows);
+    const baseSize = Math.floor(rows.length / pageCount);
+    const extraRows = rows.length % pageCount;
+    const groups = [];
+    for (let index = 0; index < rows.length;) {
+      const cell = rows[index].cells[0];
+      const span = cell?.classList.contains('cat-cell') ? Math.max(1, cell.rowSpan || 1) : 1;
+      groups.push({ start: index, end: Math.min(rows.length, index + span), cell });
+      index += span;
+    }
+
+    const chunks = [];
+    let start = 0;
+    for (let page = 0; page < pageCount; page++) {
+      const size = baseSize + (page < extraRows ? 1 : 0);
+      const end = start + size;
+      const chunk = rows.slice(start, end).map((row) => row.cloneNode(true));
+      for (const group of groups) {
+        const overlapStart = Math.max(start, group.start);
+        const overlapEnd = Math.min(end, group.end);
+        if (overlapStart >= overlapEnd) continue;
+        const localRow = chunk[overlapStart - start];
+        const categoryCell = group.cell.cloneNode(true);
+        categoryCell.rowSpan = overlapEnd - overlapStart;
+        if (overlapStart === group.start) {
+          localRow.cells[0].rowSpan = overlapEnd - overlapStart;
+        } else {
+          localRow.insertBefore(categoryCell, localRow.cells[0]);
+        }
+      }
+      chunks.push(chunk);
+      start = end;
+    }
     return chunks;
   }
 
@@ -68,7 +133,7 @@
       const maxRows = getDenseTableRowLimit(section);
       if (rows.length <= maxRows) continue;
 
-      const chunks = chunkDenseTableRows(rows, maxRows);
+      const chunks = balanceDenseTableRows(rows, maxRows);
       if (chunks.length < 2) continue;
 
       const writeRows = (targetPage, unitsForPage) => {
@@ -104,7 +169,9 @@
 
   global.getDenseTableRowLimit = getDenseTableRowLimit;
   global.chunkDenseTableRows = chunkDenseTableRows;
+  global.balanceDenseTableRows = balanceDenseTableRows;
   global.getDenseTableTypography = getDenseTableTypography;
   global.renumberDenseTablePages = renumberDenseTablePages;
   global.paginateDenseTables = paginateDenseTables;
 })(window);
+
