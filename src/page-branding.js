@@ -138,6 +138,7 @@
       </div>
     </div>
   `;
+    global.refreshAppearanceTargets?.();
   }
 
   // Vision Image Handlers

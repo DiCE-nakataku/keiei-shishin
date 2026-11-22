@@ -33,6 +33,7 @@
     const text = String(value || '').trim();
     if (!text) return '';
     if (text === '●' || text === '•') return `<span class="gantt-dot">●</span>`;
+    if (text.startsWith('⭐')) return `<span class="gantt-star">⭐︎</span>`;
     if (text.startsWith('★') || text.includes('完了')) return `<span class="gantt-star">★</span>`;
     if (text.startsWith('△') || text.includes('継続')) return `<span class="gantt-tri">△</span>`;
     if (text === '→') return `<span class="gantt-arrow">→</span>`;

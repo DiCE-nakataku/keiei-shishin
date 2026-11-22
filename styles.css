@@ -1699,7 +1699,8 @@ capture css  .cat-cell {
     outline: 2px dashed #2563eb;
     outline-offset: 2px;
   }
-  .appearance-editing #visionPageBody > .floating-ctrl-bar {
+  .appearance-editing #visionPageBody > .floating-ctrl-bar,
+  .appearance-editing #coverPageContainer > .cover-ctrl-wrap {
     display: none;
   }
   #openWorkFileButton { justify-content: center; width: 100%; }
