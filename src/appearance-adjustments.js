@@ -173,10 +173,21 @@
     return offsets.filter((offset) => offset > 0);
   }
 
+  function canEditTextBlock(target) {
+    if (target.matches('th')) return false;
+    if (target.children.length === 0) return true;
+    const existing = state.appearanceSettings[target.dataset.appearanceKey];
+    return Boolean(
+      existing?.lineBreaks &&
+      Array.from(target.children).every((child) => child.tagName === 'BR') &&
+      target.innerText.replace(/\r/g, '') === existing.renderedText,
+    );
+  }
+
   function openDialog(target) {
     selectedTarget = target;
     const dialog = global.document.getElementById('appearanceDialog');
-    const canChangeBreaks = !target.matches('th') && target.children.length === 0;
+    const canChangeBreaks = canEditTextBlock(target);
     selectedTextCanBreak = canChangeBreaks;
     const rowOption = global.document.querySelector('#appearanceScope option[value="row"]');
     const boxOption = global.document.querySelector('#appearanceScope option[value="box"]');
@@ -322,5 +333,6 @@
   global.applyAppearanceSettings = applyAppearanceSettings;
   global.renderAppearanceTransferNotice = renderTransferNotice;
   global.clearAppearanceSettings = clearAppearanceSettings;
+  global.canEditAppearanceText = canEditTextBlock;
   global.setAppearanceEditing = activateMode;
 })(window);
