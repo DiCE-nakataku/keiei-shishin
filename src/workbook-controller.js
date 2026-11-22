@@ -1,6 +1,15 @@
 (function (global) {
   function renderBook(wb) {
     const state = global.workbookState;
+    const pendingProject = state.pendingWorkProject;
+    const restoredProject = Boolean(pendingProject);
+    state.shouldReportMapping = Boolean(state.workbookWasReplaced && !pendingProject);
+    if (pendingProject) {
+      state.appearanceSettings = pendingProject.appearanceSettings || {};
+      global.setBrandingState?.(pendingProject.branding || {});
+      global.applyTheme?.(pendingProject.theme || '');
+      state.pendingWorkProject = null;
+    }
     state.activeWorkbook = wb;
     state.calculationAdapter = global.FormulaEngine.createCalculationAdapter(wb);
     state.calculationAdapter.calculateAll();
@@ -52,6 +61,9 @@
       return;
     }
 
+    state.inputValidationResults = global.validateWorkbookInputs(wb, val, selected);
+    global.renderInputDiagnostics(state.inputValidationResults);
+
     global.document.getElementById('statusText').textContent = state.workbookHasErrors
       ? `要確認：数式エラー ${state.formulaResults.filter((x) => x.status === 'error').length} 件`
       : `確認OK：全 ${selected.length} ページ出力対象`;
@@ -73,9 +85,16 @@
       container,
       coverData: { company, rep, term, startYM, endYM, pubDate },
     });
+    global.assignAppearanceBlockIds(container);
+    global.applyAppearanceSettings(container);
+    if (state.shouldReportMapping) global.renderAppearanceTransferNotice();
+    state.workbookWasReplaced = false;
+    state.shouldReportMapping = false;
+    if (restoredProject) global.markWorkFileClean?.();
     if (!state.workbookHasErrors)
-      global.document.getElementById('statusText').textContent =
-        `確認OK：全 ${renderedPages} ページ出力対象`;
+      global.document.getElementById('statusText').textContent = state.inputValidationResults.length
+        ? `入力確認：${state.inputValidationResults.length} 件・全 ${renderedPages} ページ`
+        : `確認OK：全 ${renderedPages} ページ出力対象`;
     global.fitPreviewPages();
     global.updatePrintControls();
   }

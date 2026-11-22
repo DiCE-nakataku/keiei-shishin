@@ -21,12 +21,13 @@
   <div class="app-header-inner">
     <div class="brand-title-group">
       <h1 class="app-title">経営指針書 自動レイアウト＆PDF出力ツール</h1>
-      <span class="privacy-pill"><span class="privacy-dot"></span>ブラウザ内完結・外部送信なし</span>
+      <span class="privacy-pill"><span class="privacy-dot"></span>入力データは端末内で処理</span>
     </div>
     <div class="output-controls" id="outputControls">
-      <label class="btn-reselect" for="excelInput">
-        📂 別のExcel(.xlsx)を選択
-      </label>
+      <label class="btn-reselect" for="excelInput">📂 別のExcelを選択</label>
+      <button class="btn-print" id="openWorkFileToolbarButton" type="button">保存済み作業ファイルを開く</button>
+      <button class="btn-print" id="adjustmentModeButton" type="button" disabled aria-pressed="false">見た目を調整</button>
+      <button class="btn-print" id="saveWorkFileButton" type="button" disabled>作業ファイルを保存</button>
       <select class="theme-select" id="toolbarThemeSelect">
         <option value="">カラー：ロイヤルネイビー × ゴールド</option>
         <option value="theme-green">カラー：フォレストグリーン × ゴールド</option>
@@ -37,12 +38,14 @@
       <button class="btn-print" id="fixedPdfButton" type="button" disabled>A4横PDFを保存（文字検索可）</button>
       <button class="btn-back-top">トップへ戻る</button>
       <span class="status" id="statusText">Excelファイルを選択してください</span>
+      <span class="status work-file-status" id="workFileStatus" role="status" aria-live="polite"></span>
       <span class="print-pdf-status" id="printPdfStatus" role="status" aria-live="polite"></span>
     </div>
   </div>
 </header>
 
 <input type="file" id="excelInput" accept=".xlsx,.xls" />
+<input type="file" id="workFileInput" accept=".kswork,application/json" hidden />
 <input type="file" id="coverLogoInput" accept="image/*" />
 <input type="file" id="visionImgInput" accept="image/*" />
 
@@ -69,6 +72,7 @@
               <a class="btn-print" href="./downloads/サンプル製作所_サンプル一式.zip" download>⬇ サンプル製作所の入力例・画像一式（ZIP）</a>
               <p>自由目標欄は、売上高・利益など数値で測る目標を追加する場合に使用します。</p>
             </div>
+            <button class="btn-print open-work-file" id="openWorkFileButton" type="button">保存した作業ファイルを開く</button>
             <div class="dropzone-hint">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
             <div class="upload-feedback" id="uploadFeedback" role="status" aria-live="polite" hidden></div>
           </div>
@@ -76,7 +80,7 @@
 
         <aside class="steps-card">
           <div>
-            <h2 class="steps-card-title">使い方（5ステップ）</h2>
+            <h2 class="steps-card-title">使い方（6ステップ）</h2>
             <div class="step-list">
               <div class="step-row">
                 <div class="step-num-badge">1</div>
@@ -88,26 +92,33 @@
               <div class="step-row">
                 <div class="step-num-badge">2</div>
                 <div>
-                  <div class="step-text-main">入力済みExcel（.xlsx）を選択</div>
-                  <div class="step-text-sub">PCのフォルダやiPad/iPhoneの「ファイル」からアップロードします</div>
+                  <div class="step-text-main">Excelを選んで入力内容を確認</div>
+                  <div class="step-text-sub">形式や未入力の注意を確認します。文字・数字の修正はExcelで行い、再読み込みします</div>
                 </div>
               </div>
               <div class="step-row">
                 <div class="step-num-badge">3</div>
                 <div>
-                  <div class="step-text-main">表紙ロゴ・ビジョン画像やカラーを調整</div>
-                  <div class="step-text-sub">出力後の画面上部で配色や画像を調整できます</div>
+                  <div class="step-text-main">見た目を整える</div>
+                  <div class="step-text-sub">ブロックごとの文字サイズや改行、ロゴ・画像・カラーを調整できます</div>
                 </div>
               </div>
               <div class="step-row">
                 <div class="step-num-badge">4</div>
+                <div>
+                  <div class="step-text-main">必要なら作業ファイルを保存</div>
+                  <div class="step-text-sub">Excel・画像・見た目の調整を別ファイルに保存し、後日開いて再開できます</div>
+                </div>
+              </div>
+              <div class="step-row">
+                <div class="step-num-badge">5</div>
                 <div>
                   <div class="step-text-main">発表モードでスライドを表示</div>
                   <div class="step-text-sub">ページ移動後、Enterまたは「→」で本文を表示します。全画面ではメニューを隠し、Mキーで切り替えられます</div>
                 </div>
               </div>
               <div class="step-row">
-                <div class="step-num-badge">5</div>
+                <div class="step-num-badge">6</div>
                 <div>
                   <div class="step-text-main">A4横で印刷・PDF保存</div>
                   <div class="step-text-sub">全シートの数値を自動計算し、A4横で出力します</div>
@@ -164,6 +175,24 @@
 
           <div class="faq-item">
             <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>作業ファイルの保存・再開について</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  <ul>
+                    <li>「作業ファイルを保存」を選ぶと、入力済みExcel、ロゴ・画像、見た目の調整を1つの .kswork ファイルとしてダウンロードします。</li>
+                    <li>再開するときはトップ画面または画面上部の「保存した作業ファイルを開く」を選びます。元のExcelは変更・上書きされません。</li>
+                    <li>作業ファイルには機密情報が含まれます。暗号化やパスワードはありませんので、元のExcelと同様に保管してください。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false">
               <span>PC・iPad・iPhoneでの印刷 / PDF保存手順</span>
               <span class="faq-plus">+</span>
             </button>
@@ -204,7 +233,7 @@
             <div class="faq-body-wrap">
               <div class="faq-body-inner">
                 <div class="faq-body-content">
-                  選択したExcelファイルや画像データは、お使いのPC・タブレット・スマートフォンの<strong>ブラウザ内部（メモリ上）のみで処理</strong>されます。外部サーバーへの送信・保存は一切行われないため、機密性の高い経営数値や計画も安心してご利用いただけます。
+                  Excelと画像はブラウザー内で処理し、外部サーバーへ送信しません。保存を選んだ場合は、入力済みExcelと画像を含む作業ファイルを端末へダウンロードします。作業ファイルは暗号化されないため、保存先や共有相手にご注意ください。
                 </div>
               </div>
             </div>
@@ -224,6 +253,34 @@
 <div class="pages-wrapper" id="pagesContainer"></div>
 <dialog id="presentationDialog" class="ms-dialog no-print" aria-label="経営指針書の発表モード"></dialog>
 <section id="calcDiagnostics" class="no-print" aria-live="polite" hidden></section>
+<section id="inputDiagnostics" class="no-print" aria-live="polite" hidden></section>
+<dialog id="appearanceDialog" class="appearance-dialog no-print" aria-labelledby="appearanceDialogTitle">
+  <form method="dialog" id="appearanceForm">
+    <h2 id="appearanceDialogTitle">このブロックを調整</h2>
+    <p id="appearanceBlockDescription"></p>
+    <label for="appearanceScope">適用範囲</label>
+    <select id="appearanceScope">
+      <option value="block">このセル・枠だけ</option>
+      <option value="row">この項目（行）</option>
+      <option value="box">この枠全体</option>
+    </select>
+    <label for="appearanceSize">文字サイズ</label>
+    <select id="appearanceSize">
+      <option value="small">小さく</option>
+      <option value="standard">標準</option>
+      <option value="large">大きく</option>
+    </select>
+    <label for="appearanceText">改行位置（改行以外の文字は変更できません）</label>
+    <textarea id="appearanceText" rows="5" spellcheck="false"></textarea>
+    <p id="appearanceError" role="alert" hidden></p>
+    <div class="appearance-actions">
+      <button class="btn-print" id="resetAppearanceButton" type="button">この範囲を標準に戻す</button>
+      <button class="btn-print" id="resetAllAppearanceButton" type="button">すべて標準に戻す</button>
+      <button class="btn-print" value="cancel">キャンセル</button>
+      <button class="btn-print primary-action" id="applyAppearanceButton" type="button">適用</button>
+    </div>
+  </form>
+</dialog>
 <div id="printBlockedNotice" class="print-blocked-notice">計算エラーがあるため印刷を停止しました。画面上のエラー一覧を確認してください。</div>
 
 <script src="./src/theme.js"></script>
@@ -250,6 +307,9 @@
 <script src="./src/page-branding.js"></script>
 <script src="./src/workbook-pages.js"></script>
 <script src="./src/workbook-controller.js"></script>
+<script src="./src/input-validation.js"></script>
+<script src="./src/appearance-adjustments.js"></script>
+<script src="./src/work-file.js"></script>
 <script>
 window.configurePrintButtonVisibility();
 

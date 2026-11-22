@@ -7,11 +7,25 @@
     feedback.hidden = !message;
   }
 
-  function handleExcelFile(file) {
+  function handleExcelFile(file, options = {}) {
     if (!file) {
       setUploadFeedback('Excelファイルが選択されませんでした。もう一度選択してください。', true);
       return;
     }
+    if (/\.kswork$/i.test(file.name) && !options.fromWorkFile) {
+      global.openWorkFile(file);
+      return;
+    }
+    const state = global.workbookState;
+    if (
+      state.activeWorkbook &&
+      state.workFileDirty &&
+      !options.skipConfirmation &&
+      !global.confirm('保存していない作業があります。Excelを差し替えて続けますか？')
+    ) {
+      return;
+    }
+    state.workbookWasReplaced = Boolean(state.activeWorkbook);
     const statusEl = global.document.getElementById('statusText');
     if (!global.XLSX || !global.FormulaEngine) {
       const message =
@@ -33,6 +47,10 @@
     const reader = new global.FileReader();
     reader.onload = function (event) {
       try {
+        state.sourceWorkbookBytes = new Uint8Array(event.target.result);
+        state.sourceFileName = file.name;
+        global.markWorkFileDirty?.();
+        if (!global.markWorkFileDirty) state.workFileDirty = true;
         const workbook = global.FormulaEngine.parseWorkbook(
           new Uint8Array(event.target.result),
           global.XLSX,
@@ -74,6 +92,7 @@
       statusEl.textContent = 'ファイル読込を中断しました';
       setUploadFeedback('ファイルの読み込みが中断されました。もう一度選択してください。', true);
     };
+    if (options.project) state.pendingWorkProject = options.project;
     reader.readAsArrayBuffer(file);
   }
 
@@ -89,8 +108,23 @@
   function resetToTop() {
     global.clearPrintGuidance();
     global.workbookState.activeWorkbook = null;
+    global.workbookState.sourceWorkbookBytes = null;
+    global.workbookState.sourceFileName = '';
+    global.workbookState.pendingWorkProject = null;
+    global.workbookState.workbookWasReplaced = false;
+    global.workbookState.shouldReportMapping = false;
+    global.workbookState.appearanceSettings = {};
+    global.setBrandingState?.({});
+    global.applyTheme?.('');
+    global.workbookState.inputValidationResults = [];
+    global.workbookState.workFileDirty = false;
+    global.markWorkFileClean?.();
     global.document.body.classList.remove('has-pages');
     global.document.getElementById('pagesContainer').innerHTML = '';
+    global.document.getElementById('inputDiagnostics')?.replaceChildren();
+    if (global.document.getElementById('inputDiagnostics')) {
+      global.document.getElementById('inputDiagnostics').hidden = true;
+    }
     global.updatePrintControls();
     global.document.getElementById('statusText').textContent = 'Excelファイルを選択してください';
     setUploadFeedback('');

@@ -15,11 +15,17 @@
 
   window.bindImageDataUrlInput('coverLogoInput', (dataUrl) => {
     coverLogoDataUrl = dataUrl;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     renderCoverPage();
   });
 
   function setCoverLogoPos(pos) {
     coverLogoPos = pos;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     // Auto-suggest white plate when placed on dark left panel so dark logos never vanish
     if (pos === 'left-top' && coverLogoFrame === 'none') {
       coverLogoFrame = 'plate';
@@ -28,10 +34,16 @@
   }
   function setCoverLogoFrame(frame) {
     coverLogoFrame = frame;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     renderCoverPage();
   }
   function removeCoverLogo() {
     coverLogoDataUrl = null;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     document.getElementById('coverLogoInput').value = '';
     renderCoverPage();
   }
@@ -131,16 +143,25 @@
   // Vision Image Handlers
   window.bindImageDataUrlInput('visionImgInput', (dataUrl) => {
     visionImageDataUrl = dataUrl;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     renderVisionBody();
   });
 
   function setVisionMode(mode) {
     visionLayoutMode = mode;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     renderVisionBody();
   }
 
   function removeVisionImage() {
     visionImageDataUrl = null;
+    global.markWorkFileDirty?.();
+    if (!global.markWorkFileDirty && global.workbookState)
+      global.workbookState.workFileDirty = true;
     document.getElementById('visionImgInput').value = '';
     renderVisionBody();
   }
@@ -318,6 +339,30 @@
   };
   global.setVisionPageData = (data) => {
     currentVisionData = data;
+  };
+  global.getBrandingState = () => ({
+    coverLogoDataUrl,
+    coverLogoPos,
+    coverLogoFrame,
+    visionImageDataUrl,
+    visionLayoutMode,
+  });
+  global.setBrandingState = (settings = {}) => {
+    coverLogoDataUrl = settings.coverLogoDataUrl || null;
+    coverLogoPos = ['right-top', 'left-top', 'right-bottom', 'center-hero'].includes(
+      settings.coverLogoPos,
+    )
+      ? settings.coverLogoPos
+      : 'right-top';
+    coverLogoFrame = ['none', 'plate', 'soft'].includes(settings.coverLogoFrame)
+      ? settings.coverLogoFrame
+      : 'none';
+    visionImageDataUrl = settings.visionImageDataUrl || null;
+    visionLayoutMode = ['corner', 'right-half', 'full-bg', 'full-fg', 'full-fg-only'].includes(
+      settings.visionLayoutMode,
+    )
+      ? settings.visionLayoutMode
+      : 'corner';
   };
   global.renderCoverPage = renderCoverPage;
   global.renderVisionBody = renderVisionBody;

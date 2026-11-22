@@ -15,6 +15,10 @@
     global.document.getElementById('printButton').disabled = !allowed;
     global.document.getElementById('presentationButton').disabled = !allowed;
     global.document.getElementById('fixedPdfButton').disabled = !allowed;
+    const adjustmentButton = global.document.getElementById('adjustmentModeButton');
+    const saveButton = global.document.getElementById('saveWorkFileButton');
+    if (adjustmentButton) adjustmentButton.disabled = !allowed;
+    if (saveButton) saveButton.disabled = !global.workbookState.sourceWorkbookBytes;
   }
 
   function configurePrintButtonVisibility() {

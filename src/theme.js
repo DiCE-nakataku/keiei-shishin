@@ -6,6 +6,10 @@
 
     const select = global.document.getElementById('toolbarThemeSelect');
     if (select && select.value !== themeVal) select.value = themeVal;
+    if (global.workbookState?.activeWorkbook) {
+      global.markWorkFileDirty?.();
+      if (!global.markWorkFileDirty) global.workbookState.workFileDirty = true;
+    }
 
     global.document.querySelectorAll('.theme-pill-btn').forEach((button) => {
       button.classList.toggle('active', (button.dataset.theme || '') === themeVal);

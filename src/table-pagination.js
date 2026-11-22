@@ -174,4 +174,3 @@
   global.renumberDenseTablePages = renumberDenseTablePages;
   global.paginateDenseTables = paginateDenseTables;
 })(window);
-

@@ -15,6 +15,10 @@ const workbookControllerModuleSource = fs.readFileSync(
   'utf8',
 );
 const workbookStateModuleSource = fs.readFileSync(path.join(root, 'src/workbook-state.js'), 'utf8');
+const inputValidationModuleSource = fs.readFileSync(
+  path.join(root, 'src/input-validation.js'),
+  'utf8',
+);
 
 function createUploadHarness({ parseWorkbook = () => ({ id: 'workbook' }), renderBook } = {}) {
   const readers = [];
@@ -64,6 +68,7 @@ function createUploadHarness({ parseWorkbook = () => ({ id: 'workbook' }), rende
     },
   };
   const context = {
+    confirm: () => true,
     FileReader: class {
       readAsArrayBuffer(file) {
         this.file = file;
@@ -1404,6 +1409,7 @@ test('cover and vision renderers preserve logo and image layout variants', () =>
       addEventListener: (name, callback) => documentListeners.set(name, callback),
     },
     clearPrintGuidance() {},
+    confirm: () => true,
     esc: (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;'),
     fmtCell: (value, fallback) => value || fallback,
     bindImageDataUrlInput(id, callback) {
@@ -1614,7 +1620,11 @@ test('workbook controller validates formulas, selects sheets, and finalizes page
   };
   context.window = context;
   vm.runInNewContext(workbookStateModuleSource, context);
+  vm.runInNewContext(inputValidationModuleSource, context);
   vm.runInNewContext(workbookControllerModuleSource, context);
+  context.renderInputDiagnostics = () => {};
+  context.assignAppearanceBlockIds = () => {};
+  context.applyAppearanceSettings = () => {};
   context.renderBook(workbook);
 
   const state = context.workbookState;
@@ -1644,4 +1654,44 @@ test('workbook controller validates formulas, selects sheets, and finalizes page
     false,
   );
 });
+test('workbook input validation reports missing fields, invalid dates, and inconsistent targets', () => {
+  const context = { document: {} };
+  context.window = context;
+  vm.runInNewContext(inputValidationModuleSource, context);
+  const workbook = {
+    Sheets: {
+      '00_出力設定・表紙': {
+        B24: '',
+        B26: '0',
+        B27: '2026年13月',
+        B28: '2026年4月',
+        B29: 'not-a-date',
+      },
+      '15_目標設定': { B5: '100', B6: '120' },
+    },
+  };
+  const val = (sheet, address) => String(sheet?.[address] ?? '');
+  const issues = context.validateWorkbookInputs(workbook, val, ['03_経営理念']);
+  assert.ok(issues.some((issue) => issue.cell === 'B24' && /会社名/.test(issue.message)));
+  assert.ok(issues.some((issue) => issue.cell === 'B26' && /1以上/.test(issue.message)));
+  assert.ok(issues.some((issue) => issue.cell === 'B27' && /形式/.test(issue.message)));
+  assert.ok(issues.some((issue) => issue.cell === 'B29' && /日付形式/.test(issue.message)));
+  assert.ok(issues.some((issue) => issue.sheet === '15_目標設定' && issue.cell === 'B6'));
+  assert.ok(issues.every((issue) => issue.severity === 'warning'));
+});
 
+test('work file and appearance controls communicate local, unencrypted save and text-only break edits', () => {
+  assert.match(html, /id="saveWorkFileButton"/);
+  assert.match(html, /id="openWorkFileToolbarButton"/);
+  assert.match(html, /id="workFileInput" accept="\.kswork,application\/json"/);
+  assert.match(
+    fs.readFileSync(path.join(root, 'src/work-file.js'), 'utf8'),
+    /パスワードによる暗号化はありません/,
+  );
+  assert.match(html, /id="resetAllAppearanceButton"/);
+  assert.match(fs.readFileSync(path.join(root, 'src/work-file.js'), 'utf8'), /formatVersion = 1/);
+  assert.match(
+    fs.readFileSync(path.join(root, 'src/appearance-adjustments.js'), 'utf8'),
+    /candidate\.replace\(\/\\n\/g, ''\) !== sourceText\.replace\(\/\\n\/g, ''\)/,
+  );
+});
