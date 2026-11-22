@@ -302,6 +302,7 @@
     }
 
     container.innerHTML = ctrlHTML + `<div style="flex:1;overflow:hidden;">${bodyHTML}</div>`;
+    global.refreshAppearanceTargets?.();
   }
 
   global.document.addEventListener('click', (event) => {

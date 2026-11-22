@@ -135,6 +135,21 @@
     return skippedBreaks;
   }
 
+  function refreshAppearanceTargets(container = global.document.getElementById('pagesContainer')) {
+    if (!container) return;
+    assignAppearanceBlockIds(container);
+    applyAppearanceSettings(container);
+    if (!editing) return;
+    container.querySelectorAll('[data-appearance-key]').forEach((element) => {
+      element.tabIndex = 0;
+      element.setAttribute('role', 'button');
+      element.setAttribute(
+        'aria-label',
+        `${(element.innerText || '').trim().slice(0, 80) || 'ブロック'}：調整するにはEnterキー`,
+      );
+    });
+  }
+
   function renderTransferNotice() {
     const count = (state.unmappedAppearanceSettings || 0) + (state.skippedAppearanceBreaks || 0);
     if (!count) return;
@@ -331,6 +346,7 @@
 
   global.assignAppearanceBlockIds = assignAppearanceBlockIds;
   global.applyAppearanceSettings = applyAppearanceSettings;
+  global.refreshAppearanceTargets = refreshAppearanceTargets;
   global.renderAppearanceTransferNotice = renderTransferNotice;
   global.clearAppearanceSettings = clearAppearanceSettings;
   global.canEditAppearanceText = canEditTextBlock;

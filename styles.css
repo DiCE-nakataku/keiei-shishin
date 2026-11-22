@@ -1699,6 +1699,9 @@ capture css  .cat-cell {
     outline: 2px dashed #2563eb;
     outline-offset: 2px;
   }
+  .appearance-editing #visionPageBody > .floating-ctrl-bar {
+    display: none;
+  }
   #openWorkFileButton { justify-content: center; width: 100%; }
   @media (max-width: 540px) {
     .appearance-dialog { padding: 17px; }
