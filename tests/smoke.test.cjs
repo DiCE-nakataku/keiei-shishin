@@ -1,4 +1,1354 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛ_=Ñ:-jZ.¶›­–)Ş³V6öç7Bg2Ò&WV—&R‚væöFS¦g2r“°¦6öç7BF‚Ò&WV—&R‚væöFS§F‚r“°¦6öç7BFW7BÒ&WV—&R‚væöFS§FW7Br“°¦6öç7B76W'BÒ&WV—&R‚væöFS¦76W'B÷7G&–7Br“°¦6öç7BfÒÒ&WV—&R‚væöFS§fÒr“° ¦6öç7B&ö÷BÒF‚ç&W6öÇfR…õöF—&æÖRÂrââr“°¦6öç7B‡FÖÂÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂv–æFW‚æ‡FÖÂr’ÂwWFc‚r’ç&WÆ6R‚õÇ%ÆâörÂuÆâr“°¦6öç7B7G–ÆW6†VWBÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7G–ÆW2æ772r’ÂwWFc‚r’ç&WÆ6R‚õÇ%ÆâörÂuÆâr“°¦6öç7BWÆöDÖöGVÆU6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2÷WÆöBæ§2r’ÂwWFc‚r“°¦6öç7B'&æF–ætÖöGVÆU6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2÷vRÖ'&æF–æræ§2r’ÂwWFc‚r“°¦6öç7Bv÷&¶&ööµvW4ÖöGVÆU6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2÷v÷&¶&öö²×vW2æ§2r’ÂwWFc‚r“°¦6öç7Bv÷&¶&öö´6öçG&öÆÆW$ÖöGVÆU6÷W&6RÒg2ç&VDf–ÆU7–æ2€¢F‚æ¦ö–â‡&ö÷BÂw7&2÷v÷&¶&öö²Ö6öçG&öÆÆW"æ§2r’À¢wWFc‚rÀ¢“°¦6öç7Bv÷&¶&ööµ7FFTÖöGVÆU6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2÷v÷&¶&öö²×7FFRæ§2r’ÂwWFc‚r“°¦6öç7B–çWEfÆ–FF–öäÖöGVÆU6÷W&6RÒg2ç&VDf–ÆU7–æ2€¢F‚æ¦ö–â‡&ö÷BÂw7&2ö–çWB×fÆ–FF–öâæ§2r’À¢wWFc‚rÀ¢“° ¦gVæ7F–öâ7&VFUWÆöD†&æW72‡²'6Uv÷&¶&öö²Ò‚’Óâ‡²–C¢wv÷&¶&öö²rÒ’Â&VæFW$&öö²ÒÒ·Ò’°¢6öç7B&VFW'2ÒµÓ°¢6öç7B–çWDÆ—7FVæW'2ÒæWrÖ‚“°¢6öç7Bfö7W4Æ—7FVæW'2ÒµÓ°¢6öç7B7FGW2Ò²FW‡D6öçFVçC¢rrÓ°¢6öç7BfVVF&6²Ò°¢FW‡D6öçFVçC¢rrÀ¢†–FFVã¢G'VRÀ¢6Æ74Æ—7C¢°¢FövvÆR†æÖRÂVæ&ÆVB’°¢F†—5¶æÖUÒÒVæ&ÆVC°¢ÒÀ¢ÒÀ¢Ó°¢6öç7BW'&÷'2ÒµÓ°¢ÆWB&–çD6öçG&öÅWFFW2Ò°¢ÆWB&–çDwV–Fæ6T6ÆV'2Ò°¢6öç7B&öG”6Æ76W2ÒæWr6WB…²v†2×vW2uÒ“°¢6öç7BvW2Ò²–ææW$…DÔÃ¢sÆ'F–6ÆSç&Wf–÷W2vW3Âö'F–6ÆSârÓ°¢6öç7B67&öÆÄ6ÆÇ2ÒµÓ°¢6öç7BWÆöD7FÒ°¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢F†—2æ6Æ–6´†æFÆW"Ò6ÆÆ&6³°¢ÒÀ¢Ó°¢6öç7B&W6VÆV7DÆ&VÂÒ°¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢F†—2æ6Æ–6´†æFÆW"Ò6ÆÆ&6³°¢ÒÀ¢Ó°¢6öç7B&6µFõF÷'WGFöâÒ°¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢F†—2æ6Æ–6´†æFÆW"Ò6ÆÆ&6³°¢ÒÀ¢Ó°¢6öç7B–çWBÒ°¢fÇVS¢rrÀ¢f–ÆW3¢µÒÀ¢6Æ–6´6÷VçC¢À¢6Æ–6²‚’°¢F†—2æ6Æ–6´6÷VçB²³°¢–çWDÆ—7FVæW'2ævWB‚v6Æ–6²r“òæ6ÆÂ‡F†—2“°¢ÒÀ¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢–çWDÆ—7FVæW'2ç6WB†æÖRÂ6ÆÆ&6²“°¢ÒÀ¢Ó°¢6öç7B6öçFW‡BÒ°¢6öæf—&Ó¢‚’ÓâG'VRÀ¢f–ÆU&VFW#¢6Æ72°¢&VD4'&”'VffW"†f–ÆR’°¢F†—2æf–ÆRÒf–ÆS°¢&VFW'2çW6‚‡F†—2“°¢Ğ¢ÒÀ¢6ÆV%&–çDwV–Fæ6R‚’°¢&–çDwV–Fæ6T6ÆV'2²³°¢ÒÀ¢6öç6öÆS¢²W'&÷#¢‚ââæ&w2’ÓâW'&÷'2çW6‚†&w2’ÒÀ¢Fö7VÖVçC¢°¢&öG“¢°¢6Æ74Æ—7C¢°¢6öçF–ç3¢†æÖR’Óâ&öG”6Æ76W2æ†2†æÖR’À¢&VÖ÷fS¢†æÖR’Óâ&öG”6Æ76W2æFVÆWFR†æÖR’À¢ÒÀ¢ÒÀ¢F—FÆS¢w&Wf–÷W2v÷&¶&öö²rÀ¢VW'•6VÆV7F÷"‡6VÆV7F÷"’°¢&WGW&â6VÆV7F÷"ÓÓÒræ'Fâ×&W6VÆV7Bp¢ò&W6VÆV7DÆ&VÀ¢¢6VÆV7F÷"ÓÓÒræ'FâÖ&6²×F÷p¢ò&6µFõF÷'WGFöà¢¢çVÆÃ°¢ÒÀ¢vWDVÆVÖVçD'”–B†–B’°¢&WGW&â–BÓÓÒw7FGW5FW‡Bp¢ò7FGW0¢¢–BÓÓÒwWÆöDfVVF&6²p¢òfVVF&6°¢¢–BÓÓÒwvW46öçF–æW"p¢òvW0¢¢–BÓÓÒvW†6VÄ–çWBp¢ò–çW@¢¢–BÓÓÒwWÆöD7F'WGFöâp¢òWÆöD7F¢¢çVÆÃ°¢ÒÀ¢ÒÀ¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢–b†æÖRÓÓÒvfö7W2r’fö7W4Æ—7FVæW'2çW6‚†6ÆÆ&6²“°¢ÒÀ¢f÷&×VÆVæv–æS¢²'6Uv÷&¶&öö²ÒÀ¢6WEF–ÖV÷WB†6ÆÆ&6²’°¢6ÆÆ&6²‚“°¢ÒÀ¢WFFU&–çD6öçG&öÇ2‚’°¢&–çD6öçG&öÅWFFW2²³°¢ÒÀ¢67&öÆÅFó¢‚ââæ&w2’Óâ67&öÆÄ6ÆÇ2çW6‚†&w2’À¢„Å5ƒ¢·ÒÀ¢Ó°¢6öçFW‡Bçv–æF÷rÒ6öçFW‡C°¢fÒç'Vä–äæWt6öçFW‡B‡v÷&¶&ööµ7FFTÖöGVÆU6÷W&6RÂ6öçFW‡B“°¢6öçFW‡BçWÆöEv÷&¶&ööµ7FFRÒ6öçFW‡Bçv÷&¶&ööµ7FFS°¢fÒç'Vä–äæWt6öçFW‡B‡WÆöDÖöGVÆU6÷W&6RÂ6öçFW‡B“°¢6öçFW‡Bç&VæFW$&öö²Ò‡v÷&¶&öö²’Óâ°¢–b‡&VæFW$&öö²’&WGW&â&VæFW$&öö²‡v÷&¶&öö²“°¢6öçFW‡BçWÆöEv÷&¶&ööµ7FFRæ7F—fUv÷&¶&öö²Òv÷&¶&öö³°¢6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´6Æ7VÆF–ærÒfÇ6S°¢Ó°¢&WGW&â°¢6öçFW‡BÀ¢&VFW'2À¢7FGW2À¢fVVF&6²À¢W'&÷'2À¢–çWBÀ¢WÆöD7FÀ¢&W6VÆV7DÆ&VÂÀ¢&6µFõF÷'WGFöâÀ¢–çWDÆ—7FVæW'2À¢fö7W4Æ—7FVæW'2À¢&öG”6Æ76W2À¢vW2À¢67&öÆÄ6ÆÇ2À¢vWB&–çDwV–Fæ6T6ÆV'2‚’°¢&WGW&â&–çDwV–Fæ6T6ÆV'3°¢ÒÀ¢vWB&–çD6öçG&öÅWFFW2‚’°¢&WGW&â&–çD6öçG&öÅWFFW3°¢ÒÀ¢Ó°§Ğ §FW7B‚vÆæF–ærvR¶VW2F†RFV×ÆFRæBgVÆÂ6×ÆR'VæFÆRF÷væÆöG2rÂ‚’Óâ°¢6öç7BF÷væÆöG2Ò²ââæ‡FÖÂæÖF6„ÆÂ‚óÆÆ"…µãåÒ¥Æ&‡&VcÒ%ÂåÂöF÷væÆöG5Âò…µâ%Ò²’%µãåÒ¢“âör•Ó°¢6öç7Bf–ÆTæÖW2ÒF÷væÆöG2æÖ‚…²ÂÂf–ÆTæÖUÒ’Óâf–ÆTæÖR“° ¢76W'Bæö²†f–ÆTæÖW2æ–æ6ÇVFW2‚~{XÎYknhÈ~˜yŞi»…ş898;Î8+8+~8;Î88‚ç†Ç7‚r’“°¢76W'Bæö²†f–ÆTæÖW2æ–æ6ÇVFW2‚~8+^8;>89~8:¾Š;ŞKÙÎh˜ş8+^8;>89~8:¾Kˆ[Èòç¦—r’“°¢76W'Bæö²†F÷væÆöG2æWfW'’‚…²ÂGG&–'WFW5Ò’ÓâõÆ&F÷væÆöEÆ"òçFW7B†GG&–'WFW2’’“°§Ò“° §FW7B‚vW‡FW&æÂ7G–ÆW6†VWB¶VW267&VVâæB&–çBvRÆ–÷WB'VÆW2rÂ‚’Óâ°¢76W'BæÖF6‚†‡FÖÂÂóÆÆ–æ²&VÃÒ'7G–ÆW6†VWB"‡&VcÒ%ÂåÂ÷7G–ÆW5Âæ772#âò“°¢76W'BæFöW4æ÷DÖF6‚†‡FÖÂÂóÇ7G–ÆSâò“°¢76W'BæÖF6‚‡7G–ÆW6†VWBÂôvUÇ2¥ÇµµçÕÒ§6—¦S¥Ç2¤EÇ2¶ÆæG66Rö—2“°¢76W'BæÖF6‚‡7G–ÆW6†VWBÂôÖVF–&–çBò“°¢76W'BæÖF6‚‡7G–ÆW6†VWBÂõÂçvR×6Æ÷BÂ²ÂçvR×6Æ÷EÇ2¥ÇµµçÕÒ¦'&V²Ö&Vf÷&S¥Ç2§vR÷2“°¢76W'BæÖF6‚‡7G–ÆW6†VWBÂõÂçvUÇ2¥Ç²ò“°§Ò“° §FW7B‚w7FF–26öçG&öÇ2&–æBF‡&÷Vv‚ÖöGVÆW2v—F†÷WB–æÆ–æRWfVçBGG&–'WFW2rÂ‚’Óâ°¢76W'BæFöW4æ÷DÖF6‚†‡FÖÂÂõÇ6öâƒó¦6Æ–6·Æ6†ævWÆ–çWB“Òö’“°¢6öç7BÖöGVÆU6÷W&6W2Òg0¢ç&VFF—%7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2r’¢æf–ÇFW"‚†æÖR’ÓâæÖRæVæG5v—F‚‚ræ§2r’¢æÖ‚†æÖR’Óâg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2rÂæÖR’ÂwWFc‚r’¢æ¦ö–â‚uÆâr“°¢76W'BæFöW4æ÷DÖF6‚†ÖöGVÆU6÷W&6W2ÂõÇ6öâƒó¦6Æ–6·Æ6†ævWÆ–çWB“Òö’“°¢6öç7B†&æW72Ò7&VFUWÆöD†&æW72‚“°¢†&æW72çWÆöD7Fæ6Æ–6´†æFÆW"‚“°¢76W'BæWVÂ††&æW72æ–çWBæ6Æ–6´6÷VçBÂ“°¢†&æW72æ–çWBçfÇVRÒw&Wf–÷W2×6VÆV7F–öâs°¢†&æW72ç&W6VÆV7DÆ&VÂæ6Æ–6´†æFÆW"‚“°¢76W'BæWVÂ††&æW72æ–çWBçfÇVRÂrr“°¢†&æW72æ&6µFõF÷'WGFöâæ6Æ–6´†æFÆW"‚“°¢76W'BæWVÂ††&æW72çvW2æ–ææW$…DÔÂÂrr“°¢76W'BæWVÂ††&æW72ç7FGW2çFW‡D6öçFVçBÂtW†6VÎ89^8*8*N8:¾8).˜h©î8~8n8ş88^8Br“°¢76W'BæFVWWVÂ„¥4ôâç'6R„¥4ôâç7G&–æv–g’††&æW72ç67&öÆÄ6ÆÇ2æB‚Ó’’’Â°¢²F÷¢Â&V†f–÷#¢w6Öö÷F‚rÒÀ¢Ò“°§Ò“° §FW7B‚wF†VÖR6VÆV7F–öâ6ÆV'2&–çBwV–Fæ6RæB7–æ6‡&öæ—¦W2&öG’ÂFööÆ&"ÂæBÆæF–ær–ÆÇ2rÂ‚’Óâ°¢76W'BæÖF6‚†‡FÖÂÂóÇ67&—B7&3Ò%ÂåÂ÷7&5Â÷F†VÖUÂæ§2#ãÅÂ÷67&—Câò“°¢6öç7B6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2÷F†VÖRæ§2r’ÂwWFc‚r“°¢6öç7B&öG”6Æ76W2ÒæWr6WB…²wF†VÖR×6ÆFRuÒ“°¢6öç7BFööÆ&"Ò°¢fÇVS¢wF†VÖRÖw&VVârÀ¢Æ—7FVæW'3¢·ÒÀ¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢F†—2æÆ—7FVæW'5¶æÖUÒÒ6ÆÆ&6³°¢ÒÀ¢Ó°¢6öç7B'WGFöç2Ò²rrÂwF†VÖRÖw&VVârÂwF†VÖR×6ÆFRuÒæÖ‚‡F†VÖR’Óâ‡°¢FF6WC¢²F†VÖRÒÀ¢Æ—7FVæW'3¢·ÒÀ¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢F†—2æÆ—7FVæW'5¶æÖUÒÒ6ÆÆ&6³°¢ÒÀ¢6Æ74Æ—7C¢°¢FövvÆR†æÖRÂVæ&ÆVB’°¢F†—5¶æÖUÒÒVæ&ÆVC°¢ÒÀ¢ÒÀ¢Ò’“°¢ÆWBwV–Fæ6T6ÆV&VBÒ°¢6öç7B6öçFW‡BÒ°¢6ÆV%&–çDwV–Fæ6R‚’°¢wV–Fæ6T6ÆV&VB²³°¢ÒÀ¢Fö7VÖVçC¢°¢&öG“¢°¢6Æ74Æ—7C¢°¢&VÖ÷fR‚ââææÖW2’°¢æÖW2æf÷$V6‚‚†æÖR’Óâ&öG”6Æ76W2æFVÆWFR†æÖR’“°¢ÒÀ¢FB†æÖR’°¢&öG”6Æ76W2æFB†æÖR“°¢ÒÀ¢ÒÀ¢ÒÀ¢vWDVÆVÖVçD'”–C¢‚’ÓâFööÆ&"À¢VW'•6VÆV7F÷$ÆÃ¢‚’Óâ'WGFöç2À¢ÒÀ¢Ó°¢6öçFW‡Bçv–æF÷rÒ6öçFW‡C°¢fÒç'Vä–äæWt6öçFW‡B‡6÷W&6RÂ6öçFW‡B“° ¢6öçFW‡BæÇ•F†VÖR‚wF†VÖRÖw&VVâr“° ¢76W'BæWVÂ†wV–Fæ6T6ÆV&VBÂ“°¢76W'BæFVWWVÂ…²ââæ&öG”6Æ76W5ÒÂ²wF†VÖRÖw&VVâuÒ“°¢76W'BæWVÂ‡FööÆ&"çfÇVRÂwF†VÖRÖw&VVâr“°¢76W'BæFVWWVÂ€¢'WGFöç2æÖ‚†'WGFöâ’Óâ'WGFöâæ6Æ74Æ—7Bæ7F—fR’À¢¶fÇ6RÂG'VRÂfÇ6UÒÀ¢“°¢'WGFöç5³%ÒæÆ—7FVæW'2æ6Æ–6²‚“°¢76W'BæFVWWVÂ…²ââæ&öG”6Æ76W5ÒÂ²wF†VÖR×6ÆFRuÒ“°¢FööÆ&"çfÇVRÒrs°¢FööÆ&"æÆ—7FVæW'2æ6†ævR‚“°¢76W'BæFVWWVÂ…²ââæ&öG”6Æ76W5ÒÂµÒ“°§Ò“° §FW7B‚td6öçG&öÂFövvÆW2—G2÷Vâ7FFRæB66W76–&ÆRW‡æFVBfÇVRrÂ‚’Óâ°¢76W'BæÖF6‚†‡FÖÂÂóÇ67&—B7&3Ò%ÂåÂ÷7&5ÂöfÂæ§2#ãÅÂ÷67&—Câò“°¢6öç7B6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2öfæ§2r’ÂwWFc‚r“°¢6öç7B6Æ76W2ÒæWr6WB‚“°¢6öç7BGG&–'WFW2Ò·Ó°¢6öç7B—FVÒÒ°¢6Æ74Æ—7C¢°¢FövvÆR†æÖR’°¢–b†6Æ76W2æ†2†æÖR’’°¢6Æ76W2æFVÆWFR†æÖR“°¢&WGW&âfÇ6S°¢Ğ¢6Æ76W2æFB†æÖR“°¢&WGW&âG'VS°¢ÒÀ¢ÒÀ¢Ó°¢6öç7B'WGFöâÒ°¢6Æ÷6W7C¢‡6VÆV7F÷"’Óâ‡6VÆV7F÷"ÓÓÒræfÖ—FVÒrò—FVÒ¢çVÆÂ’À¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢F†—2æ6Æ–6´†æFÆW"Ò6ÆÆ&6³°¢ÒÀ¢6WDGG&–'WFS¢†æÖRÂfÇVR’Óâ°¢GG&–'WFW5¶æÖUÒÒfÇVS°¢ÒÀ¢Ó°¢6öç7B6öçFW‡BÒ°¢Fö7VÖVçC¢²VW'•6VÆV7F÷$ÆÃ¢‚’Óâ¶'WGFöåÒÒÀ¢Ó°¢6öçFW‡Bçv–æF÷rÒ6öçFW‡C°¢fÒç'Vä–äæWt6öçFW‡B‡6÷W&6RÂ6öçFW‡B“° ¢'WGFöâæ6Æ–6´†æFÆW"‚“°¢76W'BæWVÂ†6Æ76W2æ†2‚v÷Vâr’ÂG'VR“°¢76W'BæWVÂ†GG&–'WFW5²v&–ÖW‡æFVBuÒÂwG'VRr“° ¢'WGFöâæ6Æ–6´†æFÆW"‚“°¢76W'BæWVÂ†6Æ76W2æ†2‚v÷Vâr’ÂfÇ6R“°¢76W'BæWVÂ†GG&–'WFW5²v&–ÖW‡æFVBuÒÂvfÇ6Rr“° ¢6öçFW‡Bçv–æF÷rçFövvÆTf‡²6Æ÷6W7C¢‚’ÓâçVÆÂÂ6WDGG&–'WFS¢‚’Óâ76W'Bæf–Â‚’Ò“°¢76W'BæWVÂ†GG&–'WFW5²v&–ÖW‡æFVBuÒÂvfÇ6Rr“°§Ò“° §FW7B‚tW†6VÂ6VÆV7F–öâæBÆæF–ærG&÷¦öæRf÷'v&Bf–ÆW2FòF†RW†—7F–ærWÆöB†æFÆW"rÂ‚’Óâ°¢76W'BæÖF6‚†‡FÖÂÂóÆ–çWBG—SÒ&f–ÆR"–CÒ&W†6VÄ–çWB"66WCÒ%Âç†Ç7‚ÅÂç†Ç2"ò“°¢76W'BæÖF6‚†‡FÖÂÂóÇ67&—B7&3Ò%ÂåÂ÷7&5Â÷WÆöEÂæ§2#ãÅÂ÷67&—Câò“°¢76W'BæÖF6‚€¢WÆöDÖöGVÆU6÷W&6RÀ¢öW†6VÄ–çWEÂæFDWfVçDÆ—7FVæW%Â‚v6†ævRrÂ†æFÆTW†6VÅ6VÆV7F–öåÂ’òÀ¢“°¢76W'BæÖF6‚†‡FÖÂÂóÇ67&—B7&3Ò%ÂåÂ÷7&5ÂöG&÷¦öæUÂæ§2#ãÅÂ÷67&—Câò“°¢6öç7B6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2öG&÷¦öæRæ§2r’ÂwWFc‚r“°¢6öç7BÆ—7FVæW'2ÒæWrÖ‚“°¢6öç7B6Æ76W2ÒæWr6WB‚“°¢ÆWB÷VæVDf–ÆU–6¶W"Ò°¢6öç7BG&÷¦öæRÒ°¢FDWfVçDÆ—7FVæW"†æÖRÂ6ÆÆ&6²’°¢6öç7B6ÆÆ&6·2ÒÆ—7FVæW'2ævWB†æÖR’ÇÂµÓ°¢6ÆÆ&6·2çW6‚†6ÆÆ&6²“°¢Æ—7FVæW'2ç6WB†æÖRÂ6ÆÆ&6·2“°¢ÒÀ¢6Æ74Æ—7C¢°¢FC¢†æÖR’Óâ6Æ76W2æFB†æÖR’À¢&VÖ÷fS¢†æÖR’Óâ6Æ76W2æFVÆWFR†æÖR’À¢ÒÀ¢Ó°¢6öç7B–çWBÒ²6Æ–6³¢‚’Óâ÷VæVDf–ÆU–6¶W"²²Ó°¢6öç7Bf–ÆW4÷VæVBÒµÓ°¢6öç7BF—7F6‚Ò†æÖRÂWfVçB’ÓâÆ—7FVæW'2ævWB†æÖR’æf÷$V6‚‚†6ÆÆ&6²’Óâ6ÆÆ&6²†WfVçB’“°¢6öç7B6öçFW‡BÒ°¢Fö7VÖVçC¢°¢vWDVÆVÖVçD'”–C¢†–B’Óà¢–BÓÓÒvÆæF–ætG&÷¦öæRròG&÷¦öæR¢–BÓÓÒvW†6VÄ–çWBrò–çWB¢çVÆÂÀ¢ÒÀ¢†æFÆTW†6VÄf–ÆS¢†f–ÆR’Óâf–ÆW4÷VæVBçW6‚†f–ÆR’À¢Ó°¢6öçFW‡Bçv–æF÷rÒ6öçFW‡C°¢fÒç'Vä–äæWt6öçFW‡B‡6÷W&6RÂ6öçFW‡B“° ¢6öç7BG&tWfVçBÒ‚’Óâ‡°¢&WfVçFVC¢fÇ6RÀ¢7F÷VC¢fÇ6RÀ¢&WfVçDFVfVÇB‚’°¢F†—2ç&WfVçFVBÒG'VS°¢ÒÀ¢7F÷&÷vF–öâ‚’°¢F†—2ç7F÷VBÒG'VS°¢ÒÀ¢Ò“°¢f÷"†6öç7BæÖRöb²vG&vVçFW"rÂvG&v÷fW"uÒ’°¢6öç7BWfVçBÒG&tWfVçB‚“°¢F—7F6‚†æÖRÂWfVçB“°¢76W'BæWVÂ†WfVçBç&WfVçFVBÂG'VR“°¢76W'BæWVÂ†WfVçBç7F÷VBÂG'VR“°¢76W'BæWVÂ†6Æ76W2æ†2‚vG&rÖ÷fW"r’ÂG'VR“°¢Ğ¢f÷"†6öç7BæÖRöb²vG&vÆVfRrÂvG&÷uÒ’°¢6öç7BWfVçBÒG&tWfVçB‚“°¢F—7F6‚†æÖRÂWfVçB“°¢76W'BæWVÂ†WfVçBç&WfVçFVBÂG'VR“°¢76W'BæWVÂ†WfVçBç7F÷VBÂG'VR“°¢76W'BæWVÂ†6Æ76W2æ†2‚vG&rÖ÷fW"r’ÂfÇ6R“°¢Ğ¢6öç7Bf–ÆRÒ²æÖS¢v–çWBç†Ç7‚rÓ°¢F—7F6‚‚vG&÷rÂ°¢ââæG&tWfVçB‚’À¢FFG&ç6fW#¢²f–ÆW3¢¶f–ÆUÒÒÀ¢Ò“°¢76W'BæFVWWVÂ†f–ÆW4÷VæVBÂ¶f–ÆUÒ“° ¢6öç7B6Æ–6´WfVçBÒ‡6VÆV7F÷"’Óâ‡°¢F&vWC¢²6Æ÷6W7C¢‚’Óâ6VÆV7F÷"ÒÀ¢Ò“°¢F—7F6‚‚v6Æ–6²rÂ6Æ–6´WfVçB†çVÆÂ’“°¢F—7F6‚‚v6Æ–6²rÂ6Æ–6´WfVçB‚vr’“°¢76W'BæWVÂ†÷VæVDf–ÆU–6¶W"Â“°§Ò“° §FW7B‚vÆæF–ærG&÷¦öæRFöW2æ÷B&Vv—7FW"v—F†÷WB&÷F‚&WV—&VBVÆVÖVçG2rÂ‚’Óâ°¢6öç7B6÷W&6RÒg2ç&VDf–ÆU7–æ2‡F‚æ¦ö–â‡&ö÷BÂw7&2öG&÷¦öæRæ§2r’ÂwWFc‚r“°¢6öç7B6öçFW‡BÒ²Fö7VÖVçC¢²vWDVÆVÖVçD'”–C¢‚’ÓâçVÆÂÒÓ°¢6öçFW‡Bçv–æF÷rÒ6öçFW‡C°¢76W'BæFöW4æ÷EF‡&÷r‚‚’ÓâfÒç'Vä–äæWt6öçFW‡B‡6÷W&6RÂ6öçFW‡B’“°§Ò“° §FW7B‚tW†6VÂWÆöB&VG2Â'6W2Â&VæFW'2ÂæB6ÆV'2&Wf–÷W2v÷&¶&öö²öâ&R×WÆöBrÂ‚’Óâ°¢6öç7B†&æW72Ò7&VFUWÆöD†&æW72‚“°¢6öç7Bf—'7Df–ÆRÒ²æÖS¢vf—'7Bç†Ç7‚rÓ°¢6öç7B6V6öæDf–ÆRÒ²æÖS¢w6V6öæBç†Ç7‚rÓ° ¢†&æW72æ6öçFW‡Bæ†æFÆTW†6VÄf–ÆR†f—'7Df–ÆR“°¢76W'BæWVÂ††&æW72ç&VFW'2æÆVæwF‚Â“°¢76W'BæWVÂ††&æW72ç&VFW'5³Òæf–ÆRÂf—'7Df–ÆR“°¢76W'BæWVÂ††&æW72ç7FGW2çFW‡D6öçFVçBÂ~89^8*8*N8:¾8).ŠªŞ8ş‹ëÎ8şKŠÒâââr“°¢76W'BæWVÂ††&æW72æ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´6Æ7VÆF–ærÂG'VR“° ¢†&æW72ç&VFW'5³ÒæöæÆöB‡²F&vWC¢²&W7VÇC¢æWr'&”'VffW"ƒ’ÒÒ“°¢6öç7Bf—'7Ev÷&¶&öö²Ò†&æW72æ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRæ7F—fUv÷&¶&öö³°¢76W'BæWVÂ†f—'7Ev÷&¶&öö²æ–BÂwv÷&¶&öö²r“°¢76W'BæWVÂ††&æW72æ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´6Æ7VÆF–ærÂfÇ6R“° ¢†&æW72æ6öçFW‡Bæ†æFÆTW†6VÄf–ÆR‡6V6öæDf–ÆR“°¢76W'BæWVÂ††&æW72ç&VFW'2æÆVæwF‚Â"“°¢76W'BæWVÂ††&æW72ç&VFW'5³Òæf–ÆRÂ6V6öæDf–ÆR“°¢76W'BæWVÂ††&æW72æ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRæ7F—fUv÷&¶&öö²ÂçVÆÂ“°¢76W'BæWVÂ††&æW72æ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´6Æ7VÆF–ærÂG'VR“° ¢†&æW72ç&VFW'5³Òæöæ&÷'B‚“°¢76W'BæWVÂ††&æW72æ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´6Æ7VÆF–ærÂfÇ6R“°¢76W'BæWVÂ††&æW72ç7FGW2çFW‡D6öçFVçBÂ~89^8*8*N8:¾ŠªŞ‹ëÎ8).KŠŞijŞ8~8î8~8òr“°¢76W'BæÖF6‚††&æW72æfVVF&6²çFW‡D6öçFVçBÂşKŠŞijÒò“°¢76W'BæWVÂ††&æW72æfVVF&6²æ6Æ74Æ—7E²v—2ÖW'&÷"uÒÂG'VR“°§Ò“° §FW7B‚tW†6VÂWÆöB&W÷'G2'6–ærÂ&VæFW&–ærÂæBf–ÆR×&VBf–ÇW&W2rÂ‚’Óâ°¢6öç7B'6Tf–ÇW&RÒ7&VFUWÆöD†&æW72‡°¢'6Uv÷&¶&öö²‚’°¢F‡&÷ræWrW'&÷"‚v–çfÆ–Bv÷&¶&öö²r“°¢ÒÀ¢Ò“°¢'6Tf–ÇW&Ræ6öçFW‡Bæ†æFÆTW†6VÄf–ÆR‡²æÖS¢v'&ö¶Vâç†Ç7‚rÒ“°¢'6Tf–ÇW&Rç&VFW'5³ÒæöæÆöB‡²F&vWC¢²&W7VÇC¢æWr'&”'VffW"ƒ’ÒÒ“°¢76W'BæWVÂ‡'6Tf–ÇW&Rç7FGW2çFW‡D6öçFVçBÂ~ŠªŞ8ş‹ëÎ8ş8*8:8;Î8Îy›®yIş8~8î8~8òr“°¢76W'BæÖF6‚‡'6Tf–ÇW&RæfVVF&6²çFW‡D6öçFVçBÂö–çfÆ–Bv÷&¶&öö²ò“°¢76W'BæWVÂ‡'6Tf–ÇW&RæfVVF&6²æ6Æ74Æ—7E²v—2ÖW'&÷"uÒÂG'VR“°¢76W'BæWVÂ‡'6Tf–ÇW&Ræ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´6Æ7VÆF–ærÂfÇ6R“° ¢6öç7B&VæFW$f–ÇW&RÒ7&VFUWÆöD†&æW72‡°¢&VæFW$&öö²‚’°¢F‡&÷ræWrW'&÷"‚w&VæFW"f–ÇW&Rr“°¢ÒÀ¢Ò“°¢&VæFW$f–ÇW&Ræ6öçFW‡Bæ†æFÆTW†6VÄf–ÆR‡²æÖS¢wfÆ–Bç†Ç7‚rÒ“°¢&VæFW$f–ÇW&Rç&VFW'5³ÒæöæÆöB‡²F&vWC¢²&W7VÇC¢æWr'&”'VffW"ƒ’ÒÒ“°¢76W'BæWVÂ‡&VæFW$f–ÇW&Rç7FGW2çFW‡D6öçFVçBÂ~Šˆzé~8*8:8;Î8Îy›®yIş8~8î8~8òr“°¢76W'BæÖF6‚‡&VæFW$f–ÇW&RæfVVF&6²çFW‡D6öçFVçBÂ÷&VæFW"f–ÇW&Rò“°¢76W'BæWVÂ‡&VæFW$f–ÇW&RæfVVF&6²æ6Æ74Æ—7E²v—2ÖW'&÷"uÒÂG'VR“°¢76W'BæWVÂ‡&VæFW$f–ÇW&Ræ6öçFW‡BçWÆöEv÷&¶&ööµ7FFRçv÷&¶&öö´†4W'&÷'2ÂG'VR“° ¢6öç7B&VDf–ÇW&RÒ7&VFUWÆöD†&æW72‚“°¢&VDf–ÇW&Ræ6öçFW‡Bæ†æFÆTW†6VÄf–ÆR‡²æÖS¢wVç&VF&ÆRç†Ç7‚rÒ“°¢&VDf–ÇW&Rç&VFW'5³ÒæöæW'&÷"‚“°¢76W'BæWVÂ‡&VDf–ÇW&Rç7FGW2çFW‡D6öçFVçBÂ~89^8*8*N8:¾ŠªŞ‹ëÎZKiYrr“°¢76W'BæÖF6‚‡&VDf–ÇW&RæfVVF&6²çFW‡D6öçFVçBÂşŠªŞ8ş‹ëÍuóİ-¢G§²ÚîÆ­yÜ1å¹´',
+const fs = require('node:fs');
+const path = require('node:path');
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const vm = require('node:vm');
+
+const root = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace(/\r\n/g, '\n');
+const stylesheet = fs.readFileSync(path.join(root, 'styles.css'), 'utf8').replace(/\r\n/g, '\n');
+const uploadModuleSource = fs.readFileSync(path.join(root, 'src/upload.js'), 'utf8');
+const brandingModuleSource = fs.readFileSync(path.join(root, 'src/page-branding.js'), 'utf8');
+const workbookPagesModuleSource = fs.readFileSync(path.join(root, 'src/workbook-pages.js'), 'utf8');
+const workbookControllerModuleSource = fs.readFileSync(
+  path.join(root, 'src/workbook-controller.js'),
+  'utf8',
+);
+const workbookStateModuleSource = fs.readFileSync(path.join(root, 'src/workbook-state.js'), 'utf8');
+const inputValidationModuleSource = fs.readFileSync(
+  path.join(root, 'src/input-validation.js'),
+  'utf8',
+);
+
+function createUploadHarness({ parseWorkbook = () => ({ id: 'workbook' }), renderBook } = {}) {
+  const readers = [];
+  const inputListeners = new Map();
+  const focusListeners = [];
+  const status = { textContent: '' };
+  const feedback = {
+    textContent: '',
+    hidden: true,
+    classList: {
+      toggle(name, enabled) {
+        this[name] = enabled;
+      },
+    },
+  };
+  const errors = [];
+  let printControlUpdates = 0;
+  let printGuidanceClears = 0;
+  const bodyClasses = new Set(['has-pages']);
+  const pages = { innerHTML: '<article>previous pages</article>' };
+  const scrollCalls = [];
+  const uploadCta = {
+    addEventListener(name, callback) {
+      this.clickHandler = callback;
+    },
+  };
+  const reselectLabel = {
+    addEventListener(name, callback) {
+      this.clickHandler = callback;
+    },
+  };
+  const backToTopButton = {
+    addEventListener(name, callback) {
+      this.clickHandler = callback;
+    },
+  };
+  const input = {
+    value: '',
+    files: [],
+    clickCount: 0,
+    click() {
+      this.clickCount++;
+      inputListeners.get('click')?.call(this);
+    },
+    addEventListener(name, callback) {
+      inputListeners.set(name, callback);
+    },
+  };
+  const context = {
+    confirm: () => true,
+    FileReader: class {
+      readAsArrayBuffer(file) {
+        this.file = file;
+        readers.push(this);
+      }
+    },
+    clearPrintGuidance() {
+      printGuidanceClears++;
+    },
+    console: { error: (...args) => errors.push(args) },
+    document: {
+      body: {
+        classList: {
+          contains: (name) => bodyClasses.has(name),
+          remove: (name) => bodyClasses.delete(name),
+        },
+      },
+      title: 'previous workbook',
+      querySelector(selector) {
+        return selector === '.btn-reselect'
+          ? reselectLabel
+          : selector === '.btn-back-top'
+            ? backToTopButton
+            : null;
+      },
+      getElementById(id) {
+        return id === 'statusText'
+          ? status
+          : id === 'uploadFeedback'
+            ? feedback
+            : id === 'pagesContainer'
+              ? pages
+              : id === 'excelInput'
+                ? input
+                : id === 'uploadCtaButton'
+                  ? uploadCta
+                  : null;
+      },
+    },
+    addEventListener(name, callback) {
+      if (name === 'focus') focusListeners.push(callback);
+    },
+    FormulaEngine: { parseWorkbook },
+    setTimeout(callback) {
+      callback();
+    },
+    updatePrintControls() {
+      printControlUpdates++;
+    },
+    scrollTo: (...args) => scrollCalls.push(args),
+    XLSX: {},
+  };
+  context.window = context;
+  vm.runInNewContext(workbookStateModuleSource, context);
+  context.uploadWorkbookState = context.workbookState;
+  vm.runInNewContext(uploadModuleSource, context);
+  context.renderBook = (workbook) => {
+    if (renderBook) return renderBook(workbook);
+    context.uploadWorkbookState.activeWorkbook = workbook;
+    context.uploadWorkbookState.workbookCalculating = false;
+  };
+  return {
+    context,
+    readers,
+    status,
+    feedback,
+    errors,
+    input,
+    uploadCta,
+    reselectLabel,
+    backToTopButton,
+    inputListeners,
+    focusListeners,
+    bodyClasses,
+    pages,
+    scrollCalls,
+    get printGuidanceClears() {
+      return printGuidanceClears;
+    },
+    get printControlUpdates() {
+      return printControlUpdates;
+    },
+  };
+}
+
+test('landing page keeps the template and full sample bundle downloads', () => {
+  const downloads = [...html.matchAll(/<a\b([^>]*\bhref="\.\/downloads\/([^"]+)"[^>]*)>/g)];
+  const fileNames = downloads.map(([, , fileName]) => fileName);
+
+  assert.ok(fileNames.includes('çµŒå–¶æŒ‡é‡æ›¸_ãƒ™ãƒ¼ã‚¹ã‚·ãƒ¼ãƒˆ.xlsx'));
+  assert.ok(fileNames.includes('ã‚µãƒ³ãƒ—ãƒ«è£½ä½œæ‰€_ã‚µãƒ³ãƒ—ãƒ«ä¸€å¼.zip'));
+  assert.ok(downloads.every(([, attributes]) => /\bdownload\b/.test(attributes)));
+});
+
+test('external stylesheet keeps screen and print page layout rules', () => {
+  assert.match(html, /<link rel="stylesheet" href="\.\/styles\.css">/);
+  assert.doesNotMatch(html, /<style>/);
+  assert.match(stylesheet, /@page\s*\{[^}]*size:\s*A4\s+landscape/is);
+  assert.match(stylesheet, /@media print/);
+  assert.match(stylesheet, /\.page-slot \+ \.page-slot\s*\{[^}]*break-before:\s*page/s);
+  assert.match(stylesheet, /\.page\s*\{/);
+});
+
+test('static controls bind through modules without inline event attributes', () => {
+  assert.doesNotMatch(html, /\son(?:click|change|input)=/i);
+  const moduleSources = fs
+    .readdirSync(path.join(root, 'src'))
+    .filter((name) => name.endsWith('.js'))
+    .map((name) => fs.readFileSync(path.join(root, 'src', name), 'utf8'))
+    .join('\n');
+  assert.doesNotMatch(moduleSources, /\son(?:click|change|input)=/i);
+  const harness = createUploadHarness();
+  harness.uploadCta.clickHandler();
+  assert.equal(harness.input.clickCount, 1);
+  harness.input.value = 'previous-selection';
+  harness.reselectLabel.clickHandler();
+  assert.equal(harness.input.value, '');
+  harness.backToTopButton.clickHandler();
+  assert.equal(harness.pages.innerHTML, '');
+  assert.equal(harness.status.textContent, 'Excelãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¦ãã ã•ã„');
+  assert.deepEqual(JSON.parse(JSON.stringify(harness.scrollCalls.at(-1))), [
+    { top: 0, behavior: 'smooth' },
+  ]);
+});
+
+test('theme selection clears print guidance and synchronizes body, toolbar, and landing pills', () => {
+  assert.match(html, /<script src="\.\/src\/theme\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/theme.js'), 'utf8');
+  const bodyClasses = new Set(['theme-slate']);
+  const toolbar = {
+    value: 'theme-green',
+    listeners: {},
+    addEventListener(name, callback) {
+      this.listeners[name] = callback;
+    },
+  };
+  const buttons = ['', 'theme-green', 'theme-slate'].map((theme) => ({
+    dataset: { theme },
+    listeners: {},
+    addEventListener(name, callback) {
+      this.listeners[name] = callback;
+    },
+    classList: {
+      toggle(name, enabled) {
+        this[name] = enabled;
+      },
+    },
+  }));
+  let guidanceCleared = 0;
+  const context = {
+    clearPrintGuidance() {
+      guidanceCleared++;
+    },
+    document: {
+      body: {
+        classList: {
+          remove(...names) {
+            names.forEach((name) => bodyClasses.delete(name));
+          },
+          add(name) {
+            bodyClasses.add(name);
+          },
+        },
+      },
+      getElementById: () => toolbar,
+      querySelectorAll: () => buttons,
+    },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  context.applyTheme('theme-green');
+
+  assert.equal(guidanceCleared, 1);
+  assert.deepEqual([...bodyClasses], ['theme-green']);
+  assert.equal(toolbar.value, 'theme-green');
+  assert.deepEqual(
+    buttons.map((button) => button.classList.active),
+    [false, true, false],
+  );
+  buttons[2].listeners.click();
+  assert.deepEqual([...bodyClasses], ['theme-slate']);
+  toolbar.value = '';
+  toolbar.listeners.change();
+  assert.deepEqual([...bodyClasses], []);
+});
+
+test('FAQ control toggles its open state and accessible expanded value', () => {
+  assert.match(html, /<script src="\.\/src\/faq\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/faq.js'), 'utf8');
+  const classes = new Set();
+  const attributes = {};
+  const item = {
+    classList: {
+      toggle(name) {
+        if (classes.has(name)) {
+          classes.delete(name);
+          return false;
+        }
+        classes.add(name);
+        return true;
+      },
+    },
+  };
+  const button = {
+    closest: (selector) => (selector === '.faq-item' ? item : null),
+    addEventListener(name, callback) {
+      this.clickHandler = callback;
+    },
+    setAttribute: (name, value) => {
+      attributes[name] = value;
+    },
+  };
+  const context = {
+    document: { querySelectorAll: () => [button] },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  button.clickHandler();
+  assert.equal(classes.has('open'), true);
+  assert.equal(attributes['aria-expanded'], 'true');
+
+  button.clickHandler();
+  assert.equal(classes.has('open'), false);
+  assert.equal(attributes['aria-expanded'], 'false');
+
+  context.window.toggleFaq({ closest: () => null, setAttribute: () => assert.fail() });
+  assert.equal(attributes['aria-expanded'], 'false');
+});
+
+test('Excel selection and landing dropzone forward files to the existing upload handler', () => {
+  assert.match(html, /<input type="file" id="excelInput" accept="\.xlsx,\.xls"/);
+  assert.match(html, /<script src="\.\/src\/upload\.js"><\/script>/);
+  assert.match(
+    uploadModuleSource,
+    /excelInput\.addEventListener\('change', handleExcelSelection\)/,
+  );
+  assert.match(html, /<script src="\.\/src\/dropzone\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/dropzone.js'), 'utf8');
+  const listeners = new Map();
+  const classes = new Set();
+  let openedFilePicker = 0;
+  const dropzone = {
+    addEventListener(name, callback) {
+      const callbacks = listeners.get(name) || [];
+      callbacks.push(callback);
+      listeners.set(name, callbacks);
+    },
+    classList: {
+      add: (name) => classes.add(name),
+      remove: (name) => classes.delete(name),
+    },
+  };
+  const input = { click: () => openedFilePicker++ };
+  const filesOpened = [];
+  const dispatch = (name, event) => listeners.get(name).forEach((callback) => callback(event));
+  const context = {
+    document: {
+      getElementById: (id) =>
+        id === 'landingDropzone' ? dropzone : id === 'excelInput' ? input : null,
+    },
+    handleExcelFile: (file) => filesOpened.push(file),
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  const dragEvent = () => ({
+    prevented: false,
+    stopped: false,
+    preventDefault() {
+      this.prevented = true;
+    },
+    stopPropagation() {
+      this.stopped = true;
+    },
+  });
+  for (const name of ['dragenter', 'dragover']) {
+    const event = dragEvent();
+    dispatch(name, event);
+    assert.equal(event.prevented, true);
+    assert.equal(event.stopped, true);
+    assert.equal(classes.has('drag-over'), true);
+  }
+  for (const name of ['dragleave', 'drop']) {
+    const event = dragEvent();
+    dispatch(name, event);
+    assert.equal(event.prevented, true);
+    assert.equal(event.stopped, true);
+    assert.equal(classes.has('drag-over'), false);
+  }
+  const file = { name: 'input.xlsx' };
+  dispatch('drop', {
+    ...dragEvent(),
+    dataTransfer: { files: [file] },
+  });
+  assert.deepEqual(filesOpened, [file]);
+
+  const clickEvent = (selector) => ({
+    target: { closest: () => selector },
+  });
+  dispatch('click', clickEvent(null));
+  dispatch('click', clickEvent('a'));
+  assert.equal(openedFilePicker, 1);
+});
+
+test('landing dropzone does not register without both required elements', () => {
+  const source = fs.readFileSync(path.join(root, 'src/dropzone.js'), 'utf8');
+  const context = { document: { getElementById: () => null } };
+  context.window = context;
+  assert.doesNotThrow(() => vm.runInNewContext(source, context));
+});
+
+test('Excel upload reads, parses, renders, and clears a previous workbook on re-upload', () => {
+  const harness = createUploadHarness();
+  const firstFile = { name: 'first.xlsx' };
+  const secondFile = { name: 'second.xlsx' };
+
+  harness.context.handleExcelFile(firstFile);
+  assert.equal(harness.readers.length, 1);
+  assert.equal(harness.readers[0].file, firstFile);
+  assert.equal(harness.status.textContent, 'ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ä¸­...');
+  assert.equal(harness.context.uploadWorkbookState.workbookCalculating, true);
+
+  harness.readers[0].onload({ target: { result: new ArrayBuffer(0) } });
+  const firstWorkbook = harness.context.uploadWorkbookState.activeWorkbook;
+  assert.equal(firstWorkbook.id, 'workbook');
+  assert.equal(harness.context.uploadWorkbookState.workbookCalculating, false);
+
+  harness.context.handleExcelFile(secondFile);
+  assert.equal(harness.readers.length, 2);
+  assert.equal(harness.readers[1].file, secondFile);
+  assert.equal(harness.context.uploadWorkbookState.activeWorkbook, null);
+  assert.equal(harness.context.uploadWorkbookState.workbookCalculating, true);
+
+  harness.readers[1].onabort();
+  assert.equal(harness.context.uploadWorkbookState.workbookCalculating, false);
+  assert.equal(harness.status.textContent, 'ãƒ•ã‚¡ã‚¤ãƒ«èª­è¾¼ã‚’ä¸­æ–­ã—ã¾ã—ãŸ');
+  assert.match(harness.feedback.textContent, /ä¸­æ–­/);
+  assert.equal(harness.feedback.classList['is-error'], true);
+});
+
+test('Excel upload reports parsing, rendering, and file-read failures', () => {
+  const parseFailure = createUploadHarness({
+    parseWorkbook() {
+      throw new Error('invalid workbook');
+    },
+  });
+  parseFailure.context.handleExcelFile({ name: 'broken.xlsx' });
+  parseFailure.readers[0].onload({ target: { result: new ArrayBuffer(0) } });
+  assert.equal(parseFailure.status.textContent, 'èª­ã¿è¾¼ã¿ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ');
+  assert.match(parseFailure.feedback.textContent, /invalid workbook/);
+  assert.equal(parseFailure.feedback.classList['is-error'], true);
+  assert.equal(parseFailure.context.uploadWorkbookState.workbookCalculating, false);
+
+  const renderFailure = createUploadHarness({
+    renderBook() {
+      throw new Error('render failure');
+    },
+  });
+  renderFailure.context.handleExcelFile({ name: 'valid.xlsx' });
+  renderFailure.readers[0].onload({ target: { result: new ArrayBuffer(0) } });
+  assert.equal(renderFailure.status.textContent, 'è¨ˆç®—ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ');
+  assert.match(renderFailure.feedback.textContent, /render failure/);
+  assert.equal(renderFailure.feedback.classList['is-error'], true);
+  assert.equal(renderFailure.context.uploadWorkbookState.workbookHasErrors, true);
+
+  const readFailure = createUploadHarness();
+  readFailure.context.handleExcelFile({ name: 'unreadable.xlsx' });
+  readFailure.readers[0].onerror();
+  assert.equal(readFailure.status.textContent, 'ãƒ•ã‚¡ã‚¤ãƒ«èª­è¾¼å¤±æ•—');
+  assert.match(readFailure.feedback.textContent, /èª­ã¿è¾¼ã¿ã«å¤±æ•—/);
+  assert.equal(readFailure.feedback.classList['is-error'], true);
+});
+
+test('file picker suppresses duplicate input/change events and allows selecting the same file again', () => {
+  const harness = createUploadHarness();
+  const file = { name: 'same.xlsx', size: 100, lastModified: 10 };
+  harness.input.files = [file];
+  const event = { currentTarget: harness.input };
+
+  harness.inputListeners.get('input')(event);
+  harness.inputListeners.get('change')(event);
+  harness.focusListeners[0]();
+  assert.equal(harness.readers.length, 1);
+  assert.equal(harness.readers[0].file, file);
+
+  harness.inputListeners.get('click').call(harness.input);
+  assert.equal(harness.input.value, '');
+  harness.inputListeners.get('change')(event);
+  assert.equal(harness.readers.length, 2);
+  assert.equal(harness.readers[1].file, file);
+});
+
+test('return to top clears the active workbook, rendered pages, status, and upload feedback', () => {
+  assert.match(html, /<script src="\.\/src\/upload\.js"><\/script>/);
+  const harness = createUploadHarness();
+  harness.context.uploadWorkbookState.activeWorkbook = { id: 'previous' };
+
+  harness.context.resetToTop();
+
+  assert.equal(harness.context.uploadWorkbookState.activeWorkbook, null);
+  assert.equal(harness.bodyClasses.has('has-pages'), false);
+  assert.equal(harness.pages.innerHTML, '');
+  assert.equal(harness.status.textContent, 'Excelãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¦ãã ã•ã„');
+  assert.equal(harness.feedback.textContent, '');
+  assert.equal(harness.context.document.title, 'çµŒå–¶æŒ‡é‡æ›¸ è‡ªå‹•ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆï¼†A4æ¨ªPDFå‡ºåŠ›ãƒ„ãƒ¼ãƒ«');
+  assert.equal(harness.printGuidanceClears, 1);
+  assert.equal(harness.printControlUpdates, 1);
+  assert.equal(harness.scrollCalls.length, 1);
+  assert.equal(harness.scrollCalls[0][0].top, 0);
+  assert.equal(harness.scrollCalls[0][0].behavior, 'smooth');
+});
+
+test('sample workbook still recalculates all formulas without errors', () => {
+  const XLSX = require('../vendor/xlsx.full.min.js');
+  const context = {};
+  const engineSource = fs.readFileSync(path.join(root, 'dist/formula-engine.js'), 'utf8');
+  vm.runInNewContext(engineSource, context, { filename: 'dist/formula-engine.js' });
+
+  const bytes = fs.readFileSync(path.join(root, 'downloads/ã‚µãƒ³ãƒ—ãƒ«è£½ä½œæ‰€_å…¥åŠ›ä¾‹.xlsx'));
+  const workbook = context.FormulaEngine.parseWorkbook(new Uint8Array(bytes), XLSX);
+  const adapter = context.FormulaEngine.createCalculationAdapter(workbook);
+  const errors = adapter.calculateAll();
+  const results = context.FormulaEngine.validateWorkbook(workbook, adapter);
+  const statuses = results.reduce((counts, result) => {
+    counts[result.status] = (counts[result.status] || 0) + 1;
+    return counts;
+  }, {});
+
+  assert.equal(workbook.SheetNames.length, 18);
+  assert.equal(results.length, 356);
+  assert.equal(errors.length, 0);
+  assert.deepEqual(statuses, { ok: 315, 'intentional-blank': 41 });
+});
+
+test('a workbook formula error is identified and blocks PDF eligibility', () => {
+  const XLSX = require('../vendor/xlsx.full.min.js');
+  const context = {};
+  const engineSource = fs.readFileSync(path.join(root, 'dist/formula-engine.js'), 'utf8');
+  vm.runInNewContext(engineSource, context, { filename: 'dist/formula-engine.js' });
+
+  const bytes = fs.readFileSync(path.join(root, 'downloads/ã‚µãƒ³ãƒ—ãƒ«è£½ä½œæ‰€_å…¥åŠ›ä¾‹.xlsx'));
+  const workbook = context.FormulaEngine.parseWorkbook(new Uint8Array(bytes), XLSX);
+  workbook.Sheets['00_å‡ºåŠ›è¨­å®šãƒ»è¡¨ç´™'].ZZ999 = { t: 'n', f: 'BOGUS(1)' };
+  const adapter = context.FormulaEngine.createCalculationAdapter(workbook);
+  const errors = adapter.calculateAll();
+  const results = context.FormulaEngine.validateWorkbook(workbook, adapter);
+  const formulaError = results.find(
+    (result) => result.sheet === '00_å‡ºåŠ›è¨­å®šãƒ»è¡¨ç´™' && result.cell === 'ZZ999',
+  );
+
+  assert.equal(errors.length, 1);
+  assert.equal(formulaError.status, 'error');
+  assert.match(formulaError.message, /Function BOGUS is not implemented/);
+  assert.equal(
+    context.FormulaEngine.canPrint({ hasWorkbook: true, calculating: false, hasErrors: true }),
+    false,
+  );
+});
+
+test('calculation diagnostics show success or safely escaped formula errors', () => {
+  assert.match(html, /<script src="\.\/src\/diagnostics\.js"><\/script>/);
+  const formattingSource = fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8');
+  const source = fs.readFileSync(path.join(root, 'src/diagnostics.js'), 'utf8');
+  const diagnostics = { hidden: true, innerHTML: '' };
+  const context = {
+    document: { getElementById: (id) => (id === 'calcDiagnostics' ? diagnostics : null) },
+  };
+  context.window = context;
+  vm.runInNewContext(formattingSource, context);
+  vm.runInNewContext(source, context);
+
+  context.renderCalculationDiagnostics([
+    { status: 'ok' },
+    { status: 'intentional-blank' },
+    { status: 'ok' },
+  ]);
+  assert.equal(diagnostics.hidden, false);
+  assert.match(diagnostics.innerHTML, /è¨ˆç®—ç¢ºèªOKï¼šæ•°å¼ 3 ä»¶ï¼ˆæ­£å¸¸ãªç©ºæ¬„ 1 ä»¶ï¼‰/);
+
+  context.renderCalculationDiagnostics([
+    {
+      status: 'error',
+      sheet: '<Sheet>',
+      cell: 'A&1',
+      formula: '=BAD("<tag>")',
+      message: 'invalid & <value>',
+    },
+  ]);
+  assert.match(diagnostics.innerHTML, /è¦ç¢ºèªï¼š1 ä»¶ã®æ•°å¼ã‚¨ãƒ©ãƒ¼/);
+  assert.match(diagnostics.innerHTML, /&lt;Sheet&gt;!A&amp;1/);
+  assert.match(diagnostics.innerHTML, /invalid &amp; &lt;value&gt;/);
+  assert.doesNotMatch(diagnostics.innerHTML, /<Sheet>|<tag>|<value>/);
+});
+
+test('PDF export remains guarded and uses native browser printing', () => {
+  assert.match(html, /<script src="\.\/src\/printing\.js"><\/script>/);
+  assert.match(html, /window\.configurePrintButtonVisibility\(\)/);
+  assert.equal(fs.existsSync(path.join(root, 'vendor/html2canvas-1.4.1.min.js')), false);
+  assert.equal(fs.existsSync(path.join(root, 'vendor/pdf-lib-1.17.1.min.js')), false);
+  const source = fs.readFileSync(path.join(root, 'src/printing.js'), 'utf8');
+  const eventListeners = new Map();
+  const bodyClasses = new Set();
+  const status = { textContent: '' };
+  const notice = { style: { display: 'none' } };
+  const alerts = [];
+  const printButton = {
+    disabled: false,
+    addEventListener(name, callback) {
+      this.clickHandler = callback;
+    },
+  };
+  const presentationButton = { disabled: false };
+  const fixedPdfButton = {
+    disabled: false,
+    addEventListener(name, callback) {
+      this.clickHandler = callback;
+    },
+  };
+  const pages = { childElementCount: 1 };
+  let printCount = 0;
+  const formulaInputs = [];
+  const context = {
+    addEventListener: (name, callback) => eventListeners.set(name, callback),
+    alert: (message) => alerts.push(message),
+    navigator: { userAgent: 'Mozilla', platform: 'Win32', maxTouchPoints: 0 },
+    FormulaEngine: {
+      canPrint(input) {
+        formulaInputs.push(input);
+        return input.hasWorkbook && !input.calculating && !input.hasErrors;
+      },
+    },
+    document: {
+      body: {
+        classList: {
+          add: (name) => bodyClasses.add(name),
+          remove: (name) => bodyClasses.delete(name),
+        },
+      },
+      getElementById(id) {
+        return id === 'printPdfStatus'
+          ? status
+          : id === 'printBlockedNotice'
+            ? notice
+            : id === 'pagesContainer'
+              ? pages
+              : id === 'printButton'
+                ? printButton
+                : id === 'presentationButton'
+                  ? presentationButton
+                  : id === 'fixedPdfButton'
+                    ? fixedPdfButton
+                    : null;
+      },
+    },
+    print: () => printCount++,
+  };
+  context.window = context;
+  vm.runInNewContext(workbookStateModuleSource, context);
+  vm.runInNewContext(source, context);
+  context.setPrintState = (workbook, calculating, errors) => {
+    Object.assign(context.workbookState, {
+      activeWorkbook: workbook,
+      workbookCalculating: calculating,
+      workbookHasErrors: errors,
+    });
+  };
+
+  context.configurePrintButtonVisibility();
+  assert.equal(printButton.hidden, false);
+  assert.equal(fixedPdfButton.hidden, true);
+  context.navigator = { userAgent: 'iPhone', platform: 'iPhone', maxTouchPoints: 0 };
+  context.configurePrintButtonVisibility();
+  assert.equal(printButton.hidden, true);
+  assert.equal(fixedPdfButton.hidden, false);
+  context.navigator = { userAgent: 'Mozilla', platform: 'MacIntel', maxTouchPoints: 5 };
+  context.configurePrintButtonVisibility();
+  assert.equal(printButton.hidden, true);
+  assert.equal(fixedPdfButton.hidden, false);
+
+  context.updatePrintControls();
+  assert.equal(printButton.disabled, true);
+  assert.equal(presentationButton.disabled, true);
+  assert.equal(fixedPdfButton.disabled, true);
+  context.safePrint();
+  assert.equal(printCount, 0);
+  assert.match(alerts[0], /æ•°å¼ã‚¨ãƒ©ãƒ¼ã¾ãŸã¯æœªæ¤œè¨¼/);
+
+  context.setPrintState(null, true, false);
+  context.safePrint();
+  assert.match(alerts[1], /è¨ˆç®—ä¸­/);
+
+  context.setPrintState({ id: 'workbook' }, false, false);
+  context.updatePrintControls();
+  assert.equal(printButton.disabled, false);
+  assert.equal(presentationButton.disabled, false);
+  assert.equal(fixedPdfButton.disabled, false);
+  context.safePrint();
+  assert.equal(printCount, 1);
+  assert.match(status.textContent, /æ–‡å­—ã‚’é¸æŠãƒ»æ¤œç´¢ãƒ»ã‚³ãƒ”ãƒ¼/);
+  printButton.clickHandler();
+  fixedPdfButton.clickHandler();
+  assert.equal(printCount, 3);
+  assert.equal(context.canExportPages(), true);
+  assert.ok(
+    formulaInputs.some((input) => input.hasWorkbook && !input.calculating && !input.hasErrors),
+  );
+
+  pages.childElementCount = 0;
+  assert.equal(context.canExportPages(), false);
+  context.setPrintState({ id: 'workbook' }, false, true);
+  eventListeners.get('beforeprint')();
+  assert.equal(bodyClasses.has('print-blocked'), true);
+  assert.equal(notice.style.display, 'block');
+  eventListeners.get('afterprint')();
+  assert.equal(bodyClasses.has('print-blocked'), false);
+  assert.equal(notice.style.display, 'none');
+
+  assert.doesNotMatch(html, /html2canvas|PDFLib|createFixedPdf/);
+});
+
+test('preview scaling and print guidance work in the preview module', () => {
+  assert.match(html, /<script src="\.\/src\/preview\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/preview.js'), 'utf8');
+  const listeners = new Map();
+  const scale = [];
+  const pages = {
+    firstElementChild: {
+      firstElementChild: { offsetWidth: 1000 },
+      clientWidth: 500,
+    },
+    style: { setProperty: (...args) => scale.push(args) },
+  };
+  const printStatus = { textContent: 'å¤ã„æ¡ˆå†…' };
+  const context = {
+    document: {
+      getElementById(id) {
+        return id === 'pagesContainer' ? pages : printStatus;
+      },
+    },
+    addEventListener(name, callback) {
+      listeners.set(name, callback);
+    },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  context.fitPreviewPages();
+  assert.deepEqual(scale[0], ['--preview-scale', 0.5]);
+  context.clearPrintGuidance();
+  assert.equal(printStatus.textContent, '');
+
+  pages.firstElementChild.firstElementChild.offsetWidth = 400;
+  pages.firstElementChild.clientWidth = 600;
+  context.fitPreviewPages();
+  assert.deepEqual(scale[1], ['--preview-scale', 1]);
+
+  const fallbackContext = {
+    document: { getElementById: () => pages },
+    addEventListener(name, callback) {
+      listeners.set(name, callback);
+    },
+  };
+  fallbackContext.window = fallbackContext;
+  vm.runInNewContext(source, fallbackContext);
+  assert.equal(listeners.has('resize'), true);
+  pages.firstElementChild = null;
+  assert.doesNotThrow(() => fallbackContext.fitPreviewPages());
+});
+
+test('three-year target narratives keep their page split and typography rules', () => {
+  assert.match(html, /<script src="\.\/src\/targets\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/targets.js'), 'utf8');
+  const context = { Array, String };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  assert.deepEqual(Array.from(context.splitTargetNarrative('')), ['']);
+  assert.deepEqual(Array.from(context.splitTargetNarrative('abcdef\nxyz', 8)), ['abcdef\n', 'xyz']);
+  assert.deepEqual(Array.from(context.splitTargetNarrative('abcdefghij', 4)), [
+    'abcd',
+    'efgh',
+    'ij',
+  ]);
+  assert.equal(context.targetNarrativeStyle('ã‚'.repeat(200)).includes('9.5pt'), true);
+  assert.equal(context.targetNarrativeStyle('ã‚'.repeat(201)).includes('8.6pt'), true);
+  assert.equal(context.targetNarrativeStyle('ã‚'.repeat(301)).includes('8pt'), true);
+});
+
+test('dense-table pagination preserves grouped rows and section limits', () => {
+  assert.match(html, /<script src="\.\/src\/table-pagination\.js"><\/script>/);
+  assert.match(html, /<script src="\.\/src\/workbook-pages\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/table-pagination.js'), 'utf8');
+  const context = { Math };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  assert.equal(context.getDenseTableRowLimit('MACRO ENVIRONMENT'), 8);
+  assert.equal(context.getDenseTableRowLimit('MICRO ENVIRONMENT'), 12);
+  assert.equal(context.getDenseTableRowLimit('STRATEGIC ISSUES'), 8);
+  assert.equal(context.getDenseTableRowLimit('SALES PLAN'), 12);
+  assert.equal(context.getDenseTableRowLimit('OTHER'), 20);
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('STRATEGIC ISSUES', 4) },
+    {
+      fontSize: '8.8pt',
+      lineHeight: '1.45',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('STRATEGIC ISSUES', 8) },
+    {
+      fontSize: '8.2pt',
+      lineHeight: '1.45',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('MACRO ENVIRONMENT', 6) },
+    {
+      fontSize: '9.5pt',
+      lineHeight: '1.55',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('MACRO ENVIRONMENT', 8) },
+    {
+      fontSize: '9pt',
+      lineHeight: '1.4',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('MACRO ENVIRONMENT', 9) },
+    {
+      fontSize: '8.2pt',
+      lineHeight: '1.4',
+    },
+  );
+
+  const row = (id, rowSpan = 1) => ({
+    id,
+    cells: [
+      {
+        rowSpan,
+        classList: { contains: (name) => name === 'cat-cell' && rowSpan > 1 },
+      },
+    ],
+  });
+  const rows = [row('a', 2), row('b'), row('c'), row('d'), row('e')];
+  const chunks = context.chunkDenseTableRows(rows, 3);
+  assert.deepEqual(
+    Array.from(chunks, (chunk) => Array.from(chunk, (item) => item.id)),
+    [
+      ['a', 'b'],
+      ['c', 'd', 'e'],
+    ],
+  );
+  assert.deepEqual(
+    Array.from(context.chunkDenseTableRows(rows, 20), (chunk) =>
+      Array.from(chunk, (item) => item.id),
+    ),
+    [['a', 'b', 'c', 'd', 'e']],
+  );
+  const groupedRows = [
+    ...Array.from({ length: 3 }, (_, index) => row(`a${index}`, index === 0 ? 3 : 1)),
+    ...Array.from({ length: 6 }, (_, index) => row(`b${index}`, index === 0 ? 6 : 1)),
+    ...Array.from({ length: 2 }, (_, index) => row(`c${index}`, index === 0 ? 2 : 1)),
+    ...Array.from({ length: 4 }, (_, index) => row(`d${index}`, index === 0 ? 4 : 1)),
+  ];
+  assert.deepEqual(
+    Array.from(context.chunkDenseTableRows(groupedRows, 12), (chunk) => chunk.length),
+    [9, 6],
+  );
+  const cell = (label, rowSpan, isCategory) => ({
+    label,
+    rowSpan,
+    classList: { contains: (name) => name === 'cat-cell' && isCategory },
+    cloneNode: () => cell(label, rowSpan, isCategory),
+  });
+  const domRow = (label, categoryCell) => ({
+    cells: [categoryCell || cell(label, 1, false)],
+    cloneNode() {
+      return domRow(label, this.cells[0].cloneNode(true));
+    },
+    insertBefore(newCell, beforeCell) {
+      this.cells.splice(this.cells.indexOf(beforeCell), 0, newCell);
+    },
+  });
+  const categoryRows = [];
+  for (const [label, size] of [
+    ['å¸‚å ´ãƒ»é¡§å®¢', 3],
+    ['ç«¶åˆãƒ»æ–°è¦å‚å…¥', 6],
+    ['æˆé•·æ€§ãƒ»åç›Šæ€§', 2],
+    ['ç«‹åœ°ç’°å¢ƒ', 2],
+  ]) {
+    for (let index = 0; index < size; index++) {
+      categoryRows.push(
+        domRow(`row-${categoryRows.length}`, index === 0 ? cell(label, size, true) : null),
+      );
+    }
+  }
+  const balancedChunks = context.balanceDenseTableRows(categoryRows, 12);
+  assert.deepEqual(
+    Array.from(balancedChunks, (chunk) => chunk.length),
+    [7, 6],
+  );
+  assert.equal(balancedChunks[1][0].cells[0].label, 'ç«¶åˆãƒ»æ–°è¦å‚å…¥');
+  assert.equal(balancedChunks[1][0].cells[0].rowSpan, 2);
+  const pageNumbers = [{ textContent: '' }, { textContent: '' }, null];
+  const pages = pageNumbers.map((number) => ({
+    querySelector: () => number && number,
+  }));
+  assert.equal(context.renumberDenseTablePages(pages), 3);
+  assert.deepEqual(
+    pageNumbers.slice(0, 2).map((number) => number.textContent),
+    ['01 / 03', '02 / 03'],
+  );
+});
+
+test('shared cell formatting escapes data and preserves badge and marker rules', () => {
+  assert.match(html, /<script src="\.\/src\/cell-formatting\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8');
+  const context = {};
+  context.window = context;
+  vm.runInNewContext(source, context);
+  assert.equal(context.esc('<x & y>'), '&lt;x &amp; y&gt;');
+  assert.equal(context.fmtCell(' <script> '), '&lt;script&gt;');
+  assert.equal(context.fmtCell(''), '<span class="empty-dash">â€”</span>');
+  assert.equal(context.fmtNum('-12'), '<span style="color:#c5221f;">-12</span>');
+  assert.equal(context.fmtNum('0'), '0');
+  assert.match(context.impactBadge('ä¸¡é¢ï¼ˆæ©Ÿä¼šã¨è„…å¨ï¼‰'), /badge-both/);
+  assert.match(context.impactBadge('æ©Ÿä¼š <A>'), /badge-opp/);
+  assert.match(context.ganttMark('â˜…å®Œäº†'), /gantt-star/);
+  assert.match(context.ganttMark('æœªåˆ†é¡ &'), /æœªåˆ†é¡ &amp;/);
+});
+
+test('dynamic table and card layouts preserve grouping and compactness rules', () => {
+  assert.match(html, /<script src="\.\/src\/dynamic-layout\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8'), context);
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/dynamic-layout.js'), 'utf8'), context);
+
+  const table = context.buildDynamicCatTable(
+    [
+      { cat: '<A>', hasData: true, cellsHTML: '<td>1</td>' },
+      { cat: '<A>', hasData: true, cellsHTML: '<td>2</td>' },
+      { cat: 'ç©ºæ¬„', hasData: false, cellsHTML: '<td>3</td>' },
+    ],
+    '<colgroup></colgroup>',
+    '<thead></thead>',
+  );
+  assert.match(table, /rowspan="2" class="cat-cell">&lt;A&gt;/);
+  assert.doesNotMatch(table, /ç©ºæ¬„/);
+  assert.match(table, /font-size:9\.5pt/);
+
+  const cards = context.buildDynamicCardGrid([
+    { title: '<one>', body: 'æœ¬æ–‡' },
+    { title: 'ç©º', body: '' },
+  ]);
+  assert.match(cards, /cols-1 rows-1/);
+  assert.match(cards, /&lt;one&gt;/);
+  assert.doesNotMatch(cards, />ç©º</);
+  assert.match(context.buildDynamicCardGrid([{ title: 'æœªå…¥åŠ›', body: '' }]), /ï¼ˆæœªå…¥åŠ›ï¼‰/);
+});
+
+test('workbook value reader formats literals and evaluated formulas', () => {
+  assert.match(html, /<script src="\.\/src\/workbook-values\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/workbook-values.js'), 'utf8');
+  const calls = [];
+  const worksheet = {
+    A1: { v: 1234, z: '#,##0' },
+    A2: { f: '1+2', z: '0.00' },
+    A3: { v: null },
+    A4: { f: 'NO_SHEET' },
+  };
+  const workbook = { SheetNames: ['Main'], Sheets: { Main: worksheet } };
+  const context = {
+    FormulaEngine: null,
+    document: null,
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  const reader = context.createWorkbookValueReader(
+    workbook,
+    { evaluateCell: (...args) => (calls.push(args), 3) },
+    { formatValue: (value, format, xlsx) => `${value}|${format}|${xlsx}` },
+    'XLSX',
+  );
+  assert.equal(reader(worksheet, 'A1'), '1234|#,##0|XLSX');
+  assert.equal(reader(worksheet, 'A2'), '3|0.00|XLSX');
+  assert.equal(reader(worksheet, 'A3'), '');
+  assert.equal(reader(null, 'A1'), '');
+  assert.equal(reader(worksheet, 'A9'), '');
+  assert.equal(reader(worksheet, 'A4'), '3|General|XLSX');
+  assert.equal(reader({ A1: { f: '1+2' } }, 'A1'), '');
+  assert.deepEqual(calls, [
+    ['Main', 'A2'],
+    ['Main', 'A4'],
+  ]);
+});
+
+test('shared image input reads data URLs and skips empty selections', () => {
+  assert.match(html, /<script src="\.\/src\/image-upload\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/image-upload.js'), 'utf8');
+  const listeners = new Map();
+  const readers = [];
+  const input = { addEventListener: (name, callback) => listeners.set(name, callback) };
+  const context = {
+    FileReader: class {
+      readAsDataURL(file) {
+        this.file = file;
+        readers.push(this);
+      }
+    },
+    document: { getElementById: (id) => (id === 'image' ? input : null) },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  const loaded = [];
+  context.bindImageDataUrlInput('image', (dataUrl) => loaded.push(dataUrl));
+  const onChange = listeners.get('change');
+  onChange({ target: { files: [] } });
+  assert.equal(readers.length, 0);
+  const file = { name: 'logo.png' };
+  onChange({ target: { files: [file] } });
+  assert.equal(readers[0].file, file);
+  readers[0].onload({ target: { result: 'data:image/png;base64,AA==' } });
+  assert.deepEqual(loaded, ['data:image/png;base64,AA==']);
+  assert.doesNotThrow(() => context.bindImageDataUrlInput('missing', () => {}));
+});
+
+test('page factory preserves cover and standard page structure and numbering', () => {
+  assert.match(html, /<script src="\.\/src\/page-factory\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/page-factory.js'), 'utf8');
+  const pages = [];
+  const document = {
+    createElement() {
+      return {
+        dataset: {},
+        append(child) {
+          this.child = child;
+        },
+      };
+    },
+  };
+  const container = { append: (slot) => pages.push(slot) };
+  const context = {};
+  context.window = context;
+  vm.runInNewContext(source, context);
+  const makePage = context.createPageFactory({
+    document,
+    container,
+    company: '<ä¼šç¤¾>',
+    term: '7',
+    total: 2,
+    escapeHtml: (value) => String(value).replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+  });
+  makePage('COVER', 'è¡¨ç´™', '', true, 'coverPageContainer');
+  makePage('01 / TEST', 'æ¨™æº–ãƒšãƒ¼ã‚¸', '<p>æœ¬æ–‡</p>', false, 'body');
+  assert.equal(pages[0].className, 'page-slot');
+  assert.equal(pages[0].child.className, 'page cover-page');
+  assert.equal(pages[0].child.id, 'coverPageContainer');
+  assert.equal(pages[1].child.className, 'page');
+  assert.match(pages[1].child.innerHTML, /&lt;ä¼šç¤¾&gt;/);
+  assert.match(pages[1].child.innerHTML, /02 \/ 02/);
+  assert.match(pages[1].child.innerHTML, /<div class="page-body" id="body">/);
+});
+
+test('management stance page renders the existing grouped questions', () => {
+  assert.match(html, /<script src="\.\/src\/page-stance\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-stance.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const worksheet = {};
+  for (let row = 5; row <= 10; row++) {
+    worksheet[`B${row}`] = row === 5 ? '<é …ç›®>' : `é …ç›®${row}`;
+    worksheet[`C${row}`] = row === 10 ? '' : `å›ç­”${row}`;
+  }
+  const pages = [];
+  context.renderStancePage(
+    worksheet,
+    (sheet, address) => sheet[address] || '',
+    (...args) => pages.push(args),
+  );
+  assert.equal(pages.length, 1);
+  assert.equal(pages[0][0], '01 / STANCE');
+  assert.equal(pages[0][1], 'çµŒå–¶å§¿å‹¢ã®ç¢ºç«‹ï¼ˆç§‘å­¦æ€§ãƒ»ç¤¾ä¼šæ€§ãƒ»äººé–“æ€§ï¼‰');
+  assert.match(pages[0][2], /rowspan="2" class="cat-cell">â… \. ãƒãƒ¼ã‚±ãƒ†ã‚£ãƒ³ã‚°ã®ç«‹å ´ï¼ˆç§‘å­¦æ€§ï¼‰/);
+  assert.match(pages[0][2], /&lt;é …ç›®&gt;/);
+  assert.doesNotMatch(pages[0][2], /é …ç›®10/);
+  assert.match(pages[0][2], /è‡ªç¤¾ã®çµŒå–¶å§¿å‹¢/);
+});
+
+test('philosophy and vision planning pages preserve their content variants', () => {
+  assert.match(html, /<script src="\.\/src\/page-foundation\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-foundation.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const pageCalls = [];
+  const makePage = (...args) => pageCalls.push(args);
+  const values = { C5: '<ç†å¿µ>', C6: 'èƒŒæ™¯ & è§£èª¬' };
+  const val = (sheet, address) => sheet[address] || '';
+  context.renderPhilosophyPage(values, val, makePage);
+  assert.equal(pageCalls[0][0], '02 / PHILOSOPHY');
+  assert.match(pageCalls[0][2], /&lt;ç†å¿µ&gt;/);
+  assert.match(pageCalls[0][2], /èƒŒæ™¯ &amp; è§£èª¬/);
+  pageCalls.length = 0;
+  context.renderPhilosophyPage({ C5: '' }, val, makePage);
+  assert.match(pageCalls[0][2], /ï¼ˆçµŒå–¶ç†å¿µã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼‰/);
+  assert.doesNotMatch(pageCalls[0][2], /narrative-box/);
+
+  pageCalls.length = 0;
+  context.renderVisionPlanningPage({ A5: 'ãƒ†ãƒ¼ãƒ', B5: 'åœ°åŸŸ', C5: 'å†…å®¹' }, val, makePage);
+  assert.equal(pageCalls[0][0], '03 / VISION WORK');
+  assert.match(pageCalls[0][2], /ãƒ†ãƒ¼ãƒï¼šåœ°åŸŸ/);
+  assert.match(pageCalls[0][2], /å†…å®¹/);
+});
+
+test('macro and micro environment pages keep their different ranges and labels', () => {
+  assert.match(html, /<script src="\.\/src\/page-environment\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-environment.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const worksheet = {};
+  for (let row = 5; row <= 19; row++) {
+    worksheet[`A${row}`] = 'ã€æ”¿æ²»ã€‘';
+    worksheet[`B${row}`] = 'â—é …ç›®';
+    worksheet[`C${row}`] = 'äºˆæ¸¬ & å‚¾å‘';
+    worksheet[`D${row}`] = 'ä¸¡é¢';
+  }
+  const pages = [];
+  const val = (sheet, address) => sheet[address] || '';
+  const makePage = (...args) => pages.push(args);
+  context.renderExternalEnvironmentPage(worksheet, val, makePage, 'macro');
+  context.renderExternalEnvironmentPage(worksheet, val, makePage, 'micro');
+  assert.equal(pages[0][0], '04 / MACRO ENVIRONMENT');
+  assert.equal(pages[1][0], '05 / MICRO ENVIRONMENT');
+  assert.match(pages[0][2], /rowspan="10"/);
+  assert.match(pages[1][2], /rowspan="15"/);
+  assert.match(pages[0][2], /width:14%/);
+  assert.match(pages[1][2], /width:15%/);
+  assert.match(pages[0][2], /ä¸–ã®ä¸­ã®å‹•å‘/);
+  assert.match(pages[1][2], /æ¥­ç•Œãƒ»é¡§å®¢ãƒ»ç«¶åˆ/);
+  assert.match(pages[0][2], /äºˆæ¸¬ &amp; å‚¾å‘/);
+  assert.match(pages[0][2], />é …ç›®</);
+});
+
+test('internal analysis and cross-SWOT pages preserve cleanup and display rules', () => {
+  assert.match(html, /<script src="\.\/src\/page-analysis\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-analysis.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const worksheet = {};
+  for (let row = 5; row <= 32; row++) {
+    worksheet[`A${row}`] = 'ã€äººã€‘\nè£œè¶³';
+    worksheet[`B${row}`] = row === 5 ? 'â—è©•ä¾¡é …ç›®' : `é …ç›®${row}`;
+    worksheet[`C${row}`] = row === 5 ? '<å¼·ã¿>' : '';
+    worksheet[`D${row}`] = row === 5 ? 'å¼±ã¿ &' : '';
+  }
+  const pages = [];
+  const makePage = (...args) => pages.push(args);
+  const val = (sheet, address) => sheet[address] || '';
+  context.renderInternalAnalysisPage(worksheet, val, makePage);
+  assert.equal(pages[0][0], '06 / INTERNAL ANALYSIS');
+  assert.match(pages[0][2], /rowspan="1" class="cat-cell">äºº/);
+  assert.match(pages[0][2], /&lt;å¼·ã¿&gt;/);
+  assert.match(pages[0][2], /å¼±ã¿ &amp;/);
+  assert.doesNotMatch(pages[0][2], /è£œè¶³/);
+
+  pages.length = 0;
+  const swot = {
+    A5: 'å¼·ã¿\nS',
+    B5: 'æ©Ÿä¼š',
+    C5: 'ã€Eï¼šæ‹¡å¤§ã€‘',
+    A6: 'å¼±ã¿\nW',
+    B6: 'è„…å¨',
+    C6: 'æ”¹å–„å†…å®¹',
+  };
+  context.renderCrossSwotPage(swot, val, makePage);
+  assert.equal(pages[0][0], '07 / CROSS SWOT');
+  assert.match(pages[0][2], /å¼±ã¿ W Ã— è„…å¨/);
+  assert.doesNotMatch(pages[0][2], /å¼·ã¿ S Ã— æ©Ÿä¼š/);
+  assert.doesNotMatch(pages[0][2], /ã€Eï¼šæ‹¡å¤§ã€‘/);
+  assert.match(pages[0][2], /æ”¹å–„å†…å®¹/);
+  pages.length = 0;
+  context.renderCrossSwotPage({ C5: 'ã€Eï¼šæ‹¡å¤§ã€‘' }, val, makePage);
+  assert.match(pages[0][2], /ï¼ˆå¯¾ç­–æœªè¨˜å…¥ï¼‰/);
+});
+
+test('strategic issues and management policy pages preserve row selection and formatting', () => {
+  assert.match(html, /<script src="\.\/src\/page-priorities\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'page-priorities.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const val = (sheet, address) => sheet[address] || '';
+  const pageCalls = [];
+  const makePage = (...args) => pageCalls.push(args);
+  const issues = {};
+  for (let row = 5; row <= 10; row++) {
+    issues[`B${row}`] = `èª²é¡Œ${row}`;
+    issues[`C${row}`] = `åŠ¹æœ${row}`;
+    for (const column of ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']) {
+      issues[`${column}${row}`] = String(row - 4);
+    }
+  }
+  context.renderStrategicIssuesPage(issues, val, makePage);
+  const issuePage = pageCalls.at(-1);
+  assert.equal(issuePage[0], '08 / STRATEGIC ISSUES');
+  assert.match(issuePage[2], /font-size:8\.4pt/);
+  assert.match(issuePage[2], /èª²é¡Œ5/);
+  assert.match(issuePage[2], /èª²é¡Œ10/);
+  assert.match(issuePage[2], /<td class="ctr item-cell">6<\/td>/);
+  assert.match(issuePage[2], /font-weight:800;color:var\(--accent\)/);
+  context.renderStrategicIssuesPage({}, val, makePage);
+  const fallbackIssuePage = pageCalls.at(-1);
+  assert.match(fallbackIssuePage[2], /font-size:9\.2pt/);
+  assert.match(fallbackIssuePage[2], /<td class="ctr item-cell">3<\/td>/);
+
+  const policies = {};
+  for (let row = 5; row <= 9; row++) {
+    policies[`B${row}`] = `æ–¹é‡${row}`;
+    policies[`C${row}`] = `å…·ä½“ç­–${row}\nè©³ç´°`;
+  }
+  context.renderManagementPolicyPage(policies, val, makePage);
+  const policyPage = pageCalls.at(-1);
+  assert.equal(policyPage[0], '09 / MANAGEMENT POLICY');
+  assert.match(policyPage[2], /font-size:8\.8pt/);
+  assert.match(policyPage[2], /æ–¹é‡ 5/);
+  assert.match(policyPage[2], /å…·ä½“ç­–9\nè©³ç´°/);
+  context.renderManagementPolicyPage({}, val, makePage);
+  const fallbackPolicyPage = pageCalls.at(-1);
+  assert.match(fallbackPolicyPage[2], /font-size:9\.6pt/);
+  assert.match(fallbackPolicyPage[2], /æ–¹é‡ 3/);
+});
+
+test('financial pages preserve active columns, summaries, and memo layout', () => {
+  assert.match(html, /<script src="\.\/src\/page-financial\.js"><\/script>/);
+  const context = {
+    XLSX: { utils: { encode_col: (index) => String.fromCharCode(65 + index) } },
+  };
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'page-financial.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const val = (sheet, address) => sheet[address] || '';
+  const pages = [];
+  const makePage = (...args) => pages.push(args);
+
+  const variableProfit = {
+    B5: '2026å¹´',
+    E5: '2025å¹´',
+    H5: '2024å¹´',
+    B25: '100',
+    B27: 'åˆè¨ˆ',
+    D27: '20',
+    A25: '<å£²ä¸Š>',
+  };
+  context.renderVariableProfitPage(variableProfit, val, makePage);
+  assert.equal(pages[0][0], '10 / VARIABLE P&L');
+  assert.match(pages[0][2], /2026å¹´/);
+  assert.doesNotMatch(pages[0][2], /2025å¹´|2024å¹´/);
+  assert.match(pages[0][2], /&lt;å£²ä¸Š&gt;/);
+  assert.match(pages[0][2], /row-summary/);
+  assert.match(pages[0][2], /width:34%/);
+  pages.length = 0;
+  context.renderVariableProfitPage({ B5: '2026å¹´', E5: '2025å¹´', H5: '2024å¹´' }, val, makePage);
+  assert.match(pages[0][2], /2026å¹´[\s\S]*2025å¹´[\s\S]*2024å¹´/);
+  assert.match(pages[0][2], /width:22%/);
+
+  pages.length = 0;
+  const simulation = { B4: 'å®Ÿç¸¾', C4: 'è¨ˆç”»A', F4: 'è¨ˆç”»B', C5: '1', F7: '2', A8: 'é™¤å¤–è¡Œ' };
+  context.renderProfitSimulationPage(simulation, val, makePage);
+  assert.equal(pages[0][0], '11 / PROFIT SIMULATION');
+  assert.match(pages[0][2], /å®Ÿç¸¾[\s\S]*è¨ˆç”»A[\s\S]*è¨ˆç”»B/);
+  assert.doesNotMatch(pages[0][2], /é™¤å¤–è¡Œ/);
+  assert.match(pages[0][2], /row-summary/);
+  pages.length = 0;
+  context.renderProfitSimulationPage(
+    { B4: 'å®Ÿç¸¾', C4: 'æ¨™æº–C', D4: 'æ¨™æº–D', E4: 'æ¨™æº–E' },
+    val,
+    makePage,
+  );
+  assert.match(pages[0][2], /å®Ÿç¸¾[\s\S]*æ¨™æº–C[\s\S]*æ¨™æº–D[\s\S]*æ¨™æº–E/);
+
+  pages.length = 0;
+  const midterm = {
+    B4: 'ç¬¬1æœŸ',
+    D4: 'ç¬¬2æœŸ',
+    F4: 'ç¬¬3æœŸ',
+    H4: 'ç¬¬4æœŸ',
+    A6: 'å£²ä¸Š',
+    B24: '<ãƒ¡ãƒ¢>\næ¬¡è¡Œ',
+  };
+  context.renderMidtermFinancialPlanPage(midterm, val, makePage);
+  assert.equal(pages[0][0], '12 / MID-TERM FINANCIAL PLAN');
+  assert.match(pages[0][2], /ç¬¬1æœŸ[\s\S]*ç¬¬4æœŸ/);
+  assert.match(pages[0][2], /font-size:7\.2pt/);
+  assert.match(pages[0][2], /&lt;ãƒ¡ãƒ¢&gt;ã€€æ¬¡è¡Œ/);
+  assert.match(pages[0][2], /row-summary/);
+  pages.length = 0;
+  context.renderMidtermFinancialPlanPage({}, val, makePage);
+  assert.match(pages[0][2], /font-size:7\.6pt/);
+  assert.doesNotMatch(pages[0][2], /æ¤œè¨äº‹é …ãƒ¡ãƒ¢/);
+});
+
+test('targets, action plan, and sales pages preserve workbook-driven layouts', () => {
+  assert.match(html, /<script src="\.\/src\/page-planning\.js"><\/script>/);
+  const context = {
+    XLSX: { utils: { encode_col: (index) => String.fromCharCode(65 + index) } },
+  };
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'targets.js', 'page-planning.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const val = (sheet, address) => sheet[address] || '';
+  const pages = [];
+  const makePage = (...args) => pages.push(args);
+
+  const targetText = 'é•·æ–‡'.repeat(550);
+  const targets = {
+    B4: 'ç¬¬3å¹´',
+    B5: '52400',
+    B6: '6000',
+    B7: '12',
+    B8: targetText,
+    A9: 'åˆ©ç›Šç‡',
+    B9: '70%',
+    A10: 'è‡ªç”±ç›®æ¨™2',
+  };
+  context.renderThreeYearTargetsPage(targets, val, makePage);
+  assert.equal(pages.length, 2);
+  assert.equal(pages[0][0], '13 / 3-YEAR TARGETS');
+  assert.equal(pages[0][1], '3ãƒµå¹´ ç›®æ¨™è¨­å®šã‚·ãƒ¼ãƒˆ');
+  assert.equal(pages[1][1], '3ãƒµå¹´ ç›®æ¨™è¨­å®šã‚·ãƒ¼ãƒˆï¼ˆç¶šãï¼‰');
+  assert.match(pages[0][2], /ç›®æ¨™ å£²ä¸Šé«˜/);
+  assert.match(pages[0][2], /åˆ©ç›Šç‡/);
+  assert.match(pages[0][2], /å®šé‡ç›®æ¨™ã®ã¿/);
+  assert.doesNotMatch(pages[0][2], /è‡ªç”±ç›®æ¨™2/);
+  assert.doesNotMatch(pages[1][2], /ç›®æ¨™ å£²ä¸Šé«˜|å®šé‡ç›®æ¨™ã®ã¿/);
+  assert.match(pages[1][2], /å®šæ€§ç›®æ¨™ï¼ˆç¶šãï¼‰/);
+  pages.length = 0;
+  context.renderThreeYearTargetsPage({ B4: '1å¹´', C4: '2å¹´', D4: '3å¹´' }, val, makePage);
+  assert.equal(pages.length, 1);
+  assert.match(pages[0][2], /1å¹´[\s\S]*2å¹´[\s\S]*3å¹´/);
+
+  pages.length = 0;
+  const actionPlan = {
+    F5: '(ã€€æœˆ)',
+    G5: '(ç‰¹åˆ¥)',
+    B6: 'è³‡é‡‘ç¹°ã‚Šæ”¹å–„',
+    C6: 'æ¯é€±ç¢ºèª',
+    D6: 'ç”°ä¸­',
+    E6: 'ä½è—¤',
+    F6: 'â˜…å®Œäº†',
+  };
+  context.renderActionPlanPage(actionPlan, val, makePage, '2026å¹´4æœˆ');
+  assert.equal(pages[0][0], '14 / ACTION PLAN');
+  assert.match(pages[0][2], /4æœˆ[\s\S]*ç‰¹åˆ¥[\s\S]*6æœˆ/);
+  assert.match(pages[0][2], /gantt-star/);
+  assert.match(pages[0][2], /è³‡é‡‘ç¹°ã‚Šæ”¹å–„/);
+  assert.match(pages[0][2], /è²¬ä»»è€…/);
+  pages.length = 0;
+  context.renderActionPlanPage({}, val, makePage, '');
+  assert.equal((pages[0][2].match(/<tr>/g) || []).length, 7);
+  assert.match(pages[0][2], /font-size:8\.6pt/);
+  assert.match(pages[0][2], /1æœˆ/);
+
+  pages.length = 0;
+  const sales = {
+    C4: 'ç¬¬1å¹´',
     F4: 'ç¬¬2å¹´',
     I4: 'ç¬¬3å¹´',
     A6: 'ä¸»è¦é¡§å®¢',
