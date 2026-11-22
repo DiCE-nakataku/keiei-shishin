@@ -1582,14 +1582,13 @@ capture css  .cat-cell {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #fff;
-    font-size: 8pt;
-    font-weight: 700;
+    color: #111827;
+    font-size: 16pt;
+    font-weight: 900;
     line-height: 1;
+  }
+  .gantt-star-legend {
+    font-size: 18pt;
   }
   .gantt-tri {
     display: inline-flex;

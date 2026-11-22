@@ -170,7 +170,7 @@
       '<span class="gantt-legend-item"><span class="gantt-dot">●</span> 計画（P）</span>' +
       '<span class="gantt-legend-item"><span class="gantt-arrow">→</span> 実施（D）</span>' +
       '<span class="gantt-legend-item"><span class="gantt-tri">△</span> 評価（C）</span>' +
-      '<span class="gantt-legend-item"><span class="gantt-star">⭐︎</span> 改善（A）</span></div>';
+      '<span class="gantt-legend-item"><span class="gantt-star gantt-star-legend">★</span> 改善（A）</span></div>';
     const widths =
       '<colgroup><col style="width:3.5%;"><col style="width:17.5%;">' +
       '<col style="width:31%;"><col style="width:7%;"><col style="width:7%;">' +

@@ -1798,9 +1798,10 @@ test('action plan legend and versioned assets use the revised PDCA symbols', () 
   assert.match(planning, /●<\/span> 計画（P）/);
   assert.match(planning, /→<\/span> 実施（D）/);
   assert.match(planning, /△<\/span> 評価（C）/);
-  assert.match(planning, /⭐︎<\/span> 改善（A）/);
-  assert.match(html, /page-planning\.js\?v=1\.4\.1/);
-  assert.match(html, /appearance-adjustments\.js\?v=1\.4\.1/);
-  assert.match(html, /styles\.css\?v=1\.4\.1/);
-  assert.match(html, /v1\.4\.1 · 更新日 2026-11-22/);
+  assert.match(planning, /gantt-star gantt-star-legend">★<\/span> 改善（A）/);
+  assert.match(fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8'), /text\.startsWith\('⭐'\).*text\.startsWith\('★'\)/s);
+  assert.match(html, /page-planning\.js\?v=1\.4\.3/);
+  assert.match(html, /appearance-adjustments\.js\?v=1\.4\.3/);
+  assert.match(html, /styles\.css\?v=1\.4\.3/);
+  assert.match(html, /v1\.4\.3 · 更新日 2026-11-22/);
 });
