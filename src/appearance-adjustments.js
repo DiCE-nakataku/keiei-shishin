@@ -1,5 +1,6 @@
 (function (global) {
   const factors = { small: 0.9, standard: 1, large: 1.1 };
+  const motionEffectIds = { fade: 'G01', rise: 'G02' };
   const state = global.workbookState;
   let selectedTarget = null;
   let selectedTextCanBreak = false;
@@ -113,6 +114,43 @@
     element.style.fontSize = `${base * (factors[size] || 1)}px`;
   }
 
+  function motionTargetsFor(key, scope, container) {
+    const elements = targetsFor(key, scope, container);
+    if (scope === 'row') {
+      const rows = elements.filter((element) => element.matches('tr'));
+      if (rows.length) return rows;
+    }
+    if (scope === 'box') {
+      const boxes = elements.filter((element) =>
+        element.matches('.panel-card, .hero-quote, tr'),
+      );
+      if (boxes.length) return boxes;
+    }
+    return elements;
+  }
+
+  function clearMotionAssignments(container) {
+    if (!container) return;
+    container.querySelectorAll('[data-appearance-motion]').forEach((element) => {
+      delete element.dataset.msEffect;
+      if (element.dataset.appearanceMotionStep === 'true') {
+        delete element.dataset.msStep;
+        delete element.dataset.appearanceMotionStep;
+      }
+      delete element.dataset.appearanceMotion;
+    });
+  }
+
+  function applyMotion(element, motion) {
+    if (!motion || motion === 'auto') return;
+    element.dataset.appearanceMotion = motion;
+    if (motionEffectIds[motion]) element.dataset.msEffect = motionEffectIds[motion];
+    if (!element.dataset.msStep) {
+      element.dataset.msStep = '1';
+      element.dataset.appearanceMotionStep = 'true';
+    }
+  }
+
   function renderTextBreaks(element, sourceText, offsets) {
     const characters = Array.from(sourceText.replace(/\n/g, ''));
     const splitAt = new Set(offsets);
@@ -127,6 +165,7 @@
   function applyAppearanceSettings(container) {
     let skippedBreaks = 0;
     let unmatched = 0;
+    clearMotionAssignments(container);
     const pages = [...container.querySelectorAll('.page')];
     for (const [key, settings] of Object.entries(state.appearanceSettings || {})) {
       const elements = targetsFor(key, settings.scope || 'block', container);
@@ -149,6 +188,9 @@
             skippedBreaks++;
           }
         }
+      }
+      for (const element of motionTargetsFor(key, settings.scope || 'block', container)) {
+        applyMotion(element, settings.motion || 'auto');
       }
     }
     state.skippedAppearanceBreaks = skippedBreaks;
@@ -229,10 +271,21 @@
     const boxOption = global.document.querySelector('#appearanceScope option[value="box"]');
     rowOption.hidden = !target.dataset.appearanceRow;
     boxOption.hidden = !target.dataset.appearanceBox;
-    const scope = target.dataset.appearanceKey;
-    const existing = state.appearanceSettings[scope] || {};
+    const candidates = [
+      ['block', target.dataset.appearanceKey],
+      ['row', target.dataset.appearanceRow],
+      ['box', target.dataset.appearanceBox],
+    ];
+    const saved = candidates
+      .map(([savedScope, key]) => ({
+        scope: savedScope,
+        settings: key ? state.appearanceSettings[key] : null,
+      }))
+      .find(({ scope: savedScope, settings }) => settings?.scope === savedScope);
+    const existing = saved?.settings || state.appearanceSettings[target.dataset.appearanceKey] || {};
     global.document.getElementById('appearanceScope').value = existing.scope || 'block';
     global.document.getElementById('appearanceSize').value = existing.size || 'standard';
+    global.document.getElementById('appearanceMotion').value = existing.motion || 'auto';
     const textInput = global.document.getElementById('appearanceText');
     textInput.value = canChangeBreaks ? target.innerText.replace(/\r/g, '') : '';
     textInput.disabled = !canChangeBreaks;
@@ -298,6 +351,7 @@
         ? selectedTarget.dataset.appearanceKey
         : selectedTarget.dataset[scope === 'row' ? 'appearanceRow' : 'appearanceBox'];
     const size = global.document.getElementById('appearanceSize').value;
+    const motion = global.document.getElementById('appearanceMotion').value;
     const textarea = global.document.getElementById('appearanceText');
     const sourceText = selectedTarget.innerText.replace(/\r/g, '');
     const candidate = textarea.value.replace(/\r/g, '');
@@ -307,7 +361,7 @@
       error.hidden = false;
       return;
     }
-    const settings = { scope, size };
+    const settings = { scope, size, motion };
     const previous = state.appearanceSettings[scopeKey];
     if (
       scope === 'block' &&

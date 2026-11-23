@@ -130,6 +130,9 @@
         )
         .map(([key, value]) => {
           const clean = { scope: value.scope, size: value.size };
+          if (['auto', 'fade', 'rise', 'none'].includes(value.motion)) {
+            clean.motion = value.motion;
+          }
           if (
             Array.isArray(value.lineBreaks) &&
             value.lineBreaks.length <= 100 &&

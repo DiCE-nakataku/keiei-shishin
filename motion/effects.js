@@ -37,6 +37,8 @@
     effects.set(id, { name, duration, frames, children, stagger, origin, fallback });
   }
 
+  define('G01', 'フェード', 360, fade);
+  define('G02', '下からフェード', 420, rise);
   define('T01', 'フェード＆ライズ', 360, rise);
   define('T02', '行ごとのマスク表示', 520, mask,
     { children: '[data-ms-mask-line]', fallback: true, stagger: 240 });

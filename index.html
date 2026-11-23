@@ -100,7 +100,7 @@
                 <div class="step-num-badge">3</div>
                 <div>
                   <div class="step-text-main">見た目を整える</div>
-                  <div class="step-text-sub">ブロックごとの文字サイズや改行、ロゴ・画像・カラーを調整できます</div>
+                  <div class="step-text-sub">ブロックごとの文字サイズや改行、発表モードのモーション、ロゴ・画像・カラーを調整できます</div>
                 </div>
               </div>
               <div class="step-row">
@@ -184,6 +184,7 @@
                   <ul>
                     <li>「見た目を調整」から対象のセル・項目（行）・枠全体を選び、文字サイズを「小さく・標準・大きく」に調整できます。</li>
                     <li>改行位置も調整できますが、文字や数字そのものは変更できません。内容を直す場合はExcelを修正して読み込み直してください。</li>
+                    <li>発表モードで使うモーションは「自動（おすすめ）・フェード・下からフェード・なし」から選べます。選んだ種類は作業ファイルに保存され、表示速度は発表モードでその都度選びます。</li>
                     <li>調整内容を後日も使う場合は、作業ファイルを保存してください。</li>
                   </ul>
                 </div>
@@ -280,7 +281,7 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.4.5 · 更新日 2026-11-23</span></span>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.5.0 · 更新日 2026-11-23</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
     <span class="footer-copyright">© 2026 DiCE JAPAN株式会社</span>
   </footer>
@@ -305,6 +306,13 @@
       <option value="small">小さく</option>
       <option value="standard">標準</option>
       <option value="large">大きく</option>
+    </select>
+    <label for="appearanceMotion">モーション（発表モードのみ）</label>
+    <select id="appearanceMotion">
+      <option value="auto">自動（おすすめ）</option>
+      <option value="fade">フェード</option>
+      <option value="rise">下からフェード</option>
+      <option value="none">なし</option>
     </select>
     <label for="appearanceText">改行位置（改行以外の文字は変更できません）</label>
     <textarea id="appearanceText" rows="5" spellcheck="false"></textarea>
@@ -344,16 +352,15 @@
 <script src="./src/workbook-pages.js"></script>
 <script src="./src/workbook-controller.js"></script>
 <script src="./src/input-validation.js"></script>
-<script src="./src/appearance-adjustments.js?v=1.4.4"></script>
-<script src="./src/work-file.js"></script>
+<script src="./src/appearance-adjustments.js?v=1.5.0"></script>
+<script src="./src/work-file.js?v=1.5.0"></script>
 <script>
 window.configurePrintButtonVisibility();
 
 </script>
-<script src="./motion/effects.js"></script>
+<script src="./motion/effects.js?v=1.5.0"></script>
 <script src="./motion/presets.js"></script>
 <script src="./motion/player.js"></script>
-<script src="./motion/book.js"></script>
+<script src="./motion/book.js?v=1.5.0"></script>
 </body>
 </html>
-
