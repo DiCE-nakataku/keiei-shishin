@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 17660)
-Total output lines: 1808
-
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
@@ -647,7 +644,571 @@ test('PDF export remains guarded and uses native browser printing', () => {
   context.navigator = { userAgent: 'iPhone', platform: 'iPhone', maxTouchPoints: 0 };
   context.configurePrintButtonVisibility();
   assert.equal(printButton.hidden, true);
-  assert.equal(fixedPdfButton.hidden, …5660 tokens truncated…, val, makePage);
+  assert.equal(fixedPdfButton.hidden, false);
+  context.navigator = { userAgent: 'Mozilla', platform: 'MacIntel', maxTouchPoints: 5 };
+  context.configurePrintButtonVisibility();
+  assert.equal(printButton.hidden, true);
+  assert.equal(fixedPdfButton.hidden, false);
+
+  context.updatePrintControls();
+  assert.equal(printButton.disabled, true);
+  assert.equal(presentationButton.disabled, true);
+  assert.equal(fixedPdfButton.disabled, true);
+  context.safePrint();
+  assert.equal(printCount, 0);
+  assert.match(alerts[0], /数式エラーまたは未検証/);
+
+  context.setPrintState(null, true, false);
+  context.safePrint();
+  assert.match(alerts[1], /計算中/);
+
+  context.setPrintState({ id: 'workbook' }, false, false);
+  context.updatePrintControls();
+  assert.equal(printButton.disabled, false);
+  assert.equal(presentationButton.disabled, false);
+  assert.equal(fixedPdfButton.disabled, false);
+  context.safePrint();
+  assert.equal(printCount, 1);
+  assert.match(status.textContent, /文字を選択・検索・コピー/);
+  printButton.clickHandler();
+  fixedPdfButton.clickHandler();
+  assert.equal(printCount, 3);
+  assert.equal(context.canExportPages(), true);
+  assert.ok(
+    formulaInputs.some((input) => input.hasWorkbook && !input.calculating && !input.hasErrors),
+  );
+
+  pages.childElementCount = 0;
+  assert.equal(context.canExportPages(), false);
+  context.setPrintState({ id: 'workbook' }, false, true);
+  eventListeners.get('beforeprint')();
+  assert.equal(bodyClasses.has('print-blocked'), true);
+  assert.equal(notice.style.display, 'block');
+  eventListeners.get('afterprint')();
+  assert.equal(bodyClasses.has('print-blocked'), false);
+  assert.equal(notice.style.display, 'none');
+
+  assert.doesNotMatch(html, /html2canvas|PDFLib|createFixedPdf/);
+});
+
+test('preview scaling and print guidance work in the preview module', () => {
+  assert.match(html, /<script src="\.\/src\/preview\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/preview.js'), 'utf8');
+  const listeners = new Map();
+  const scale = [];
+  const pages = {
+    firstElementChild: {
+      firstElementChild: { offsetWidth: 1000 },
+      clientWidth: 500,
+    },
+    style: { setProperty: (...args) => scale.push(args) },
+  };
+  const printStatus = { textContent: '古い案内' };
+  const context = {
+    document: {
+      getElementById(id) {
+        return id === 'pagesContainer' ? pages : printStatus;
+      },
+    },
+    addEventListener(name, callback) {
+      listeners.set(name, callback);
+    },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  context.fitPreviewPages();
+  assert.deepEqual(scale[0], ['--preview-scale', 0.5]);
+  context.clearPrintGuidance();
+  assert.equal(printStatus.textContent, '');
+
+  pages.firstElementChild.firstElementChild.offsetWidth = 400;
+  pages.firstElementChild.clientWidth = 600;
+  context.fitPreviewPages();
+  assert.deepEqual(scale[1], ['--preview-scale', 1]);
+
+  const fallbackContext = {
+    document: { getElementById: () => pages },
+    addEventListener(name, callback) {
+      listeners.set(name, callback);
+    },
+  };
+  fallbackContext.window = fallbackContext;
+  vm.runInNewContext(source, fallbackContext);
+  assert.equal(listeners.has('resize'), true);
+  pages.firstElementChild = null;
+  assert.doesNotThrow(() => fallbackContext.fitPreviewPages());
+});
+
+test('three-year target narratives keep their page split and typography rules', () => {
+  assert.match(html, /<script src="\.\/src\/targets\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/targets.js'), 'utf8');
+  const context = { Array, String };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  assert.deepEqual(Array.from(context.splitTargetNarrative('')), ['']);
+  assert.deepEqual(Array.from(context.splitTargetNarrative('abcdef\nxyz', 8)), ['abcdef\n', 'xyz']);
+  assert.deepEqual(Array.from(context.splitTargetNarrative('abcdefghij', 4)), [
+    'abcd',
+    'efgh',
+    'ij',
+  ]);
+  assert.equal(context.targetNarrativeStyle('あ'.repeat(200)).includes('9.5pt'), true);
+  assert.equal(context.targetNarrativeStyle('あ'.repeat(201)).includes('8.6pt'), true);
+  assert.equal(context.targetNarrativeStyle('あ'.repeat(301)).includes('8pt'), true);
+});
+
+test('dense-table pagination preserves grouped rows and section limits', () => {
+  assert.match(html, /<script src="\.\/src\/table-pagination\.js"><\/script>/);
+  assert.match(html, /<script src="\.\/src\/workbook-pages\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/table-pagination.js'), 'utf8');
+  const context = { Math };
+  context.window = context;
+  vm.runInNewContext(source, context);
+
+  assert.equal(context.getDenseTableRowLimit('MACRO ENVIRONMENT'), 8);
+  assert.equal(context.getDenseTableRowLimit('MICRO ENVIRONMENT'), 12);
+  assert.equal(context.getDenseTableRowLimit('STRATEGIC ISSUES'), 8);
+  assert.equal(context.getDenseTableRowLimit('SALES PLAN'), 12);
+  assert.equal(context.getDenseTableRowLimit('OTHER'), 20);
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('STRATEGIC ISSUES', 4) },
+    {
+      fontSize: '8.8pt',
+      lineHeight: '1.45',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('STRATEGIC ISSUES', 8) },
+    {
+      fontSize: '8.2pt',
+      lineHeight: '1.45',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('MACRO ENVIRONMENT', 6) },
+    {
+      fontSize: '9.5pt',
+      lineHeight: '1.55',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('MACRO ENVIRONMENT', 8) },
+    {
+      fontSize: '9pt',
+      lineHeight: '1.4',
+    },
+  );
+  assert.deepEqual(
+    { ...context.getDenseTableTypography('MACRO ENVIRONMENT', 9) },
+    {
+      fontSize: '8.2pt',
+      lineHeight: '1.4',
+    },
+  );
+
+  const row = (id, rowSpan = 1) => ({
+    id,
+    cells: [
+      {
+        rowSpan,
+        classList: { contains: (name) => name === 'cat-cell' && rowSpan > 1 },
+      },
+    ],
+  });
+  const rows = [row('a', 2), row('b'), row('c'), row('d'), row('e')];
+  const chunks = context.chunkDenseTableRows(rows, 3);
+  assert.deepEqual(
+    Array.from(chunks, (chunk) => Array.from(chunk, (item) => item.id)),
+    [
+      ['a', 'b'],
+      ['c', 'd', 'e'],
+    ],
+  );
+  assert.deepEqual(
+    Array.from(context.chunkDenseTableRows(rows, 20), (chunk) =>
+      Array.from(chunk, (item) => item.id),
+    ),
+    [['a', 'b', 'c', 'd', 'e']],
+  );
+  const groupedRows = [
+    ...Array.from({ length: 3 }, (_, index) => row(`a${index}`, index === 0 ? 3 : 1)),
+    ...Array.from({ length: 6 }, (_, index) => row(`b${index}`, index === 0 ? 6 : 1)),
+    ...Array.from({ length: 2 }, (_, index) => row(`c${index}`, index === 0 ? 2 : 1)),
+    ...Array.from({ length: 4 }, (_, index) => row(`d${index}`, index === 0 ? 4 : 1)),
+  ];
+  assert.deepEqual(
+    Array.from(context.chunkDenseTableRows(groupedRows, 12), (chunk) => chunk.length),
+    [9, 6],
+  );
+  const cell = (label, rowSpan, isCategory) => ({
+    label,
+    rowSpan,
+    classList: { contains: (name) => name === 'cat-cell' && isCategory },
+    cloneNode: () => cell(label, rowSpan, isCategory),
+  });
+  const domRow = (label, categoryCell) => ({
+    cells: [categoryCell || cell(label, 1, false)],
+    cloneNode() {
+      return domRow(label, this.cells[0].cloneNode(true));
+    },
+    insertBefore(newCell, beforeCell) {
+      this.cells.splice(this.cells.indexOf(beforeCell), 0, newCell);
+    },
+  });
+  const categoryRows = [];
+  for (const [label, size] of [
+    ['市場・顧客', 3],
+    ['競合・新規参入', 6],
+    ['成長性・収益性', 2],
+    ['立地環境', 2],
+  ]) {
+    for (let index = 0; index < size; index++) {
+      categoryRows.push(
+        domRow(`row-${categoryRows.length}`, index === 0 ? cell(label, size, true) : null),
+      );
+    }
+  }
+  const balancedChunks = context.balanceDenseTableRows(categoryRows, 12);
+  assert.deepEqual(
+    Array.from(balancedChunks, (chunk) => chunk.length),
+    [7, 6],
+  );
+  assert.equal(balancedChunks[1][0].cells[0].label, '競合・新規参入');
+  assert.equal(balancedChunks[1][0].cells[0].rowSpan, 2);
+  const pageNumbers = [{ textContent: '' }, { textContent: '' }, null];
+  const pages = pageNumbers.map((number) => ({
+    querySelector: () => number && number,
+  }));
+  assert.equal(context.renumberDenseTablePages(pages), 3);
+  assert.deepEqual(
+    pageNumbers.slice(0, 2).map((number) => number.textContent),
+    ['01 / 03', '02 / 03'],
+  );
+});
+
+test('shared cell formatting escapes data and preserves badge and marker rules', () => {
+  assert.match(html, /<script src="\.\/src\/cell-formatting\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8');
+  const context = {};
+  context.window = context;
+  vm.runInNewContext(source, context);
+  assert.equal(context.esc('<x & y>'), '&lt;x &amp; y&gt;');
+  assert.equal(context.fmtCell(' <script> '), '&lt;script&gt;');
+  assert.equal(context.fmtCell(''), '<span class="empty-dash">—</span>');
+  assert.equal(context.fmtNum('-12'), '<span style="color:#c5221f;">-12</span>');
+  assert.equal(context.fmtNum('0'), '0');
+  assert.match(context.impactBadge('両面（機会と脅威）'), /badge-both/);
+  assert.match(context.impactBadge('機会 <A>'), /badge-opp/);
+  assert.match(context.ganttMark('★完了'), /gantt-star/);
+  assert.match(context.ganttMark('未分類 &'), /未分類 &amp;/);
+});
+
+test('dynamic table and card layouts preserve grouping and compactness rules', () => {
+  assert.match(html, /<script src="\.\/src\/dynamic-layout\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8'), context);
+  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/dynamic-layout.js'), 'utf8'), context);
+
+  const table = context.buildDynamicCatTable(
+    [
+      { cat: '<A>', hasData: true, cellsHTML: '<td>1</td>' },
+      { cat: '<A>', hasData: true, cellsHTML: '<td>2</td>' },
+      { cat: '空欄', hasData: false, cellsHTML: '<td>3</td>' },
+    ],
+    '<colgroup></colgroup>',
+    '<thead></thead>',
+  );
+  assert.match(table, /rowspan="2" class="cat-cell">&lt;A&gt;/);
+  assert.doesNotMatch(table, /空欄/);
+  assert.match(table, /font-size:9\.5pt/);
+
+  const cards = context.buildDynamicCardGrid([
+    { title: '<one>', body: '本文' },
+    { title: '空', body: '' },
+  ]);
+  assert.match(cards, /cols-1 rows-1/);
+  assert.match(cards, /&lt;one&gt;/);
+  assert.doesNotMatch(cards, />空</);
+  assert.match(context.buildDynamicCardGrid([{ title: '未入力', body: '' }]), /（未入力）/);
+});
+
+test('workbook value reader formats literals and evaluated formulas', () => {
+  assert.match(html, /<script src="\.\/src\/workbook-values\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/workbook-values.js'), 'utf8');
+  const calls = [];
+  const worksheet = {
+    A1: { v: 1234, z: '#,##0' },
+    A2: { f: '1+2', z: '0.00' },
+    A3: { v: null },
+    A4: { f: 'NO_SHEET' },
+  };
+  const workbook = { SheetNames: ['Main'], Sheets: { Main: worksheet } };
+  const context = {
+    FormulaEngine: null,
+    document: null,
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  const reader = context.createWorkbookValueReader(
+    workbook,
+    { evaluateCell: (...args) => (calls.push(args), 3) },
+    { formatValue: (value, format, xlsx) => `${value}|${format}|${xlsx}` },
+    'XLSX',
+  );
+  assert.equal(reader(worksheet, 'A1'), '1234|#,##0|XLSX');
+  assert.equal(reader(worksheet, 'A2'), '3|0.00|XLSX');
+  assert.equal(reader(worksheet, 'A3'), '');
+  assert.equal(reader(null, 'A1'), '');
+  assert.equal(reader(worksheet, 'A9'), '');
+  assert.equal(reader(worksheet, 'A4'), '3|General|XLSX');
+  assert.equal(reader({ A1: { f: '1+2' } }, 'A1'), '');
+  assert.deepEqual(calls, [
+    ['Main', 'A2'],
+    ['Main', 'A4'],
+  ]);
+});
+
+test('shared image input reads data URLs and skips empty selections', () => {
+  assert.match(html, /<script src="\.\/src\/image-upload\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/image-upload.js'), 'utf8');
+  const listeners = new Map();
+  const readers = [];
+  const input = { addEventListener: (name, callback) => listeners.set(name, callback) };
+  const context = {
+    FileReader: class {
+      readAsDataURL(file) {
+        this.file = file;
+        readers.push(this);
+      }
+    },
+    document: { getElementById: (id) => (id === 'image' ? input : null) },
+  };
+  context.window = context;
+  vm.runInNewContext(source, context);
+  const loaded = [];
+  context.bindImageDataUrlInput('image', (dataUrl) => loaded.push(dataUrl));
+  const onChange = listeners.get('change');
+  onChange({ target: { files: [] } });
+  assert.equal(readers.length, 0);
+  const file = { name: 'logo.png' };
+  onChange({ target: { files: [file] } });
+  assert.equal(readers[0].file, file);
+  readers[0].onload({ target: { result: 'data:image/png;base64,AA==' } });
+  assert.deepEqual(loaded, ['data:image/png;base64,AA==']);
+  assert.doesNotThrow(() => context.bindImageDataUrlInput('missing', () => {}));
+});
+
+test('page factory preserves cover and standard page structure and numbering', () => {
+  assert.match(html, /<script src="\.\/src\/page-factory\.js"><\/script>/);
+  const source = fs.readFileSync(path.join(root, 'src/page-factory.js'), 'utf8');
+  const pages = [];
+  const document = {
+    createElement() {
+      return {
+        dataset: {},
+        append(child) {
+          this.child = child;
+        },
+      };
+    },
+  };
+  const container = { append: (slot) => pages.push(slot) };
+  const context = {};
+  context.window = context;
+  vm.runInNewContext(source, context);
+  const makePage = context.createPageFactory({
+    document,
+    container,
+    company: '<会社>',
+    term: '7',
+    total: 2,
+    escapeHtml: (value) => String(value).replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+  });
+  makePage('COVER', '表紙', '', true, 'coverPageContainer');
+  makePage('01 / TEST', '標準ページ', '<p>本文</p>', false, 'body');
+  assert.equal(pages[0].className, 'page-slot');
+  assert.equal(pages[0].child.className, 'page cover-page');
+  assert.equal(pages[0].child.id, 'coverPageContainer');
+  assert.equal(pages[1].child.className, 'page');
+  assert.match(pages[1].child.innerHTML, /&lt;会社&gt;/);
+  assert.match(pages[1].child.innerHTML, /02 \/ 02/);
+  assert.match(pages[1].child.innerHTML, /<div class="page-body" id="body">/);
+});
+
+test('management stance page renders the existing grouped questions', () => {
+  assert.match(html, /<script src="\.\/src\/page-stance\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-stance.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const worksheet = {};
+  for (let row = 5; row <= 10; row++) {
+    worksheet[`B${row}`] = row === 5 ? '<項目>' : `項目${row}`;
+    worksheet[`C${row}`] = row === 10 ? '' : `回答${row}`;
+  }
+  const pages = [];
+  context.renderStancePage(
+    worksheet,
+    (sheet, address) => sheet[address] || '',
+    (...args) => pages.push(args),
+  );
+  assert.equal(pages.length, 1);
+  assert.equal(pages[0][0], '01 / STANCE');
+  assert.equal(pages[0][1], '経営姿勢の確立（科学性・社会性・人間性）');
+  assert.match(pages[0][2], /rowspan="2" class="cat-cell">Ⅰ\. マーケティングの立場（科学性）/);
+  assert.match(pages[0][2], /&lt;項目&gt;/);
+  assert.doesNotMatch(pages[0][2], /項目10/);
+  assert.match(pages[0][2], /自社の経営姿勢/);
+});
+
+test('philosophy and vision planning pages preserve their content variants', () => {
+  assert.match(html, /<script src="\.\/src\/page-foundation\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-foundation.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const pageCalls = [];
+  const makePage = (...args) => pageCalls.push(args);
+  const values = { C5: '<理念>', C6: '背景 & 解説' };
+  const val = (sheet, address) => sheet[address] || '';
+  context.renderPhilosophyPage(values, val, makePage);
+  assert.equal(pageCalls[0][0], '02 / PHILOSOPHY');
+  assert.match(pageCalls[0][2], /&lt;理念&gt;/);
+  assert.match(pageCalls[0][2], /背景 &amp; 解説/);
+  pageCalls.length = 0;
+  context.renderPhilosophyPage({ C5: '' }, val, makePage);
+  assert.match(pageCalls[0][2], /（経営理念を入力してください）/);
+  assert.doesNotMatch(pageCalls[0][2], /narrative-box/);
+
+  pageCalls.length = 0;
+  context.renderVisionPlanningPage({ A5: 'テーマ', B5: '地域', C5: '内容' }, val, makePage);
+  assert.equal(pageCalls[0][0], '03 / VISION WORK');
+  assert.match(pageCalls[0][2], /テーマ：地域/);
+  assert.match(pageCalls[0][2], /内容/);
+});
+
+test('macro and micro environment pages keep their different ranges and labels', () => {
+  assert.match(html, /<script src="\.\/src\/page-environment\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-environment.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const worksheet = {};
+  for (let row = 5; row <= 19; row++) {
+    worksheet[`A${row}`] = '【政治】';
+    worksheet[`B${row}`] = '●項目';
+    worksheet[`C${row}`] = '予測 & 傾向';
+    worksheet[`D${row}`] = '両面';
+  }
+  const pages = [];
+  const val = (sheet, address) => sheet[address] || '';
+  const makePage = (...args) => pages.push(args);
+  context.renderExternalEnvironmentPage(worksheet, val, makePage, 'macro');
+  context.renderExternalEnvironmentPage(worksheet, val, makePage, 'micro');
+  assert.equal(pages[0][0], '04 / MACRO ENVIRONMENT');
+  assert.equal(pages[1][0], '05 / MICRO ENVIRONMENT');
+  assert.match(pages[0][2], /rowspan="10"/);
+  assert.match(pages[1][2], /rowspan="15"/);
+  assert.match(pages[0][2], /width:14%/);
+  assert.match(pages[1][2], /width:15%/);
+  assert.match(pages[0][2], /世の中の動向/);
+  assert.match(pages[1][2], /業界・顧客・競合/);
+  assert.match(pages[0][2], /予測 &amp; 傾向/);
+  assert.match(pages[0][2], />項目</);
+});
+
+test('internal analysis and cross-SWOT pages preserve cleanup and display rules', () => {
+  assert.match(html, /<script src="\.\/src\/page-analysis\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-analysis.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const worksheet = {};
+  for (let row = 5; row <= 32; row++) {
+    worksheet[`A${row}`] = '【人】\n補足';
+    worksheet[`B${row}`] = row === 5 ? '●評価項目' : `項目${row}`;
+    worksheet[`C${row}`] = row === 5 ? '<強み>' : '';
+    worksheet[`D${row}`] = row === 5 ? '弱み &' : '';
+  }
+  const pages = [];
+  const makePage = (...args) => pages.push(args);
+  const val = (sheet, address) => sheet[address] || '';
+  context.renderInternalAnalysisPage(worksheet, val, makePage);
+  assert.equal(pages[0][0], '06 / INTERNAL ANALYSIS');
+  assert.match(pages[0][2], /rowspan="1" class="cat-cell">人/);
+  assert.match(pages[0][2], /&lt;強み&gt;/);
+  assert.match(pages[0][2], /弱み &amp;/);
+  assert.doesNotMatch(pages[0][2], /補足/);
+
+  pages.length = 0;
+  const swot = {
+    A5: '強み\nS',
+    B5: '機会',
+    C5: '【E：拡大】',
+    A6: '弱み\nW',
+    B6: '脅威',
+    C6: '改善内容',
+  };
+  context.renderCrossSwotPage(swot, val, makePage);
+  assert.equal(pages[0][0], '07 / CROSS SWOT');
+  assert.match(pages[0][2], /弱み W × 脅威/);
+  assert.doesNotMatch(pages[0][2], /強み S × 機会/);
+  assert.doesNotMatch(pages[0][2], /【E：拡大】/);
+  assert.match(pages[0][2], /改善内容/);
+  pages.length = 0;
+  context.renderCrossSwotPage({ C5: '【E：拡大】' }, val, makePage);
+  assert.match(pages[0][2], /（対策未記入）/);
+});
+
+test('strategic issues and management policy pages preserve row selection and formatting', () => {
+  assert.match(html, /<script src="\.\/src\/page-priorities\.js"><\/script>/);
+  const context = {};
+  context.window = context;
+  for (const name of ['cell-formatting.js', 'page-priorities.js']) {
+    vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
+  }
+  const val = (sheet, address) => sheet[address] || '';
+  const pageCalls = [];
+  const makePage = (...args) => pageCalls.push(args);
+  const issues = {};
+  for (let row = 5; row <= 10; row++) {
+    issues[`B${row}`] = `課題${row}`;
+    issues[`C${row}`] = `効果${row}`;
+    for (const column of ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']) {
+      issues[`${column}${row}`] = String(row - 4);
+    }
+  }
+  context.renderStrategicIssuesPage(issues, val, makePage);
+  const issuePage = pageCalls.at(-1);
+  assert.equal(issuePage[0], '08 / STRATEGIC ISSUES');
+  assert.match(issuePage[2], /font-size:8\.4pt/);
+  assert.match(issuePage[2], /課題5/);
+  assert.match(issuePage[2], /課題10/);
+  assert.match(issuePage[2], /<td class="ctr item-cell">6<\/td>/);
+  assert.match(issuePage[2], /font-weight:800;color:var\(--accent\)/);
+  context.renderStrategicIssuesPage({}, val, makePage);
+  const fallbackIssuePage = pageCalls.at(-1);
+  assert.match(fallbackIssuePage[2], /font-size:9\.2pt/);
+  assert.match(fallbackIssuePage[2], /<td class="ctr item-cell">3<\/td>/);
+
+  const policies = {};
+  for (let row = 5; row <= 9; row++) {
+    policies[`B${row}`] = `方針${row}`;
+    policies[`C${row}`] = `具体策${row}\n詳細`;
+  }
+  context.renderManagementPolicyPage(policies, val, makePage);
+  const policyPage = pageCalls.at(-1);
+  assert.equal(policyPage[0], '09 / MANAGEMENT POLICY');
+  assert.match(policyPage[2], /font-size:8\.8pt/);
+  assert.match(policyPage[2], /方針 5/);
+  assert.match(policyPage[2], /具体策9\n詳細/);
+  context.renderManagementPolicyPage({}, val, makePage);
   const fallbackPolicyPage = pageCalls.at(-1);
   assert.match(fallbackPolicyPage[2], /font-size:9\.6pt/);
   assert.match(fallbackPolicyPage[2], /方針 3/);
@@ -1244,4 +1805,3 @@ test('action plan legend and versioned assets use the revised PDCA symbols', () 
   assert.match(html, /styles\.css\?v=1\.4\.5/);
   assert.match(html, /v1\.4\.5 · 更新日 2026-11-23/);
 });
-
