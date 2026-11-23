@@ -13,7 +13,7 @@
 <script src="dist/formula-engine.js"></script>
 <script src="./src/workbook-state.js"></script>
 <link rel="stylesheet" href="./motion/player.css">
-<link rel="stylesheet" href="./styles.css?v=1.4.3">
+<link rel="stylesheet" href="./styles.css?v=1.4.5">
 </head>
 <body>
 
@@ -86,14 +86,14 @@
                 <div class="step-num-badge">1</div>
                 <div>
                   <div class="step-text-main">入力用シートをダウンロード</div>
-                  <div class="step-text-sub">ベースシートに入力するか、サンプル製作所の例を確認します。保存したExcelを次のステップで選びます</div>
+                  <div class="step-text-sub">ベースシートをダウンロードして入力するか、サンプルZIPを展開して中のExcelを開きます。入力後、保存したExcelを次のステップで選びます</div>
                 </div>
               </div>
               <div class="step-row">
                 <div class="step-num-badge">2</div>
                 <div>
                   <div class="step-text-main">Excelを選んで入力内容を確認</div>
-                  <div class="step-text-sub">形式や未入力の注意を確認します。文字・数字の修正はExcelで行い、再読み込みします</div>
+                  <div class="step-text-sub">一部の未入力・形式違い・目標値の矛盾を確認します。文字や数字の修正はExcelで行い、再読み込みします</div>
                 </div>
               </div>
               <div class="step-row">
@@ -121,7 +121,7 @@
                 <div class="step-num-badge">6</div>
                 <div>
                   <div class="step-text-main">A4横で印刷・PDF保存</div>
-                  <div class="step-text-sub">全シートの数値を自動計算し、A4横で出力します</div>
+                  <div class="step-text-sub">数式を計算してA4横で出力します。数式エラーがある場合は一覧を表示し、PDF出力を停止します</div>
                 </div>
               </div>
             </div>
@@ -164,9 +164,45 @@
               <div class="faq-body-inner">
                 <div class="faq-body-content">
                   <ul>
-                    <li>専用の経営指針書Excelファイル（<strong>.xlsx形式</strong>）の薄い黄色セルに必要事項を入力してください。</li>
+                    <li>専用の経営指針書Excelファイル（<strong>.xlsx形式</strong>）の薄い黄色セルに必要事項を入力してください。サンプル一式（ZIP）は先に展開してください。</li>
                     <li>先頭シート「<code>00_出力設定・表紙</code>」のD列で「出力する／出力しない」を切り替えると、PDF化するページを自由に選択できます。</li>
                     <li>数式セル（合計・構成比・前年差など）は読み込み時に自動計算されるため、上書き保存直後のファイルでもそのまま正確に反映されます。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>見た目調整でできること</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  <ul>
+                    <li>「見た目を調整」から対象のセル・項目（行）・枠全体を選び、文字サイズを「小さく・標準・大きく」に調整できます。</li>
+                    <li>改行位置も調整できますが、文字や数字そのものは変更できません。内容を直す場合はExcelを修正して読み込み直してください。</li>
+                    <li>調整内容を後日も使う場合は、作業ファイルを保存してください。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-trigger" aria-expanded="false">
+              <span>数式エラーが表示され、PDFを保存できない場合</span>
+              <span class="faq-plus">+</span>
+            </button>
+            <div class="faq-body-wrap">
+              <div class="faq-body-inner">
+                <div class="faq-body-content">
+                  <ul>
+                    <li>エラー一覧に表示されたシート名とセル番地を確認してください。数式が正しく計算できない場合、安全のためPDF出力を停止します。</li>
+                    <li>Excelで該当セルや参照元の入力を確認・修正し、保存してからファイルを読み込み直してください。</li>
+                    <li>「Function ... is not implemented」と表示された場合、その関数がツール内の計算に未対応の可能性があります。Excelで結果が正しくてもエラーが続くことがあり、その場合はツール側の対応が必要です。</li>
                   </ul>
                 </div>
               </div>
@@ -218,7 +254,7 @@
                 <div class="faq-body-content">
                   <ul>
                     <li>Excel読み込み後、「表紙」ページの右上バーから<strong>自社ロゴ（PNG / JPG / SVG）</strong>を挿入でき、4パターンの配置と白プレート処理を選べます。</li>
-                    <li>「長期（10年）ビジョン」ページでは、上部バーからビジョン画像・イラストを挿入し、「右隅」「右半分」「全面背景」「全面前面」のレイアウトを切り替えられます。</li>
+                    <li>「長期（10年）ビジョン」ページでは、上部バーからビジョン画像・イラストを挿入し、「右隅」「右半分」「全面背景（文字重ね）」「全面前面（下帯付）」「全面前面（画像のみ）」の5種類からレイアウトを選べます。</li>
                   </ul>
                 </div>
               </div>
@@ -244,9 +280,9 @@
   </div>
 
   <footer class="landing-footer">
-    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.4.4 · 更新日 2026-11-23</span></span>
-    <a href="./motion/index.html">モーション演出デモ</a>
+    <span>経営指針書 自動レイアウト＆PDF出力ツール <span class="app-version">v1.4.5 · 更新日 2026-11-23</span></span>
     <span>ローカルブラウザ処理（サーバーデータ保存なし）</span>
+    <span class="footer-copyright">© 2026 DiCE JAPAN株式会社</span>
   </footer>
 </main>
 
@@ -320,3 +356,4 @@ window.configurePrintButtonVisibility();
 <script src="./motion/book.js"></script>
 </body>
 </html>
+
