@@ -79,7 +79,7 @@
           });
       });
       body
-        .querySelectorAll('.cover-motto, .panel-body, .hero-quote-text, .vision-text')
+        .querySelectorAll('.cover-motto, .panel-body, .hero-quote-text, .vision-text, .narrative-box')
         .forEach((block, index) => {
           if (block.dataset.appearanceKey) return;
           const number = boxNumbers.get(section) || 0;
