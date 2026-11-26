@@ -1,7 +1,7 @@
 (function (global) {
   function getDenseTableRowLimit(section) {
-    if (section.includes('MACRO ENVIRONMENT')) return 8;
-    if (section.includes('MICRO ENVIRONMENT')) return 12;
+    if (section.includes('MACRO ENVIRONMENT')) return 18;
+    if (section.includes('MICRO ENVIRONMENT')) return 18;
     if (section.includes('INTERNAL ANALYSIS')) return 20;
     if (section.includes('STRATEGIC ISSUES')) return 8;
     if (section.includes('ACTIONS') || section.includes('SALES PLAN')) return 12;

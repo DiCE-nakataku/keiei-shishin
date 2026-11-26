@@ -2,17 +2,16 @@
   function buildDynamicCatTable(rows, colgroupHTML, theadHTML, tableStyle = '') {
     const active = rows.filter((row) => row.hasData);
     const displayRows = active.length > 0 ? active : rows.slice(0, 4);
-    const counts = {};
-    displayRows.forEach((row) => {
-      counts[row.cat] = (counts[row.cat] || 0) + 1;
-    });
-    const rendered = {};
     let tableRows = '';
-    displayRows.forEach((row) => {
-      const first = !rendered[row.cat];
-      rendered[row.cat] = true;
+    displayRows.forEach((row, index) => {
+      const previous = displayRows[index - 1];
+      const first = !previous || previous.cat !== row.cat;
+      let span = 1;
+      if (first) {
+        while (index + span < displayRows.length && displayRows[index + span].cat === row.cat) span++;
+      }
       tableRows += `<tr>
-      ${first ? `<td rowspan="${counts[row.cat]}" class="cat-cell">${global.esc(row.cat)}</td>` : ''}
+      ${first ? `<td rowspan="${span}" class="cat-cell">${global.esc(row.cat)}</td>` : ''}
       ${row.cellsHTML}
     </tr>`;
     });

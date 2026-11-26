@@ -1573,12 +1573,12 @@ capture css  .cat-cell {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--primary);
     color: #fff;
-    font-size: 7.5pt;
+    font-size: 5.5pt;
     font-weight: 700;
     line-height: 1;
   }
@@ -1587,12 +1587,12 @@ capture css  .cat-cell {
     align-items: center;
     justify-content: center;
     color: #111827;
-    font-size: 16pt;
+    font-size: 10pt;
     font-weight: 900;
     line-height: 1;
   }
   .gantt-star-legend {
-    font-size: 18pt;
+    font-size: 9pt;
   }
   .gantt-tri {
     display: inline-flex;
@@ -1615,6 +1615,82 @@ capture css  .cat-cell {
     font-weight: 800;
     font-size: 9.5pt;
     line-height: 1;
+  }
+  .action-plan-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .action-policy {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+    color: var(--primary);
+    font-size: 7.2pt;
+  }
+  .action-policy > span {
+    flex: 0 0 auto;
+    font-weight: 700;
+  }
+  .action-policy > strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .action-plan-topbar .gantt-legend {
+    flex: 0 0 auto;
+    gap: 7px;
+    margin: 0;
+    padding: 2px 5px;
+    font-size: 6.6pt;
+  }
+  .action-plan-topbar .gantt-dot,
+  .action-plan-topbar .gantt-tri {
+    width: 8px;
+    height: 8px;
+    font-size: 5pt;
+  }
+  .action-plan-topbar .gantt-star-legend {
+    font-size: 8pt;
+  }
+  .action-week-table {
+    font-size: 6.8pt;
+    line-height: 1.12;
+  }
+  .action-week-table th,
+  .action-week-table td {
+    padding: 2px 1px;
+  }
+  .action-week-table thead th {
+    padding: 2px 0;
+    font-size: 6.6pt;
+    letter-spacing: 0;
+  }
+  .action-week-table thead th.action-week {
+    font-size: 5.8pt;
+    font-weight: 500;
+  }
+  .action-week-table thead th.action-month {
+    font-size: 7pt;
+  }
+  .action-week-table .action-month-start {
+    border-left: 1.2pt solid var(--primary) !important;
+  }
+  .action-week-table .action-week-cell {
+    padding: 1px 0 !important;
+    font-size: 6.6pt;
+  }
+  .action-week-table .action-detail {
+    padding: 3px 4px;
+    font-size: 7.4pt;
+    line-height: 1.22;
+  }
+  .action-week-table .action-owner {
+    font-size: 6.6pt;
+    line-height: 1.1;
   }
   .kpi-hero-val {
     font-family: "Inter", sans-serif;
@@ -1713,4 +1789,3 @@ capture css  .cat-cell {
     .appearance-actions .btn-print { flex: 1 1 42%; justify-content: center; }
     .input-diagnostics { margin: 10px; padding: 12px; font-size: 12px; }
   }
-

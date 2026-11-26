@@ -11,6 +11,11 @@
       const worksheet = workbook.Sheets[sheetName];
       if (!worksheet) return;
 
+      if (/^16_行動計画(?:\s*\(\d+\))?$/.test(sheetName)) {
+        global.renderActionPlanPage(worksheet, val, makePage, coverData.startYM, sheetName);
+        return;
+      }
+
       switch (sheetName) {
         case '01_表紙':
           global.setCoverPageData({ ...coverData, subTitle: val(worksheet, 'B11') });
@@ -67,9 +72,6 @@
           break;
         case '15_目標設定':
           global.renderThreeYearTargetsPage(worksheet, val, makePage);
-          break;
-        case '16_行動計画':
-          global.renderActionPlanPage(worksheet, val, makePage, coverData.startYM);
           break;
         case '17_売上計画':
           global.renderSalesPlanPage(worksheet, val, makePage);

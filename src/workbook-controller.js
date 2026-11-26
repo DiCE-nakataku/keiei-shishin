@@ -49,9 +49,29 @@
     global.document.title = `${safeTerm}_${safeCompany}_経営指針書`;
 
     const selected = [];
-    for (let r = 5; r <= 21; r++) {
-      if (val(ws0, 'B' + r).trim() && val(ws0, 'D' + r).trim() === '出力する') {
-        selected.push(val(ws0, 'B' + r).trim());
+    const configuredSheets = new Set();
+    const settingsRange = ws0['!ref'] && global.XLSX?.utils?.decode_range
+      ? global.XLSX.utils.decode_range(ws0['!ref'])
+      : null;
+    const lastSettingsRow = Math.max(21, settingsRange ? settingsRange.e.r + 1 : 21);
+    for (let r = 5; r <= lastSettingsRow; r++) {
+      const sheetName = val(ws0, 'B' + r).trim();
+      if (!sheetName || !wb.Sheets[sheetName]) continue;
+      configuredSheets.add(sheetName);
+      if (val(ws0, 'D' + r).trim() === '出力する') selected.push(sheetName);
+    }
+
+    // A continuation action-plan tab may be added without a matching row in
+    // the cover's output list. Include it beside the original unless the user
+    // explicitly added it to the list and turned output off.
+    if (selected.includes('16_行動計画')) {
+      const continuations = (wb.SheetNames || Object.keys(wb.Sheets))
+        .filter((name) => /^16_行動計画\s*\(\d+\)$/.test(name))
+        .sort((a, b) => Number(a.match(/\((\d+)\)$/)[1]) - Number(b.match(/\((\d+)\)$/)[1]));
+      let insertAt = selected.indexOf('16_行動計画') + 1;
+      for (const sheetName of continuations) {
+        if (configuredSheets.has(sheetName)) continue;
+        selected.splice(insertAt++, 0, sheetName);
       }
     }
 

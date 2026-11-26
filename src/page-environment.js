@@ -2,18 +2,18 @@
   const pageDefinitions = {
     macro: {
       startRow: 5,
-      endRow: 14,
+      endRow: 22,
       section: '04 / MACRO ENVIRONMENT',
       title: '外部環境の分析（マクロ環境）',
-      widths: [14, 19, 53, 14],
+      widths: [12, 16, 58, 14],
       forecast: '3年後の予測（世の中の動向）',
     },
     micro: {
       startRow: 5,
-      endRow: 19,
+      endRow: 22,
       section: '05 / MICRO ENVIRONMENT',
       title: '外部環境の分析（ミクロ環境）',
-      widths: [15, 19, 52, 14],
+      widths: [12, 16, 58, 14],
       forecast: '3年後の予測（業界・顧客・競合）',
     },
   };

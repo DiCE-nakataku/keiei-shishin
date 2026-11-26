@@ -164,7 +164,7 @@ test('landing page keeps the template and full sample bundle downloads', () => {
 });
 
 test('external stylesheet keeps screen and print page layout rules', () => {
-  assert.match(html, /<link rel="stylesheet" href="\.\/styles\.css\?v=1\.4\.1">/);
+  assert.match(html, /<link rel="stylesheet" href="\.\/styles\.css\?v=1\.4\.7">/);
   assert.doesNotMatch(html, /<style>/);
   assert.match(stylesheet, /@page\s*\{[^}]*size:\s*A4\s+landscape/is);
   assert.match(stylesheet, /@media print/);
@@ -499,10 +499,11 @@ test('sample workbook still recalculates all formulas without errors', () => {
     return counts;
   }, {});
 
-  assert.equal(workbook.SheetNames.length, 18);
-  assert.equal(results.length, 356);
+  assert.equal(workbook.SheetNames.length, 19);
+  assert.ok(workbook.SheetNames.includes('16_行動計画 (2)'));
+  assert.equal(results.length, 374);
   assert.equal(errors.length, 0);
-  assert.deepEqual(statuses, { ok: 315, 'intentional-blank': 41 });
+  assert.deepEqual(statuses, { ok: 333, 'intentional-blank': 41 });
 });
 
 test('a workbook formula error is identified and blocks PDF eligibility', () => {
@@ -759,15 +760,15 @@ test('three-year target narratives keep their page split and typography rules', 
 });
 
 test('dense-table pagination preserves grouped rows and section limits', () => {
-  assert.match(html, /<script src="\.\/src\/table-pagination\.js"><\/script>/);
-  assert.match(html, /<script src="\.\/src\/workbook-pages\.js"><\/script>/);
+  assert.match(html, /<script src="\.\/src\/table-pagination\.js\?v=1\.0\.1"><\/script>/);
+  assert.match(html, /<script src="\.\/src\/workbook-pages\.js\?v=1\.0\.1"><\/script>/);
   const source = fs.readFileSync(path.join(root, 'src/table-pagination.js'), 'utf8');
   const context = { Math };
   context.window = context;
   vm.runInNewContext(source, context);
 
-  assert.equal(context.getDenseTableRowLimit('MACRO ENVIRONMENT'), 8);
-  assert.equal(context.getDenseTableRowLimit('MICRO ENVIRONMENT'), 12);
+  assert.equal(context.getDenseTableRowLimit('MACRO ENVIRONMENT'), 18);
+  assert.equal(context.getDenseTableRowLimit('MICRO ENVIRONMENT'), 18);
   assert.equal(context.getDenseTableRowLimit('STRATEGIC ISSUES'), 8);
   assert.equal(context.getDenseTableRowLimit('SALES PLAN'), 12);
   assert.equal(context.getDenseTableRowLimit('OTHER'), 20);
@@ -1091,15 +1092,15 @@ test('philosophy and vision planning pages preserve their content variants', () 
   assert.match(pageCalls[0][2], /内容/);
 });
 
-test('macro and micro environment pages keep their different ranges and labels', () => {
-  assert.match(html, /<script src="\.\/src\/page-environment\.js"><\/script>/);
+test('macro and micro environment pages render 18 rows and keep their labels', () => {
+  assert.match(html, /<script src="\.\/src\/page-environment\.js\?v=1\.0\.1"><\/script>/);
   const context = {};
   context.window = context;
   for (const name of ['cell-formatting.js', 'dynamic-layout.js', 'page-environment.js']) {
     vm.runInNewContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), context);
   }
   const worksheet = {};
-  for (let row = 5; row <= 19; row++) {
+  for (let row = 5; row <= 22; row++) {
     worksheet[`A${row}`] = '【政治】';
     worksheet[`B${row}`] = '●項目';
     worksheet[`C${row}`] = '予測 & 傾向';
@@ -1112,10 +1113,12 @@ test('macro and micro environment pages keep their different ranges and labels',
   context.renderExternalEnvironmentPage(worksheet, val, makePage, 'micro');
   assert.equal(pages[0][0], '04 / MACRO ENVIRONMENT');
   assert.equal(pages[1][0], '05 / MICRO ENVIRONMENT');
-  assert.match(pages[0][2], /rowspan="10"/);
-  assert.match(pages[1][2], /rowspan="15"/);
-  assert.match(pages[0][2], /width:14%/);
-  assert.match(pages[1][2], /width:15%/);
+  assert.match(pages[0][2], /rowspan="18"/);
+  assert.match(pages[1][2], /rowspan="18"/);
+  assert.match(pages[0][2], /width:12%/);
+  assert.match(pages[1][2], /width:12%/);
+  assert.match(pages[0][2], /width:58%/);
+  assert.match(pages[1][2], /width:58%/);
   assert.match(pages[0][2], /世の中の動向/);
   assert.match(pages[1][2], /業界・顧客・競合/);
   assert.match(pages[0][2], /予測 &amp; 傾向/);
@@ -1285,9 +1288,22 @@ test('financial pages preserve active columns, summaries, and memo layout', () =
 });
 
 test('targets, action plan, and sales pages preserve workbook-driven layouts', () => {
-  assert.match(html, /<script src="\.\/src\/page-planning\.js\?v=1\.4\.1"><\/script>/);
+  assert.match(html, /<script src="\.\/src\/page-planning\.js\?v=1\.4\.6"><\/script>/);
   const context = {
-    XLSX: { utils: { encode_col: (index) => String.fromCharCode(65 + index) } },
+    XLSX: {
+      utils: {
+        encode_col: (index) => {
+          let value = index + 1;
+          let column = '';
+          while (value) {
+            value--;
+            column = String.fromCharCode(65 + (value % 26)) + column;
+            value = Math.floor(value / 26);
+          }
+          return column;
+        },
+      },
+    },
   };
   context.window = context;
   for (const name of ['cell-formatting.js', 'targets.js', 'page-planning.js']) {
@@ -1326,25 +1342,34 @@ test('targets, action plan, and sales pages preserve workbook-driven layouts', (
 
   pages.length = 0;
   const actionPlan = {
-    F5: '(　月)',
-    G5: '(特別)',
-    B6: '資金繰り改善',
-    C6: '毎週確認',
-    D6: '田中',
-    E6: '佐藤',
-    F6: '★完了',
+    E5: '4月',
+    F3: '原価管理の徹底とキャッシュ創出力の強化',
+    B7: '資金繰り改善',
+    C7: '田中',
+    D7: '佐藤',
+    E7: '★完了',
   };
   context.renderActionPlanPage(actionPlan, val, makePage, '2026年4月');
   assert.equal(pages[0][0], '14 / ACTION PLAN');
-  assert.match(pages[0][2], /4月[\s\S]*特別[\s\S]*6月/);
+  assert.match(pages[0][2], /4月[\s\S]*5月[\s\S]*6月/);
   assert.match(pages[0][2], /gantt-star/);
   assert.match(pages[0][2], /資金繰り改善/);
+  assert.match(pages[0][2], /重点経営方針[\s\S]*原価管理の徹底/);
+  assert.match(pages[0][2], /colspan="24">前期/);
+  assert.match(pages[0][2], /colspan="12">後期/);
+  assert.equal((pages[0][2].match(/action-week-cell/g) || []).length, 36);
+  assert.match(pages[0][2], /action-week-table/);
+  assert.doesNotMatch(pages[0][2], /年間目標/);
   assert.match(pages[0][2], /責任者/);
   pages.length = 0;
+  context.renderActionPlanPage(actionPlan, val, makePage, '2026年4月', '16_行動計画 (2)');
+  assert.equal(pages[0][1], '１ヵ年 行動計画（週次・続き）');
+  pages.length = 0;
   context.renderActionPlanPage({}, val, makePage, '');
-  assert.equal((pages[0][2].match(/<tr>/g) || []).length, 7);
-  assert.match(pages[0][2], /font-size:8\.6pt/);
+  assert.equal((pages[0][2].match(/<tr>/g) || []).length, 8);
+  assert.match(pages[0][2], /action-week-cell/);
   assert.match(pages[0][2], /1月/);
+  assert.match(pages[0][2], /4W/);
 
   pages.length = 0;
   const sales = {
@@ -1513,7 +1538,13 @@ test('workbook page router dispatches every selected sheet and preserves orderin
   }
   const context = { window: global };
   vm.runInNewContext(workbookPagesModuleSource, context);
-  const sheetNames = ['01_表紙', ...Object.keys(rendererMap), '05_長期ビジョン', '欠落シート'];
+  const sheetNames = [
+    '01_表紙',
+    ...Object.keys(rendererMap),
+    '16_行動計画 (2)',
+    '05_長期ビジョン',
+    '欠落シート',
+  ];
   const workbook = {
     Sheets: Object.fromEntries(sheetNames.slice(0, -1).map((name) => [name, {}])),
   };
@@ -1548,12 +1579,16 @@ test('workbook page router dispatches every selected sheet and preserves orderin
     calls.filter((call) => call[0] === 'renderExternalEnvironmentPage').map((call) => call[4]),
     ['macro', 'micro'],
   );
-  assert.deepEqual(calls.find((call) => call[0] === 'renderActionPlanPage').slice(1, 4), [
+  const actionPlanCalls = calls.filter((call) => call[0] === 'renderActionPlanPage');
+  assert.equal(actionPlanCalls.length, 2);
+  assert.deepEqual(actionPlanCalls[0].slice(1, 4), [
     workbook.Sheets['16_行動計画'],
     val,
     makePage,
   ]);
-  assert.equal(calls.find((call) => call[0] === 'renderActionPlanPage')[4], '2026年4月');
+  assert.equal(actionPlanCalls[0][4], '2026年4月');
+  assert.equal(actionPlanCalls[1][1], workbook.Sheets['16_行動計画 (2)']);
+  assert.equal(actionPlanCalls[1][5], '16_行動計画 (2)');
   const visionData = calls.find((call) => call[0] === 'vision-data')[1];
   assert.deepEqual(JSON.parse(JSON.stringify(visionData)), {
     mainVis: '10年後',
@@ -1576,8 +1611,13 @@ test('workbook controller validates formulas, selects sheets, and finalizes page
   const workbook = {
     Sheets: {
       '00_出力設定・表紙': {
+        '!ref': 'A1:D22',
         B5: '01_表紙',
         D5: '出力する',
+        B21: '16_行動計画',
+        D21: '出力する',
+        B22: '16_行動計画 (2)',
+        D22: '出力する',
         B24: '会社/商事',
         B25: '代表',
         B26: '第7期',
@@ -1586,14 +1626,21 @@ test('workbook controller validates formulas, selects sheets, and finalizes page
         B29: '2026年4月1日',
       },
       '01_表紙': { B11: '未来へ' },
+      '16_行動計画': {},
+      '16_行動計画 (2)': {},
     },
+    SheetNames: ['00_出力設定・表紙', '01_表紙', '16_行動計画', '16_行動計画 (2)'],
   };
   const context = {
     FormulaEngine: {
       createCalculationAdapter: () => ({ calculateAll: () => calls.push('calculated') }),
       validateWorkbook: () => [{ status: 'ok' }],
     },
-    XLSX: {},
+    XLSX: {
+      utils: {
+        decode_range: () => ({ e: { r: 21 } }),
+      },
+    },
     document: {
       title: '',
       body: { classList: { add: (name) => bodyClasses.add(name) } },
@@ -1635,12 +1682,17 @@ test('workbook controller validates formulas, selects sheets, and finalizes page
   assert.equal(context.document.title, '第7期_会社_商事_経営指針書');
   assert.equal(bodyClasses.has('has-pages'), true);
   assert.equal(nodes.get('statusText').textContent, '確認OK：全 5 ページ出力対象');
+  assert.equal(calls.find((call) => Array.isArray(call) && call[0] === 'page-factory')[1].total, 3);
   assert.deepEqual(
     calls.filter((call) => typeof call === 'string'),
     ['calculated', 'fit', 'controls'],
   );
   const renderArgs = calls.find((call) => Array.isArray(call) && call[0] === 'render-pages')[1];
-  assert.deepEqual(JSON.parse(JSON.stringify(renderArgs.selected)), ['01_表紙']);
+  assert.deepEqual(JSON.parse(JSON.stringify(renderArgs.selected)), [
+    '01_表紙',
+    '16_行動計画',
+    '16_行動計画 (2)',
+  ]);
   assert.deepEqual(JSON.parse(JSON.stringify(renderArgs.coverData)), {
     company: '会社/商事',
     rep: '代表',
@@ -1653,6 +1705,20 @@ test('workbook controller validates formulas, selects sheets, and finalizes page
     calls.some((call) => Array.isArray(call) && call[0] === 'alert'),
     false,
   );
+
+  const settings = workbook.Sheets['00_出力設定・表紙'];
+  delete settings.B22;
+  delete settings.D22;
+  settings['!ref'] = 'A1:D21';
+  context.renderBook(workbook);
+  const latestRenderArgs = calls.filter(
+    (call) => Array.isArray(call) && call[0] === 'render-pages',
+  ).at(-1)[1];
+  assert.deepEqual(JSON.parse(JSON.stringify(latestRenderArgs.selected)), [
+    '01_表紙',
+    '16_行動計画',
+    '16_行動計画 (2)',
+  ]);
 });
 test('workbook input validation reports missing fields, invalid dates, and inconsistent targets', () => {
   const context = { document: {} };
@@ -1800,8 +1866,10 @@ test('action plan legend and versioned assets use the revised PDCA symbols', () 
   assert.match(planning, /△<\/span> 評価（C）/);
   assert.match(planning, /gantt-star gantt-star-legend">★<\/span> 改善（A）/);
   assert.match(fs.readFileSync(path.join(root, 'src/cell-formatting.js'), 'utf8'), /text\.startsWith\('⭐'\).*text\.startsWith\('★'\)/s);
-  assert.match(html, /page-planning\.js\?v=1\.4\.3/);
+  assert.match(html, /page-planning\.js\?v=1\.4\.6/);
   assert.match(html, /appearance-adjustments\.js\?v=1\.5\.0/);
-  assert.match(html, /styles\.css\?v=1\.4\.5/);
+  assert.match(html, /styles\.css\?v=1\.4\.7/);
+  assert.match(stylesheet, /\.gantt-dot\s*\{[^}]*width:\s*10px[^}]*font-size:\s*5\.5pt/s);
+  assert.match(stylesheet, /\.gantt-star\s*\{[^}]*font-size:\s*10pt/s);
   assert.match(html, /v1\.5\.0 · 更新日 2026-11-23/);
 });
