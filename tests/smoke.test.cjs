@@ -1872,5 +1872,5 @@ test('action plan legend and versioned assets use the revised PDCA symbols', () 
   assert.match(html, /styles\.css\?v=1\.4\.7/);
   assert.match(stylesheet, /\.gantt-dot\s*\{[^}]*width:\s*10px[^}]*font-size:\s*5\.5pt/s);
   assert.match(stylesheet, /\.gantt-star\s*\{[^}]*font-size:\s*10pt/s);
-  assert.match(html, /v1\.5\.0 · 更新日 2026-11-23/);
+  assert.match(html, /v1\.5\.1 · 更新日 2026-11-27/);
 });
