@@ -1468,6 +1468,28 @@
   table.exec.fill-height {
     height: 100%;
   }
+  table.exec.target-table {
+    font-size: 8pt;
+    line-height: 1.25;
+  }
+  table.exec.target-table th,
+  table.exec.target-table td {
+    padding: 3px 5px;
+  }
+  .target-section td {
+    background: var(--primary-tint) !important;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 8.2pt;
+  }
+  .target-entry td {
+    height: 42px;
+  }
+  .target-empty td {
+    color: var(--ink-sub);
+    text-align: center;
+    height: 48px;
+  }
   table.exec th, table.exec td {
     border: 0.5pt solid var(--line);
     padding: 5px 8px;

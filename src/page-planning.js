@@ -2,13 +2,13 @@
   function renderThreeYearTargetsPage(worksheet, val, makePage) {
     const activeColumns = ['B', 'C', 'D'].filter((column) => {
       const standard = [5, 6, 7, 8].some((row) => val(worksheet, column + row).trim() !== '');
-      const flexible = [9, 10, 11, 12].some(
+      const flexible = Array.from({ length: 20 }, (_, index) => index + 8).some(
         (row) => val(worksheet, 'A' + row).trim() || val(worksheet, column + row).trim(),
       );
       return standard || flexible;
     });
     const columns = activeColumns.length ? activeColumns : ['B', 'C', 'D'];
-    const labelWidth = 19;
+    const labelWidth = 16;
     const dataWidth = ((100 - labelWidth) / columns.length).toFixed(2);
     const colgroup =
       '<colgroup><col style="width:' +
@@ -16,94 +16,122 @@
       '%;">' +
       columns.map(() => '<col style="width:' + dataWidth + '%;">').join('') +
       '</colgroup>';
-    const flexibleRows = [9, 10, 11, 12].filter((row) => {
-      const label = val(worksheet, 'A' + row).trim();
-      const values = ['B', 'C', 'D'].map((column) => val(worksheet, column + row).trim());
-      const defaultLabel = /^自由目標\s*\d+$/.test(label);
-      return values.some(Boolean) || (label && !defaultLabel && values.some(Boolean));
-    });
-    const narratives = columns.map((column) =>
-      global.splitTargetNarrative(val(worksheet, column + '8').trim()),
-    );
-    const pageCount = Math.max(1, ...narratives.map((parts) => parts.length));
-
-    for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
-      const firstPage = pageIndex === 0;
-      let kpis = '';
-      if (firstPage) {
-        for (const item of [
-          { row: 5, label: '目標 売上高', unit: '千円' },
-          { row: 6, label: '目標 経常利益', unit: '千円' },
-          { row: 7, label: '目標 社員数', unit: '名' },
-        ]) {
-          kpis +=
-            '<tr style="height:9%;"><td class="cat-cell">' +
-            item.label +
-            '</td>' +
-            columns
-              .map(
-                (column) =>
-                  '<td class="num"><span class="kpi-hero-val">' +
-                  global.fmtNum(val(worksheet, column + item.row)) +
-                  '</span><span class="kpi-unit">' +
-                  item.unit +
-                  '</span></td>',
-              )
-              .join('') +
-            '</tr>';
+    const typeFor = (value) => {
+      const normalized = value.replace(/[【】\s]/g, '');
+      if (normalized.includes('定性目標')) return 'qualitative';
+      if (normalized.includes('定量目標')) return 'quantitative';
+      return '';
+    };
+    const goals = [];
+    for (let row = 8; row <= 27; row++) {
+      const rawLabel = val(worksheet, 'A' + row).trim();
+      const type = typeFor(rawLabel) || (rawLabel ? 'quantitative' : '');
+      const values = columns.map((column) => val(worksheet, column + row).trim());
+      if (type && values.some(Boolean)) {
+        const chunks = values.map((value) => global.splitTargetNarrative(value));
+        const chunkCount = Math.max(1, ...chunks.map((parts) => parts.length));
+        for (let chunk = 0; chunk < chunkCount; chunk++) {
+          goals.push({
+            type,
+            label: typeFor(rawLabel) ? '' : rawLabel,
+            continuation: chunk > 0,
+            values: chunks.map((parts) => parts[chunk] || ''),
+          });
         }
-        kpis += flexibleRows
-          .map(
-            (row, index) =>
-              '<tr style="height:5.5%;"><td class="cat-cell">' +
-              global.fmtCell(val(worksheet, 'A' + row) || '自由目標' + (index + 1)) +
-              '<br><span style="font-size:7pt;font-weight:400;">定量目標のみ</span></td>' +
-              columns
-                .map(
-                  (column) =>
-                    '<td class="num">' + global.fmtCell(val(worksheet, column + row)) + '</td>',
-                )
-                .join('') +
-              '</tr>',
-          )
-          .join('');
       }
-      const label = firstPage ? '定性目標' : '定性目標（続き）';
-      const narrativeHeight = firstPage ? 100 - 27 - flexibleRows.length * 5.5 : 100;
-      const narrativeDescription = firstPage
-        ? '<br><span style="font-size:7.5pt;font-weight:400;color:var(--ink-sub);">（目指す組織・事業状態）</span>'
-        : '';
-      const narrativeCells = columns
-        .map((column, index) => {
-          const text = narratives[index][pageIndex] || '';
-          return (
-            '<td class="target-narrative" style="' +
-            global.targetNarrativeStyle(text) +
-            '">' +
-            global.fmtCell(text) +
-            '</td>'
-          );
-        })
-        .join('');
-      const headers = columns
-        .map((column) => '<th>' + global.esc(val(worksheet, column + '4')) + '</th>')
-        .join('');
+    }
+    if (!goals.length) {
+      const legacy = columns.map((column) => val(worksheet, column + '8').trim());
+      if (legacy.some(Boolean)) goals.push({ type: 'qualitative', values: legacy });
+    }
+    const qualitative = goals.filter((goal) => goal.type === 'qualitative');
+    const quantitative = goals.filter((goal) => goal.type === 'quantitative');
+    const headers = columns
+      .map((column) => '<th>' + global.esc(val(worksheet, column + '4')) + '</th>')
+      .join('');
+    const fixedKpis = [
+      { row: 5, label: '【定量目標】売上高（千円）', unit: '千円' },
+      { row: 6, label: '【定量目標】経常利益（千円）', unit: '千円' },
+      { row: 7, label: '【定量目標】社員数（人）', unit: '人' },
+    ]
+      .map(
+        (item) =>
+          '<tr class="target-kpi"><td class="cat-cell">' +
+          item.label +
+          '</td>' +
+          columns
+            .map(
+              (column) =>
+                '<td class="num"><span class="kpi-hero-val">' +
+                global.fmtNum(val(worksheet, column + item.row)) +
+                '</span><span class="kpi-unit">' +
+                item.unit +
+                '</span></td>',
+            )
+            .join('') +
+          '</tr>',
+      )
+      .join('');
+    const pageSize = 4;
+    const pageCount = Math.max(
+      1,
+      Math.ceil(qualitative.length / pageSize),
+      Math.ceil(quantitative.length / pageSize),
+    );
+    const renderGroup = (label, rows, pageIndex) => {
+      const pageRows = rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+      const sectionLabel = pageIndex === 0 ? label : label + '（続き）';
+      return (
+        '<tr class="target-section"><td colspan="' +
+        (columns.length + 1) +
+        '">' +
+        sectionLabel +
+        '</td></tr>' +
+        (pageRows.length
+          ? pageRows
+              .map(
+                (goal, index) =>
+                  '<tr class="target-entry"><td class="cat-cell">' +
+                  (goal.label
+                    ? global.fmtCell(goal.label)
+                    : '目標 ' + (pageIndex * pageSize + index + 1)) +
+                  (goal.continuation ? '（続き）' : '') +
+                  '</td>' +
+                  goal.values
+                    .map(
+                      (value) =>
+                        '<td class="target-narrative" style="' +
+                        global.targetNarrativeStyle(value) +
+                        '">' +
+                        global.fmtCell(value) +
+                        '</td>',
+                    )
+                    .join('') +
+                  '</tr>',
+              )
+              .join('')
+          : rows.length
+            ? ''
+            : '<tr class="target-empty"><td colspan="' +
+              (columns.length + 1) +
+              '">目標は未入力です。</td></tr>')
+      );
+    };
+    for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
       const html =
-        '<table class="exec fill-height">' +
+        '<table class="exec fill-height target-table">' +
         colgroup +
-        '<thead><tr><th>目標区分</th>' +
+        '<thead><tr><th>目標</th>' +
         headers +
         '</tr></thead><tbody>' +
-        kpis +
-        '<tr style="height:' +
-        narrativeHeight +
-        '%;"><td class="cat-cell">' +
-        label +
-        narrativeDescription +
-        '</td>' +
-        narrativeCells +
-        '</tr></tbody></table>';
-      const title = firstPage ? '3ヵ年 目標設定シート' : '3ヵ年 目標設定シート（続き）';
+        (pageIndex === 0 ? fixedKpis : '') +
+        renderGroup('定量目標', quantitative, pageIndex) +
+        renderGroup('定性目標', qualitative, pageIndex) +
+        '</tbody></table>';
+      const title =
+        pageIndex === 0
+          ? '3ヵ年 目標設定シート'
+          : '3ヵ年 目標設定シート（続き）';
       makePage('13 / 3-YEAR TARGETS', title, html);
     }
   }

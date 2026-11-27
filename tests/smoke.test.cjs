@@ -1313,28 +1313,29 @@ test('targets, action plan, and sales pages preserve workbook-driven layouts', (
   const pages = [];
   const makePage = (...args) => pages.push(args);
 
-  const targetText = '長文'.repeat(550);
+  const targetText = '長文'.repeat(80);
   const targets = {
     B4: '第3年',
     B5: '52400',
     B6: '6000',
     B7: '12',
+    A8: '定性目標',
     B8: targetText,
-    A9: '利益率',
-    B9: '70%',
-    A10: '自由目標2',
+    A9: '定量目標',
+    B9: '利益率 70%',
+    A10: '定性目標',
+    B10: '組織の自律運営',
   };
   context.renderThreeYearTargetsPage(targets, val, makePage);
-  assert.equal(pages.length, 2);
+  assert.equal(pages.length, 1);
   assert.equal(pages[0][0], '13 / 3-YEAR TARGETS');
   assert.equal(pages[0][1], '3ヵ年 目標設定シート');
-  assert.equal(pages[1][1], '3ヵ年 目標設定シート（続き）');
-  assert.match(pages[0][2], /目標 売上高/);
-  assert.match(pages[0][2], /利益率/);
-  assert.match(pages[0][2], /定量目標のみ/);
-  assert.doesNotMatch(pages[0][2], /自由目標2/);
-  assert.doesNotMatch(pages[1][2], /目標 売上高|定量目標のみ/);
-  assert.match(pages[1][2], /定性目標（続き）/);
+  assert.match(pages[0][2], /【定量目標】売上高（千円）/);
+  assert.match(pages[0][2], /利益率 70%/);
+  assert.match(pages[0][2], /組織の自律運営/);
+  assert.ok(pages[0][2].indexOf('定量目標</td>') < pages[0][2].indexOf('利益率 70%'));
+  assert.ok(pages[0][2].indexOf('利益率 70%') < pages[0][2].indexOf('定性目標'));
+  assert.ok(pages[0][2].indexOf('定性目標') < pages[0][2].indexOf('組織の自律運営'));
   pages.length = 0;
   context.renderThreeYearTargetsPage({ B4: '1年', C4: '2年', D4: '3年' }, val, makePage);
   assert.equal(pages.length, 1);
