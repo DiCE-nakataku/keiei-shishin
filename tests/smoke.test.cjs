@@ -1408,19 +1408,22 @@ test('cover and vision image controls and presenter mode remain available', () =
   assert.match(html, /src="\.\/motion\/player\.js(?:\?[^\"]*)?"/);
 });
 
-test('16:9 presentation offers three readable sizes and splits dense tables without dropping grouped labels', () => {
+test('16:9 presentation keeps the source page count and fits each page to the selected size', () => {
   assert.match(motionPlayerSource, /class="ms-font-size"[^>]*hidden/);
   assert.match(motionPlayerSource, /文字サイズ：小[\s\S]*文字サイズ：標準[\s\S]*文字サイズ：大/);
-  assert.match(motionPlayerSource, /rowLimitBySize = \{ small: 6, standard: 5, large: 4 \}/);
-  assert.match(motionPlayerSource, /function splitRows\(rows, maxRows\)/);
-  assert.match(motionPlayerSource, /categoryCell\.rowSpan = overlapEnd - overlapStart/);
-  assert.match(motionPlayerSource, /localRow\.insertBefore\(categoryCell, localRow\.cells\[0\]\)/);
-  assert.match(motionPlayerStyles, /data-ms-font-size="small"[^\n]*font-size: 28pt/);
-  assert.match(motionPlayerStyles, /data-ms-font-size="standard"[^\n]*font-size: 30pt/);
-  assert.match(motionPlayerStyles, /data-ms-font-size="large"[^\n]*font-size: 32pt/);
-  assert.match(motionPlayerStyles, /font-size: 18pt !important/);
-  assert.match(motionPlayerStyles, /font-size: 19pt !important/);
-  assert.match(motionPlayerStyles, /font-size: 20pt !important/);
+  assert.match(motionPlayerSource, /return sourceSlides\.map\(/);
+  assert.match(motionPlayerSource, /function removeBlankPresentationRows\(page\)/);
+  assert.match(motionPlayerSource, /function fitPageContent\(page\)/);
+  assert.match(motionPlayerSource, /element\.scrollHeight <= element\.clientHeight \+ 2/);
+  assert.match(motionPlayerSource, /--ms-text-scale/);
+  assert.match(motionPlayerSource, /page\.dataset\.msOverflow = 'true'/);
+  assert.doesNotMatch(motionPlayerSource, /rowLimitBySize|function splitRows/);
+  assert.match(motionPlayerStyles, /font-size: calc\(28pt \* var\(--ms-text-scale\)\)/);
+  assert.match(motionPlayerStyles, /font-size: calc\(30pt \* var\(--ms-text-scale\)\)/);
+  assert.match(motionPlayerStyles, /font-size: calc\(32pt \* var\(--ms-text-scale\)\)/);
+  assert.match(motionPlayerStyles, /font-size: calc\(18pt \* var\(--ms-text-scale\)\)/);
+  assert.match(motionPlayerStyles, /font-size: calc\(19pt \* var\(--ms-text-scale\)\)/);
+  assert.match(motionPlayerStyles, /font-size: calc\(20pt \* var\(--ms-text-scale\)\)/);
 });
 
 test('cover and vision renderers preserve logo and image layout variants', () => {
@@ -1889,5 +1892,5 @@ test('action plan legend and versioned assets use the revised PDCA symbols', () 
   assert.match(html, /styles\.css\?v=1\.4\.7/);
   assert.match(stylesheet, /\.gantt-dot\s*\{[^}]*width:\s*10px[^}]*font-size:\s*5\.5pt/s);
   assert.match(stylesheet, /\.gantt-star\s*\{[^}]*font-size:\s*10pt/s);
-  assert.match(html, /v1\.6\.0 · 更新日 2026-11-28/);
+  assert.match(html, /v1\.6\.1 · 更新日 2026-11-28/);
 });

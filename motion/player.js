@@ -81,7 +81,7 @@
       <nav class="ms-chrome" aria-label="発表ページの操作">
         <button type="button" class="ms-prev" aria-label="戻る">←</button>
         <p class="ms-caption" role="status" aria-live="polite" aria-atomic="true">
-          <span class="ms-page-number"></span><span class="ms-step"></span>
+          <span class="ms-page-number"></span><span class="ms-fit-status"></span><span class="ms-step"></span>
         </p>
         <button type="button" class="ms-next" aria-label="進む">→</button>
       </nav>`;
@@ -106,6 +106,7 @@
     const prevButton = find('.ms-prev');
     const nextButton = find('.ms-next');
     const pageNumber = find('.ms-page-number');
+    const fitStatus = find('.ms-fit-status');
     const stepNumber = find('.ms-step');
     const fullscreenTarget = host instanceof HTMLDialogElement ? document.documentElement : root;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -120,79 +121,31 @@
 
     const sourceSlides = slides;
     const a4Width = slides[0].element.offsetWidth;
-    const rowLimitBySize = { small: 6, standard: 5, large: 4 };
 
-    function splitRows(rows, maxRows) {
-      const groups = [];
-      for (let index = 0; index < rows.length;) {
-        const cell = rows[index].cells[0];
-        const span = cell?.classList.contains('cat-cell') ? Math.max(1, cell.rowSpan || 1) : 1;
-        groups.push({ start: index, end: Math.min(rows.length, index + span), cell });
-        index += span;
+    function removeBlankPresentationRows(page) {
+      for (const body of page.querySelectorAll('table.exec tbody')) {
+        const rows = [...body.rows];
+        rows.forEach((row, index) => {
+          if (row.textContent.trim() || row.querySelector('img, svg, canvas')) return;
+          if ([...row.cells].some((cell) => cell.rowSpan > 1)) return;
+          const coveredByEarlierRow = rows.slice(0, index).some((prior, priorIndex) =>
+            [...prior.cells].some((cell) => cell.rowSpan > index - priorIndex),
+          );
+          if (!coveredByEarlierRow) row.remove();
+        });
       }
-
-      const chunks = [];
-      for (let start = 0; start < rows.length; start += maxRows) {
-        const end = Math.min(rows.length, start + maxRows);
-        const chunk = rows.slice(start, end).map((row) => row.cloneNode(true));
-        for (const group of groups) {
-          const overlapStart = Math.max(start, group.start);
-          const overlapEnd = Math.min(end, group.end);
-          if (overlapStart >= overlapEnd || !group.cell) continue;
-          const localRow = chunk[overlapStart - start];
-          if (overlapStart === group.start) {
-            localRow.cells[0].rowSpan = overlapEnd - overlapStart;
-          } else {
-            const categoryCell = group.cell.cloneNode(true);
-            categoryCell.rowSpan = overlapEnd - overlapStart;
-            localRow.insertBefore(categoryCell, localRow.cells[0]);
-          }
-        }
-        chunks.push(chunk);
-      }
-      return chunks;
     }
 
     function buildDeck(isWide, size) {
-      const deck = [];
-      for (const [sourceIndex, source] of sourceSlides.entries()) {
+      return sourceSlides.map((source, sourceIndex) => {
         const page = source.element.cloneNode(true);
         page.style.width = `${isWide ? (height * 16) / 9 : a4Width}px`;
-        if (isWide) page.dataset.msFontSize = size;
-        else delete page.dataset.msFontSize;
-
-        const table = page.querySelector('.page-body > table.exec');
-        const rows = [...(table?.tBodies[0]?.rows || [])];
-        const maxRows = isWide ? rowLimitBySize[size] : rows.length;
-        const chunks = rows.length > maxRows ? splitRows(rows, maxRows) : [rows];
-
-        chunks.forEach((chunk, partIndex) => {
-          const part = partIndex === 0 ? page : page.cloneNode(true);
-          const partTable = part.querySelector('.page-body > table.exec');
-          if (partTable && rows.length) {
-            partTable.tBodies[0].replaceChildren(...chunk.map((row) => row.cloneNode(true)));
-          }
-          if (partIndex > 0) {
-            part.querySelector('h2')?.append(document.createTextNode('（続き）'));
-            part.querySelector('.sec-tag')?.append(document.createTextNode(' / CONT.'));
-          }
-          deck.push({
-            ...source,
-            element: part,
-            title: `${source.title}${partIndex > 0 ? '（続き）' : ''}`,
-            sourceIndex,
-            partIndex,
-          });
-        });
-      }
-
-      deck.forEach(({ element }, index) => {
-        const number = element.querySelector('.page-num');
-        if (number) {
-          number.textContent = `${String(index + 1).padStart(2, '0')} / ${String(deck.length).padStart(2, '0')}`;
-        }
+        if (isWide) {
+          page.dataset.msFontSize = size;
+          removeBlankPresentationRows(page);
+        } else delete page.dataset.msFontSize;
+        return { ...source, element: page, sourceIndex, partIndex: 0 };
       });
-      return deck;
     }
 
     function refreshDeck() {
@@ -250,6 +203,35 @@
       frame.style.width = `${width * scale}px`;
       frame.style.height = `${height * scale}px`;
       canvas.style.transform = `scale(${scale})`;
+    }
+
+    function pageFits(page) {
+      const elements = [
+        page,
+        ...page.querySelectorAll('.page-header, .page-body, .page-footer, td, th'),
+      ];
+      return elements.every(
+        (element) =>
+          element.scrollHeight <= element.clientHeight + 2 &&
+          element.scrollWidth <= element.clientWidth + 2,
+      );
+    }
+
+    function fitPageContent(page) {
+      if (!page.dataset.msFontSize) return 1;
+      const minimum = 0.5;
+      let scale = 1;
+      while (true) {
+        page.style.setProperty('--ms-text-scale', String(scale));
+        if (pageFits(page)) {
+          delete page.dataset.msOverflow;
+          return scale;
+        }
+        if (scale <= minimum) break;
+        scale = Math.max(minimum, Number((scale - 0.04).toFixed(2)));
+      }
+      page.dataset.msOverflow = 'true';
+      return minimum;
     }
 
     function state() {
@@ -312,6 +294,7 @@
       }
       jump.value = current;
       pageNumber.textContent = `${current + 1} / ${slides.length}`;
+      if (!slides[current]?.element.dataset.msFontSize) fitStatus.textContent = '';
       stepNumber.textContent = stepping && steps.length > 1
         ? manualSteps
           ? `${stepIndex === 0 ? 'Enterで表示' : 'Enterで次へ'}（段階 ${stepIndex} / ${steps.length - 1}）`
@@ -334,6 +317,10 @@
       slide.style.width = `${width}px`;
       configure?.(slide, index);
       canvas.replaceChildren(slide);
+      const textScale = fitPageContent(slide);
+      fitStatus.textContent = !slide.dataset.msFontSize
+        ? ''
+        : `${slide.dataset.msOverflow ? 'スクロール表示' : '自動調整'} ${Math.round(textScale * 100)}%`;
       stage.setAttribute('aria-label', slides[index].title);
       current = index;
       gates = [...slide.querySelectorAll('[data-ms-step]')].filter(stepOf).map(node => [node, node.inert]);

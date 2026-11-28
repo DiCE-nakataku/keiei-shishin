@@ -55,7 +55,8 @@ dialog.ms-dialog {
   outline: 2px solid #ffdb85;
   outline-offset: 2px;
 }
-.ms-caption { margin: 0; min-width: 78px; text-align: center; font-variant-numeric: tabular-nums; }
+.ms-caption { margin: 0; min-width: 110px; text-align: center; font-variant-numeric: tabular-nums; }
+.ms-fit-status { display: block; color: #c0cfdf; font-size: .78em; }
 .ms-step { display: block; color: #c0cfdf; font-size: .8em; }
 .ms-stage {
   min-width: 0;
@@ -88,40 +89,54 @@ dialog.ms-dialog {
   transform-origin: top left;
 }
 .ms-canvas > .page { margin: 0; box-shadow: none; color: var(--ink, #17243b); }
+.ms-canvas > .page[data-ms-font-size] {
+  --ms-text-scale: 1;
+  padding: calc(13mm * var(--ms-text-scale)) calc(17mm * var(--ms-text-scale))
+    calc(11mm * var(--ms-text-scale));
+}
 .ms-canvas > .page[data-ms-font-size="small"] .page-title,
-.ms-canvas > .page[data-ms-font-size="small"] .cover-title { font-size: 28pt !important; }
+.ms-canvas > .page[data-ms-font-size="small"] .cover-title { font-size: calc(28pt * var(--ms-text-scale)) !important; }
 .ms-canvas > .page[data-ms-font-size="standard"] .page-title,
-.ms-canvas > .page[data-ms-font-size="standard"] .cover-title { font-size: 30pt !important; }
+.ms-canvas > .page[data-ms-font-size="standard"] .cover-title { font-size: calc(30pt * var(--ms-text-scale)) !important; }
 .ms-canvas > .page[data-ms-font-size="large"] .page-title,
-.ms-canvas > .page[data-ms-font-size="large"] .cover-title { font-size: 32pt !important; }
-.ms-canvas > .page[data-ms-font-size="small"] .page-body :is(p, li, td, th, span, strong, em, small, label) {
-  font-size: 18pt !important;
+.ms-canvas > .page[data-ms-font-size="large"] .cover-title { font-size: calc(32pt * var(--ms-text-scale)) !important; }
+.ms-canvas > .page[data-ms-font-size="small"] .page-body :is(p, li, td, th, span, strong, em, small, label, div, h3, h4) {
+  font-size: calc(18pt * var(--ms-text-scale)) !important;
   line-height: 1.2 !important;
 }
-.ms-canvas > .page[data-ms-font-size="standard"] .page-body :is(p, li, td, th, span, strong, em, small, label) {
-  font-size: 19pt !important;
+.ms-canvas > .page[data-ms-font-size="standard"] .page-body :is(p, li, td, th, span, strong, em, small, label, div, h3, h4) {
+  font-size: calc(19pt * var(--ms-text-scale)) !important;
   line-height: 1.2 !important;
 }
-.ms-canvas > .page[data-ms-font-size="large"] .page-body :is(p, li, td, th, span, strong, em, small, label) {
-  font-size: 20pt !important;
+.ms-canvas > .page[data-ms-font-size="large"] .page-body :is(p, li, td, th, span, strong, em, small, label, div, h3, h4) {
+  font-size: calc(20pt * var(--ms-text-scale)) !important;
   line-height: 1.2 !important;
 }
-.ms-canvas > .page[data-ms-font-size] .page-body { overflow: auto !important; }
-.ms-canvas > .page[data-ms-font-size="small"] .page-body table.exec th { font-size: 16pt !important; }
-.ms-canvas > .page[data-ms-font-size="standard"] .page-body table.exec th { font-size: 17pt !important; }
-.ms-canvas > .page[data-ms-font-size="large"] .page-body table.exec th { font-size: 18pt !important; }
+.ms-canvas > .page[data-ms-font-size] .page-body :is(p, li, td, th) {
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-break: strict;
+}
+.ms-canvas > .page[data-ms-font-size] .page-body table.exec th,
+.ms-canvas > .page[data-ms-font-size] .page-body table.exec td {
+  padding: calc(5px * var(--ms-text-scale)) calc(6px * var(--ms-text-scale)) !important;
+}
+.ms-canvas > .page[data-ms-overflow] .page-body { overflow: auto !important; }
+.ms-canvas > .page[data-ms-font-size="small"] .page-body table.exec th { font-size: calc(16pt * var(--ms-text-scale)) !important; }
+.ms-canvas > .page[data-ms-font-size="standard"] .page-body table.exec th { font-size: calc(17pt * var(--ms-text-scale)) !important; }
+.ms-canvas > .page[data-ms-font-size="large"] .page-body table.exec th { font-size: calc(18pt * var(--ms-text-scale)) !important; }
 .ms-canvas > .page[data-ms-font-size="small"] .page-body .action-week-table :is(.action-week, .action-week-cell) {
-  font-size: 12pt !important;
+  font-size: calc(12pt * var(--ms-text-scale)) !important;
 }
 .ms-canvas > .page[data-ms-font-size="standard"] .page-body .action-week-table :is(.action-week, .action-week-cell) {
-  font-size: 13pt !important;
+  font-size: calc(13pt * var(--ms-text-scale)) !important;
 }
 .ms-canvas > .page[data-ms-font-size="large"] .page-body .action-week-table :is(.action-week, .action-week-cell) {
-  font-size: 14pt !important;
+  font-size: calc(14pt * var(--ms-text-scale)) !important;
 }
-.ms-canvas > .page[data-ms-font-size="small"] :is(.page-meta, .sec-tag, .page-footer) { font-size: 14pt !important; }
-.ms-canvas > .page[data-ms-font-size="standard"] :is(.page-meta, .sec-tag, .page-footer) { font-size: 15pt !important; }
-.ms-canvas > .page[data-ms-font-size="large"] :is(.page-meta, .sec-tag, .page-footer) { font-size: 16pt !important; }
+.ms-canvas > .page[data-ms-font-size="small"] :is(.page-meta, .sec-tag, .page-footer) { font-size: calc(14pt * var(--ms-text-scale)) !important; }
+.ms-canvas > .page[data-ms-font-size="standard"] :is(.page-meta, .sec-tag, .page-footer) { font-size: calc(15pt * var(--ms-text-scale)) !important; }
+.ms-canvas > .page[data-ms-font-size="large"] :is(.page-meta, .sec-tag, .page-footer) { font-size: calc(16pt * var(--ms-text-scale)) !important; }
 .ms-canvas [data-ms-pending] { visibility: hidden !important; }
 @media print {
   .ms-player, .ms-dialog[open] { display: none !important; }
