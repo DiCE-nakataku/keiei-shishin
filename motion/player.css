@@ -20,6 +20,7 @@ dialog.ms-dialog {
 }
 .ms-player {
   --ms-controls-bg: #192536;
+  position: relative;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
@@ -62,6 +63,22 @@ dialog.ms-dialog {
   display: grid;
   place-items: center;
   overflow: hidden;
+  touch-action: pan-y;
+}
+.ms-restore-menu { display: none; }
+.ms-player[data-menus="hidden"] .ms-restore-menu {
+  position: absolute;
+  z-index: 2;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  display: block;
+  min-height: 44px;
+  color: inherit;
+  background: var(--ms-controls-bg);
+  border: 1px solid #8593a8;
+  border-radius: 7px;
+  padding: 6px 12px;
+  font: inherit;
 }
 .ms-frame { position: relative; overflow: hidden; }
 .ms-canvas {

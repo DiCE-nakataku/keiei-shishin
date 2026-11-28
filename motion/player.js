@@ -55,6 +55,10 @@
       <div class="ms-chrome">
         <h2 class="ms-heading"></h2>
         <select class="ms-jump" aria-label="ページへ移動"></select>
+        <select class="ms-format" aria-label="スライド比率">
+          <option value="a4">A4横</option>
+          <option value="wide">16:9</option>
+        </select>
         <select class="ms-level" aria-label="表示速度">
           <option value="fast">表示速度：速い</option>
           <option value="standard" selected>表示速度：標準</option>
@@ -76,12 +80,19 @@
         </p>
         <button type="button" class="ms-next" aria-label="進む">→</button>
       </nav>`;
+    const restoreMenu = document.createElement('button');
+    restoreMenu.type = 'button';
+    restoreMenu.className = 'ms-restore-menu';
+    restoreMenu.setAttribute('aria-label', '発表メニューを表示');
+    restoreMenu.textContent = '☰ メニュー';
+    root.append(restoreMenu);
     host.append(root);
     const find = selector => root.querySelector(selector);
     const stage = find('.ms-stage');
     const frame = find('.ms-frame');
     const canvas = find('.ms-canvas');
     const jump = find('.ms-jump');
+    const format = find('.ms-format');
     const level = find('.ms-level');
     const full = find('.ms-full');
     const menuToggle = find('.ms-menu-toggle');
@@ -100,6 +111,13 @@
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
     slides.forEach(({ title }, index) => jump.add(new Option(`${index + 1}. ${title}`, index)));
+
+    function setFormat(value) {
+      width = value === 'wide' ? (height * 16) / 9 : slides[0].element.offsetWidth;
+      canvas.style.width = `${width}px`;
+      if (canvas.firstElementChild) canvas.firstElementChild.style.width = `${width}px`;
+      fit();
+    }
 
     let current = -1;
     let stepIndex = 0;
@@ -220,6 +238,7 @@
       const before = direction && scene === 'S03' && activeMotion() ? sharedRects() : null;
       if (stage.contains(document.activeElement)) stage.focus({ preventScroll: true });
       const slide = copySlide(slides[index].element);
+      slide.style.width = `${width}px`;
       configure?.(slide, index);
       canvas.replaceChildren(slide);
       stage.setAttribute('aria-label', slides[index].title);
@@ -296,6 +315,7 @@
     });
     listen(find('.ms-replay'), 'click', () => goTo(current));
     listen(menuToggle, 'click', () => setMenusHidden(root.dataset.menus !== 'hidden'));
+    listen(restoreMenu, 'click', () => setMenusHidden(false));
     listen(jump, 'change', () => goTo(Number(jump.value)));
     listen(level, 'change', () => setMotionLevel(level.value));
     listen(reduced, 'change', () => render(Infinity));
@@ -320,6 +340,22 @@
       setMenusHidden(inFullscreen || (fullscreenOwned && menusBeforeFullscreen));
       fit();
     });
+    let touchStart = null;
+    listen(stage, 'pointerdown', event => {
+      if (event.pointerType !== 'touch' || !event.isPrimary) return;
+      touchStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    });
+    listen(stage, 'pointerup', event => {
+      if (!touchStart || event.pointerId !== touchStart.id) return;
+      const deltaX = event.clientX - touchStart.x;
+      const deltaY = event.clientY - touchStart.y;
+      touchStart = null;
+      if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+      event.preventDefault();
+      if (deltaX < 0) next();
+      else previous();
+    });
+    listen(stage, 'pointercancel', () => { touchStart = null; });
     const scope = focus ? host : root;
     listen(scope, 'keydown', event => {
       if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey ||
@@ -361,6 +397,7 @@
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(fit) : null;
     observer?.observe(stage);
     if (!observer) listen(window, 'resize', fit);
+    format.addEventListener('change', () => setFormat(format.value), { signal: listeners.signal });
     goTo(0);
     if (focus) nextButton.focus({ preventScroll: true });
 
