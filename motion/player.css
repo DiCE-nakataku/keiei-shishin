@@ -88,6 +88,40 @@ dialog.ms-dialog {
   transform-origin: top left;
 }
 .ms-canvas > .page { margin: 0; box-shadow: none; color: var(--ink, #17243b); }
+.ms-canvas > .page[data-ms-font-size="small"] .page-title,
+.ms-canvas > .page[data-ms-font-size="small"] .cover-title { font-size: 28pt !important; }
+.ms-canvas > .page[data-ms-font-size="standard"] .page-title,
+.ms-canvas > .page[data-ms-font-size="standard"] .cover-title { font-size: 30pt !important; }
+.ms-canvas > .page[data-ms-font-size="large"] .page-title,
+.ms-canvas > .page[data-ms-font-size="large"] .cover-title { font-size: 32pt !important; }
+.ms-canvas > .page[data-ms-font-size="small"] .page-body :is(p, li, td, th, span, strong, em, small, label) {
+  font-size: 18pt !important;
+  line-height: 1.2 !important;
+}
+.ms-canvas > .page[data-ms-font-size="standard"] .page-body :is(p, li, td, th, span, strong, em, small, label) {
+  font-size: 19pt !important;
+  line-height: 1.2 !important;
+}
+.ms-canvas > .page[data-ms-font-size="large"] .page-body :is(p, li, td, th, span, strong, em, small, label) {
+  font-size: 20pt !important;
+  line-height: 1.2 !important;
+}
+.ms-canvas > .page[data-ms-font-size] .page-body { overflow: auto !important; }
+.ms-canvas > .page[data-ms-font-size="small"] .page-body table.exec th { font-size: 16pt !important; }
+.ms-canvas > .page[data-ms-font-size="standard"] .page-body table.exec th { font-size: 17pt !important; }
+.ms-canvas > .page[data-ms-font-size="large"] .page-body table.exec th { font-size: 18pt !important; }
+.ms-canvas > .page[data-ms-font-size="small"] .page-body .action-week-table :is(.action-week, .action-week-cell) {
+  font-size: 12pt !important;
+}
+.ms-canvas > .page[data-ms-font-size="standard"] .page-body .action-week-table :is(.action-week, .action-week-cell) {
+  font-size: 13pt !important;
+}
+.ms-canvas > .page[data-ms-font-size="large"] .page-body .action-week-table :is(.action-week, .action-week-cell) {
+  font-size: 14pt !important;
+}
+.ms-canvas > .page[data-ms-font-size="small"] :is(.page-meta, .sec-tag, .page-footer) { font-size: 14pt !important; }
+.ms-canvas > .page[data-ms-font-size="standard"] :is(.page-meta, .sec-tag, .page-footer) { font-size: 15pt !important; }
+.ms-canvas > .page[data-ms-font-size="large"] :is(.page-meta, .sec-tag, .page-footer) { font-size: 16pt !important; }
 .ms-canvas [data-ms-pending] { visibility: hidden !important; }
 @media print {
   .ms-player, .ms-dialog[open] { display: none !important; }

@@ -59,6 +59,11 @@
           <option value="a4">A4横</option>
           <option value="wide">16:9</option>
         </select>
+        <select class="ms-font-size" aria-label="16:9表示の文字サイズ" hidden>
+          <option value="small">文字サイズ：小</option>
+          <option value="standard" selected>文字サイズ：標準</option>
+          <option value="large">文字サイズ：大</option>
+        </select>
         <select class="ms-level" aria-label="表示速度">
           <option value="fast">表示速度：速い</option>
           <option value="standard" selected>表示速度：標準</option>
@@ -93,6 +98,7 @@
     const canvas = find('.ms-canvas');
     const jump = find('.ms-jump');
     const format = find('.ms-format');
+    const fontSize = find('.ms-font-size');
     const level = find('.ms-level');
     const full = find('.ms-full');
     const menuToggle = find('.ms-menu-toggle');
@@ -112,11 +118,98 @@
     canvas.style.height = `${height}px`;
     slides.forEach(({ title }, index) => jump.add(new Option(`${index + 1}. ${title}`, index)));
 
-    function setFormat(value) {
-      width = value === 'wide' ? (height * 16) / 9 : slides[0].element.offsetWidth;
+    const sourceSlides = slides;
+    const a4Width = slides[0].element.offsetWidth;
+    const rowLimitBySize = { small: 6, standard: 5, large: 4 };
+
+    function splitRows(rows, maxRows) {
+      const groups = [];
+      for (let index = 0; index < rows.length;) {
+        const cell = rows[index].cells[0];
+        const span = cell?.classList.contains('cat-cell') ? Math.max(1, cell.rowSpan || 1) : 1;
+        groups.push({ start: index, end: Math.min(rows.length, index + span), cell });
+        index += span;
+      }
+
+      const chunks = [];
+      for (let start = 0; start < rows.length; start += maxRows) {
+        const end = Math.min(rows.length, start + maxRows);
+        const chunk = rows.slice(start, end).map((row) => row.cloneNode(true));
+        for (const group of groups) {
+          const overlapStart = Math.max(start, group.start);
+          const overlapEnd = Math.min(end, group.end);
+          if (overlapStart >= overlapEnd || !group.cell) continue;
+          const localRow = chunk[overlapStart - start];
+          if (overlapStart === group.start) {
+            localRow.cells[0].rowSpan = overlapEnd - overlapStart;
+          } else {
+            const categoryCell = group.cell.cloneNode(true);
+            categoryCell.rowSpan = overlapEnd - overlapStart;
+            localRow.insertBefore(categoryCell, localRow.cells[0]);
+          }
+        }
+        chunks.push(chunk);
+      }
+      return chunks;
+    }
+
+    function buildDeck(isWide, size) {
+      const deck = [];
+      for (const [sourceIndex, source] of sourceSlides.entries()) {
+        const page = source.element.cloneNode(true);
+        page.style.width = `${isWide ? (height * 16) / 9 : a4Width}px`;
+        if (isWide) page.dataset.msFontSize = size;
+        else delete page.dataset.msFontSize;
+
+        const table = page.querySelector('.page-body > table.exec');
+        const rows = [...(table?.tBodies[0]?.rows || [])];
+        const maxRows = isWide ? rowLimitBySize[size] : rows.length;
+        const chunks = rows.length > maxRows ? splitRows(rows, maxRows) : [rows];
+
+        chunks.forEach((chunk, partIndex) => {
+          const part = partIndex === 0 ? page : page.cloneNode(true);
+          const partTable = part.querySelector('.page-body > table.exec');
+          if (partTable && rows.length) {
+            partTable.tBodies[0].replaceChildren(...chunk.map((row) => row.cloneNode(true)));
+          }
+          if (partIndex > 0) {
+            part.querySelector('h2')?.append(document.createTextNode('（続き）'));
+            part.querySelector('.sec-tag')?.append(document.createTextNode(' / CONT.'));
+          }
+          deck.push({
+            ...source,
+            element: part,
+            title: `${source.title}${partIndex > 0 ? '（続き）' : ''}`,
+            sourceIndex,
+            partIndex,
+          });
+        });
+      }
+
+      deck.forEach(({ element }, index) => {
+        const number = element.querySelector('.page-num');
+        if (number) {
+          number.textContent = `${String(index + 1).padStart(2, '0')} / ${String(deck.length).padStart(2, '0')}`;
+        }
+      });
+      return deck;
+    }
+
+    function refreshDeck() {
+      const previous = slides[current];
+      const sourceIndex = previous?.sourceIndex ?? Math.max(0, current);
+      const partIndex = previous?.partIndex ?? 0;
+      width = format.value === 'wide' ? (height * 16) / 9 : a4Width;
+      const nextSlides = buildDeck(format.value === 'wide', fontSize.value);
+      slides = nextSlides;
+      jump.replaceChildren(...slides.map(({ title }, index) => new Option(`${index + 1}. ${title}`, index)));
+      fontSize.hidden = format.value !== 'wide';
       canvas.style.width = `${width}px`;
-      if (canvas.firstElementChild) canvas.firstElementChild.style.width = `${width}px`;
-      fit();
+      const index = Math.max(0, slides.findIndex(
+        (slide) => slide.sourceIndex === sourceIndex && slide.partIndex === partIndex,
+      ));
+      current = -1;
+      goTo(index, { animate: false });
     }
 
     let current = -1;
@@ -397,7 +490,8 @@
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(fit) : null;
     observer?.observe(stage);
     if (!observer) listen(window, 'resize', fit);
-    format.addEventListener('change', () => setFormat(format.value), { signal: listeners.signal });
+    format.addEventListener('change', refreshDeck, { signal: listeners.signal });
+    fontSize.addEventListener('change', refreshDeck, { signal: listeners.signal });
     goTo(0);
     if (focus) nextButton.focus({ preventScroll: true });
 

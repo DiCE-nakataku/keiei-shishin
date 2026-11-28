@@ -7,6 +7,8 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace(/\r\n/g, '\n');
 const stylesheet = fs.readFileSync(path.join(root, 'styles.css'), 'utf8').replace(/\r\n/g, '\n');
+const motionPlayerSource = fs.readFileSync(path.join(root, 'motion/player.js'), 'utf8');
+const motionPlayerStyles = fs.readFileSync(path.join(root, 'motion/player.css'), 'utf8');
 const uploadModuleSource = fs.readFileSync(path.join(root, 'src/upload.js'), 'utf8');
 const brandingModuleSource = fs.readFileSync(path.join(root, 'src/page-branding.js'), 'utf8');
 const workbookPagesModuleSource = fs.readFileSync(path.join(root, 'src/workbook-pages.js'), 'utf8');
@@ -1403,7 +1405,22 @@ test('cover and vision image controls and presenter mode remain available', () =
   assert.match(html, /id="coverLogoInput" accept="image\/\*"/);
   assert.match(html, /id="visionImgInput" accept="image\/\*"/);
   assert.match(html, /id="presentationButton"/);
-  assert.match(html, /src="\.\/motion\/player\.js"/);
+  assert.match(html, /src="\.\/motion\/player\.js(?:\?[^\"]*)?"/);
+});
+
+test('16:9 presentation offers three readable sizes and splits dense tables without dropping grouped labels', () => {
+  assert.match(motionPlayerSource, /class="ms-font-size"[^>]*hidden/);
+  assert.match(motionPlayerSource, /文字サイズ：小[\s\S]*文字サイズ：標準[\s\S]*文字サイズ：大/);
+  assert.match(motionPlayerSource, /rowLimitBySize = \{ small: 6, standard: 5, large: 4 \}/);
+  assert.match(motionPlayerSource, /function splitRows\(rows, maxRows\)/);
+  assert.match(motionPlayerSource, /categoryCell\.rowSpan = overlapEnd - overlapStart/);
+  assert.match(motionPlayerSource, /localRow\.insertBefore\(categoryCell, localRow\.cells\[0\]\)/);
+  assert.match(motionPlayerStyles, /data-ms-font-size="small"[^\n]*font-size: 28pt/);
+  assert.match(motionPlayerStyles, /data-ms-font-size="standard"[^\n]*font-size: 30pt/);
+  assert.match(motionPlayerStyles, /data-ms-font-size="large"[^\n]*font-size: 32pt/);
+  assert.match(motionPlayerStyles, /font-size: 18pt !important/);
+  assert.match(motionPlayerStyles, /font-size: 19pt !important/);
+  assert.match(motionPlayerStyles, /font-size: 20pt !important/);
 });
 
 test('cover and vision renderers preserve logo and image layout variants', () => {
@@ -1872,5 +1889,5 @@ test('action plan legend and versioned assets use the revised PDCA symbols', () 
   assert.match(html, /styles\.css\?v=1\.4\.7/);
   assert.match(stylesheet, /\.gantt-dot\s*\{[^}]*width:\s*10px[^}]*font-size:\s*5\.5pt/s);
   assert.match(stylesheet, /\.gantt-star\s*\{[^}]*font-size:\s*10pt/s);
-  assert.match(html, /v1\.5\.1 · 更新日 2026-11-27/);
+  assert.match(html, /v1\.6\.0 · 更新日 2026-11-28/);
 });
